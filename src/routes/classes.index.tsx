@@ -7,7 +7,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { PlayCircle, CheckCircle2 } from "lucide-react";
 
-export const Route = createFileRoute("/classes")({
+export const Route = createFileRoute("/classes/")({
   head: () => ({ meta: [{ title: "Recorded Classes — Guiding Mentor" }] }),
   component: () => <Protected><Classes /></Protected>,
 });

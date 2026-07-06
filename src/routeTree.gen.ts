@@ -10,12 +10,27 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
+import { Route as DashboardRouteImport } from './routes/dashboard'
+import { Route as ClassesRouteImport } from './routes/classes'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AssignmentsRouteImport } from './routes/assignments'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ClassesIndexRouteImport } from './routes/classes.index'
+import { Route as ClassesWatchClassIdRouteImport } from './routes/classes.watch.$classId'
 
 const OnboardingRoute = OnboardingRouteImport.update({
   id: '/onboarding',
   path: '/onboarding',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardRoute = DashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ClassesRoute = ClassesRouteImport.update({
+  id: '/classes',
+  path: '/classes',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRoute = AuthRouteImport.update({
@@ -23,39 +38,95 @@ const AuthRoute = AuthRouteImport.update({
   path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AssignmentsRoute = AssignmentsRouteImport.update({
+  id: '/assignments',
+  path: '/assignments',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ClassesIndexRoute = ClassesIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => ClassesRoute,
+} as any)
+const ClassesWatchClassIdRoute = ClassesWatchClassIdRouteImport.update({
+  id: '/watch/$classId',
+  path: '/watch/$classId',
+  getParentRoute: () => ClassesRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/assignments': typeof AssignmentsRoute
   '/auth': typeof AuthRoute
+  '/classes': typeof ClassesRouteWithChildren
+  '/dashboard': typeof DashboardRoute
   '/onboarding': typeof OnboardingRoute
+  '/classes/': typeof ClassesIndexRoute
+  '/classes/watch/$classId': typeof ClassesWatchClassIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/assignments': typeof AssignmentsRoute
   '/auth': typeof AuthRoute
+  '/dashboard': typeof DashboardRoute
   '/onboarding': typeof OnboardingRoute
+  '/classes': typeof ClassesIndexRoute
+  '/classes/watch/$classId': typeof ClassesWatchClassIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/assignments': typeof AssignmentsRoute
   '/auth': typeof AuthRoute
+  '/classes': typeof ClassesRouteWithChildren
+  '/dashboard': typeof DashboardRoute
   '/onboarding': typeof OnboardingRoute
+  '/classes/': typeof ClassesIndexRoute
+  '/classes/watch/$classId': typeof ClassesWatchClassIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/onboarding'
+  fullPaths:
+    | '/'
+    | '/assignments'
+    | '/auth'
+    | '/classes'
+    | '/dashboard'
+    | '/onboarding'
+    | '/classes/'
+    | '/classes/watch/$classId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/onboarding'
-  id: '__root__' | '/' | '/auth' | '/onboarding'
+  to:
+    | '/'
+    | '/assignments'
+    | '/auth'
+    | '/dashboard'
+    | '/onboarding'
+    | '/classes'
+    | '/classes/watch/$classId'
+  id:
+    | '__root__'
+    | '/'
+    | '/assignments'
+    | '/auth'
+    | '/classes'
+    | '/dashboard'
+    | '/onboarding'
+    | '/classes/'
+    | '/classes/watch/$classId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AssignmentsRoute: typeof AssignmentsRoute
   AuthRoute: typeof AuthRoute
+  ClassesRoute: typeof ClassesRouteWithChildren
+  DashboardRoute: typeof DashboardRoute
   OnboardingRoute: typeof OnboardingRoute
 }
 
@@ -68,11 +139,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OnboardingRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/dashboard': {
+      id: '/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof DashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/classes': {
+      id: '/classes'
+      path: '/classes'
+      fullPath: '/classes'
+      preLoaderRoute: typeof ClassesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/auth': {
       id: '/auth'
       path: '/auth'
       fullPath: '/auth'
       preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/assignments': {
+      id: '/assignments'
+      path: '/assignments'
+      fullPath: '/assignments'
+      preLoaderRoute: typeof AssignmentsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -82,12 +174,42 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/classes/': {
+      id: '/classes/'
+      path: '/'
+      fullPath: '/classes/'
+      preLoaderRoute: typeof ClassesIndexRouteImport
+      parentRoute: typeof ClassesRoute
+    }
+    '/classes/watch/$classId': {
+      id: '/classes/watch/$classId'
+      path: '/watch/$classId'
+      fullPath: '/classes/watch/$classId'
+      preLoaderRoute: typeof ClassesWatchClassIdRouteImport
+      parentRoute: typeof ClassesRoute
+    }
   }
 }
 
+interface ClassesRouteChildren {
+  ClassesIndexRoute: typeof ClassesIndexRoute
+  ClassesWatchClassIdRoute: typeof ClassesWatchClassIdRoute
+}
+
+const ClassesRouteChildren: ClassesRouteChildren = {
+  ClassesIndexRoute: ClassesIndexRoute,
+  ClassesWatchClassIdRoute: ClassesWatchClassIdRoute,
+}
+
+const ClassesRouteWithChildren =
+  ClassesRoute._addFileChildren(ClassesRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AssignmentsRoute: AssignmentsRoute,
   AuthRoute: AuthRoute,
+  ClassesRoute: ClassesRouteWithChildren,
+  DashboardRoute: DashboardRoute,
   OnboardingRoute: OnboardingRoute,
 }
 export const routeTree = rootRouteImport
