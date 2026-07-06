@@ -6,12 +6,13 @@ import { useAuth } from "@/hooks/use-auth";
 import { Protected } from "@/components/protected";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
+import { celebrate } from "@/lib/celebrate";
+import { Mascot, type MascotMood } from "@/components/mascot";
 import { format, subDays } from "date-fns";
 import { LineChart, Line, ResponsiveContainer, YAxis, XAxis, Tooltip } from "recharts";
 
 export const Route = createFileRoute("/mood")({
-  head: () => ({ meta: [{ title: "Mood — Guiding Mentor" }] }),
+  head: () => ({ meta: [{ title: "Mood check-in — Guiding Mentor" }] }),
   component: () => <Protected><Mood /></Protected>,
 });
 
