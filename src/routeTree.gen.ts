@@ -9,38 +9,502 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TodoRouteImport } from './routes/todo'
+import { Route as SupportRouteImport } from './routes/support'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as ProgressRouteImport } from './routes/progress'
+import { Route as OnboardingRouteImport } from './routes/onboarding'
+import { Route as MoodRouteImport } from './routes/mood'
+import { Route as MentorsRouteImport } from './routes/mentors'
+import { Route as MeditateRouteImport } from './routes/meditate'
+import { Route as JournalRouteImport } from './routes/journal'
+import { Route as FocusRouteImport } from './routes/focus'
+import { Route as DashboardRouteImport } from './routes/dashboard'
+import { Route as ClassesRouteImport } from './routes/classes'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AssignmentsRouteImport } from './routes/assignments'
+import { Route as AssessmentsRouteImport } from './routes/assessments'
+import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ClassesIndexRouteImport } from './routes/classes.index'
+import { Route as AdminIndexRouteImport } from './routes/admin.index'
+import { Route as AdminStudentsRouteImport } from './routes/admin.students'
+import { Route as AdminRemindersRouteImport } from './routes/admin.reminders'
+import { Route as AdminMentorsRouteImport } from './routes/admin.mentors'
+import { Route as AdminMeditationsRouteImport } from './routes/admin.meditations'
+import { Route as AdminClassesRouteImport } from './routes/admin.classes'
+import { Route as AdminAssignmentsRouteImport } from './routes/admin.assignments'
+import { Route as AdminAssessmentsRouteImport } from './routes/admin.assessments'
+import { Route as AdminAnnouncementsRouteImport } from './routes/admin.announcements'
+import { Route as ClassesWatchClassIdRouteImport } from './routes/classes.watch.$classId'
+import { Route as AdminStudentsIdRouteImport } from './routes/admin.students.$id'
 
+const TodoRoute = TodoRouteImport.update({
+  id: '/todo',
+  path: '/todo',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SupportRoute = SupportRouteImport.update({
+  id: '/support',
+  path: '/support',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProgressRoute = ProgressRouteImport.update({
+  id: '/progress',
+  path: '/progress',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OnboardingRoute = OnboardingRouteImport.update({
+  id: '/onboarding',
+  path: '/onboarding',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MoodRoute = MoodRouteImport.update({
+  id: '/mood',
+  path: '/mood',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MentorsRoute = MentorsRouteImport.update({
+  id: '/mentors',
+  path: '/mentors',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MeditateRoute = MeditateRouteImport.update({
+  id: '/meditate',
+  path: '/meditate',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const JournalRoute = JournalRouteImport.update({
+  id: '/journal',
+  path: '/journal',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FocusRoute = FocusRouteImport.update({
+  id: '/focus',
+  path: '/focus',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardRoute = DashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ClassesRoute = ClassesRouteImport.update({
+  id: '/classes',
+  path: '/classes',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AssignmentsRoute = AssignmentsRouteImport.update({
+  id: '/assignments',
+  path: '/assignments',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AssessmentsRoute = AssessmentsRouteImport.update({
+  id: '/assessments',
+  path: '/assessments',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ClassesIndexRoute = ClassesIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => ClassesRoute,
+} as any)
+const AdminIndexRoute = AdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminStudentsRoute = AdminStudentsRouteImport.update({
+  id: '/students',
+  path: '/students',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminRemindersRoute = AdminRemindersRouteImport.update({
+  id: '/reminders',
+  path: '/reminders',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminMentorsRoute = AdminMentorsRouteImport.update({
+  id: '/mentors',
+  path: '/mentors',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminMeditationsRoute = AdminMeditationsRouteImport.update({
+  id: '/meditations',
+  path: '/meditations',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminClassesRoute = AdminClassesRouteImport.update({
+  id: '/classes',
+  path: '/classes',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminAssignmentsRoute = AdminAssignmentsRouteImport.update({
+  id: '/assignments',
+  path: '/assignments',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminAssessmentsRoute = AdminAssessmentsRouteImport.update({
+  id: '/assessments',
+  path: '/assessments',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminAnnouncementsRoute = AdminAnnouncementsRouteImport.update({
+  id: '/announcements',
+  path: '/announcements',
+  getParentRoute: () => AdminRoute,
+} as any)
+const ClassesWatchClassIdRoute = ClassesWatchClassIdRouteImport.update({
+  id: '/watch/$classId',
+  path: '/watch/$classId',
+  getParentRoute: () => ClassesRoute,
+} as any)
+const AdminStudentsIdRoute = AdminStudentsIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => AdminStudentsRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRouteWithChildren
+  '/assessments': typeof AssessmentsRoute
+  '/assignments': typeof AssignmentsRoute
+  '/auth': typeof AuthRoute
+  '/classes': typeof ClassesRouteWithChildren
+  '/dashboard': typeof DashboardRoute
+  '/focus': typeof FocusRoute
+  '/journal': typeof JournalRoute
+  '/meditate': typeof MeditateRoute
+  '/mentors': typeof MentorsRoute
+  '/mood': typeof MoodRoute
+  '/onboarding': typeof OnboardingRoute
+  '/progress': typeof ProgressRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/support': typeof SupportRoute
+  '/todo': typeof TodoRoute
+  '/admin/announcements': typeof AdminAnnouncementsRoute
+  '/admin/assessments': typeof AdminAssessmentsRoute
+  '/admin/assignments': typeof AdminAssignmentsRoute
+  '/admin/classes': typeof AdminClassesRoute
+  '/admin/meditations': typeof AdminMeditationsRoute
+  '/admin/mentors': typeof AdminMentorsRoute
+  '/admin/reminders': typeof AdminRemindersRoute
+  '/admin/students': typeof AdminStudentsRouteWithChildren
+  '/admin/': typeof AdminIndexRoute
+  '/classes/': typeof ClassesIndexRoute
+  '/admin/students/$id': typeof AdminStudentsIdRoute
+  '/classes/watch/$classId': typeof ClassesWatchClassIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/assessments': typeof AssessmentsRoute
+  '/assignments': typeof AssignmentsRoute
+  '/auth': typeof AuthRoute
+  '/dashboard': typeof DashboardRoute
+  '/focus': typeof FocusRoute
+  '/journal': typeof JournalRoute
+  '/meditate': typeof MeditateRoute
+  '/mentors': typeof MentorsRoute
+  '/mood': typeof MoodRoute
+  '/onboarding': typeof OnboardingRoute
+  '/progress': typeof ProgressRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/support': typeof SupportRoute
+  '/todo': typeof TodoRoute
+  '/admin/announcements': typeof AdminAnnouncementsRoute
+  '/admin/assessments': typeof AdminAssessmentsRoute
+  '/admin/assignments': typeof AdminAssignmentsRoute
+  '/admin/classes': typeof AdminClassesRoute
+  '/admin/meditations': typeof AdminMeditationsRoute
+  '/admin/mentors': typeof AdminMentorsRoute
+  '/admin/reminders': typeof AdminRemindersRoute
+  '/admin/students': typeof AdminStudentsRouteWithChildren
+  '/admin': typeof AdminIndexRoute
+  '/classes': typeof ClassesIndexRoute
+  '/admin/students/$id': typeof AdminStudentsIdRoute
+  '/classes/watch/$classId': typeof ClassesWatchClassIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/admin': typeof AdminRouteWithChildren
+  '/assessments': typeof AssessmentsRoute
+  '/assignments': typeof AssignmentsRoute
+  '/auth': typeof AuthRoute
+  '/classes': typeof ClassesRouteWithChildren
+  '/dashboard': typeof DashboardRoute
+  '/focus': typeof FocusRoute
+  '/journal': typeof JournalRoute
+  '/meditate': typeof MeditateRoute
+  '/mentors': typeof MentorsRoute
+  '/mood': typeof MoodRoute
+  '/onboarding': typeof OnboardingRoute
+  '/progress': typeof ProgressRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/support': typeof SupportRoute
+  '/todo': typeof TodoRoute
+  '/admin/announcements': typeof AdminAnnouncementsRoute
+  '/admin/assessments': typeof AdminAssessmentsRoute
+  '/admin/assignments': typeof AdminAssignmentsRoute
+  '/admin/classes': typeof AdminClassesRoute
+  '/admin/meditations': typeof AdminMeditationsRoute
+  '/admin/mentors': typeof AdminMentorsRoute
+  '/admin/reminders': typeof AdminRemindersRoute
+  '/admin/students': typeof AdminStudentsRouteWithChildren
+  '/admin/': typeof AdminIndexRoute
+  '/classes/': typeof ClassesIndexRoute
+  '/admin/students/$id': typeof AdminStudentsIdRoute
+  '/classes/watch/$classId': typeof ClassesWatchClassIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/admin'
+    | '/assessments'
+    | '/assignments'
+    | '/auth'
+    | '/classes'
+    | '/dashboard'
+    | '/focus'
+    | '/journal'
+    | '/meditate'
+    | '/mentors'
+    | '/mood'
+    | '/onboarding'
+    | '/progress'
+    | '/sitemap.xml'
+    | '/support'
+    | '/todo'
+    | '/admin/announcements'
+    | '/admin/assessments'
+    | '/admin/assignments'
+    | '/admin/classes'
+    | '/admin/meditations'
+    | '/admin/mentors'
+    | '/admin/reminders'
+    | '/admin/students'
+    | '/admin/'
+    | '/classes/'
+    | '/admin/students/$id'
+    | '/classes/watch/$classId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/assessments'
+    | '/assignments'
+    | '/auth'
+    | '/dashboard'
+    | '/focus'
+    | '/journal'
+    | '/meditate'
+    | '/mentors'
+    | '/mood'
+    | '/onboarding'
+    | '/progress'
+    | '/sitemap.xml'
+    | '/support'
+    | '/todo'
+    | '/admin/announcements'
+    | '/admin/assessments'
+    | '/admin/assignments'
+    | '/admin/classes'
+    | '/admin/meditations'
+    | '/admin/mentors'
+    | '/admin/reminders'
+    | '/admin/students'
+    | '/admin'
+    | '/classes'
+    | '/admin/students/$id'
+    | '/classes/watch/$classId'
+  id:
+    | '__root__'
+    | '/'
+    | '/admin'
+    | '/assessments'
+    | '/assignments'
+    | '/auth'
+    | '/classes'
+    | '/dashboard'
+    | '/focus'
+    | '/journal'
+    | '/meditate'
+    | '/mentors'
+    | '/mood'
+    | '/onboarding'
+    | '/progress'
+    | '/sitemap.xml'
+    | '/support'
+    | '/todo'
+    | '/admin/announcements'
+    | '/admin/assessments'
+    | '/admin/assignments'
+    | '/admin/classes'
+    | '/admin/meditations'
+    | '/admin/mentors'
+    | '/admin/reminders'
+    | '/admin/students'
+    | '/admin/'
+    | '/classes/'
+    | '/admin/students/$id'
+    | '/classes/watch/$classId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AdminRoute: typeof AdminRouteWithChildren
+  AssessmentsRoute: typeof AssessmentsRoute
+  AssignmentsRoute: typeof AssignmentsRoute
+  AuthRoute: typeof AuthRoute
+  ClassesRoute: typeof ClassesRouteWithChildren
+  DashboardRoute: typeof DashboardRoute
+  FocusRoute: typeof FocusRoute
+  JournalRoute: typeof JournalRoute
+  MeditateRoute: typeof MeditateRoute
+  MentorsRoute: typeof MentorsRoute
+  MoodRoute: typeof MoodRoute
+  OnboardingRoute: typeof OnboardingRoute
+  ProgressRoute: typeof ProgressRoute
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  SupportRoute: typeof SupportRoute
+  TodoRoute: typeof TodoRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/todo': {
+      id: '/todo'
+      path: '/todo'
+      fullPath: '/todo'
+      preLoaderRoute: typeof TodoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/support': {
+      id: '/support'
+      path: '/support'
+      fullPath: '/support'
+      preLoaderRoute: typeof SupportRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/progress': {
+      id: '/progress'
+      path: '/progress'
+      fullPath: '/progress'
+      preLoaderRoute: typeof ProgressRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/onboarding': {
+      id: '/onboarding'
+      path: '/onboarding'
+      fullPath: '/onboarding'
+      preLoaderRoute: typeof OnboardingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mood': {
+      id: '/mood'
+      path: '/mood'
+      fullPath: '/mood'
+      preLoaderRoute: typeof MoodRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mentors': {
+      id: '/mentors'
+      path: '/mentors'
+      fullPath: '/mentors'
+      preLoaderRoute: typeof MentorsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/meditate': {
+      id: '/meditate'
+      path: '/meditate'
+      fullPath: '/meditate'
+      preLoaderRoute: typeof MeditateRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/journal': {
+      id: '/journal'
+      path: '/journal'
+      fullPath: '/journal'
+      preLoaderRoute: typeof JournalRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/focus': {
+      id: '/focus'
+      path: '/focus'
+      fullPath: '/focus'
+      preLoaderRoute: typeof FocusRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard': {
+      id: '/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof DashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/classes': {
+      id: '/classes'
+      path: '/classes'
+      fullPath: '/classes'
+      preLoaderRoute: typeof ClassesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/assignments': {
+      id: '/assignments'
+      path: '/assignments'
+      fullPath: '/assignments'
+      preLoaderRoute: typeof AssignmentsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/assessments': {
+      id: '/assessments'
+      path: '/assessments'
+      fullPath: '/assessments'
+      preLoaderRoute: typeof AssessmentsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,22 +512,163 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/classes/': {
+      id: '/classes/'
+      path: '/'
+      fullPath: '/classes/'
+      preLoaderRoute: typeof ClassesIndexRouteImport
+      parentRoute: typeof ClassesRoute
+    }
+    '/admin/': {
+      id: '/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/students': {
+      id: '/admin/students'
+      path: '/students'
+      fullPath: '/admin/students'
+      preLoaderRoute: typeof AdminStudentsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/reminders': {
+      id: '/admin/reminders'
+      path: '/reminders'
+      fullPath: '/admin/reminders'
+      preLoaderRoute: typeof AdminRemindersRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/mentors': {
+      id: '/admin/mentors'
+      path: '/mentors'
+      fullPath: '/admin/mentors'
+      preLoaderRoute: typeof AdminMentorsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/meditations': {
+      id: '/admin/meditations'
+      path: '/meditations'
+      fullPath: '/admin/meditations'
+      preLoaderRoute: typeof AdminMeditationsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/classes': {
+      id: '/admin/classes'
+      path: '/classes'
+      fullPath: '/admin/classes'
+      preLoaderRoute: typeof AdminClassesRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/assignments': {
+      id: '/admin/assignments'
+      path: '/assignments'
+      fullPath: '/admin/assignments'
+      preLoaderRoute: typeof AdminAssignmentsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/assessments': {
+      id: '/admin/assessments'
+      path: '/assessments'
+      fullPath: '/admin/assessments'
+      preLoaderRoute: typeof AdminAssessmentsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/announcements': {
+      id: '/admin/announcements'
+      path: '/announcements'
+      fullPath: '/admin/announcements'
+      preLoaderRoute: typeof AdminAnnouncementsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/classes/watch/$classId': {
+      id: '/classes/watch/$classId'
+      path: '/watch/$classId'
+      fullPath: '/classes/watch/$classId'
+      preLoaderRoute: typeof ClassesWatchClassIdRouteImport
+      parentRoute: typeof ClassesRoute
+    }
+    '/admin/students/$id': {
+      id: '/admin/students/$id'
+      path: '/$id'
+      fullPath: '/admin/students/$id'
+      preLoaderRoute: typeof AdminStudentsIdRouteImport
+      parentRoute: typeof AdminStudentsRoute
+    }
   }
 }
 
+interface AdminStudentsRouteChildren {
+  AdminStudentsIdRoute: typeof AdminStudentsIdRoute
+}
+
+const AdminStudentsRouteChildren: AdminStudentsRouteChildren = {
+  AdminStudentsIdRoute: AdminStudentsIdRoute,
+}
+
+const AdminStudentsRouteWithChildren = AdminStudentsRoute._addFileChildren(
+  AdminStudentsRouteChildren,
+)
+
+interface AdminRouteChildren {
+  AdminAnnouncementsRoute: typeof AdminAnnouncementsRoute
+  AdminAssessmentsRoute: typeof AdminAssessmentsRoute
+  AdminAssignmentsRoute: typeof AdminAssignmentsRoute
+  AdminClassesRoute: typeof AdminClassesRoute
+  AdminMeditationsRoute: typeof AdminMeditationsRoute
+  AdminMentorsRoute: typeof AdminMentorsRoute
+  AdminRemindersRoute: typeof AdminRemindersRoute
+  AdminStudentsRoute: typeof AdminStudentsRouteWithChildren
+  AdminIndexRoute: typeof AdminIndexRoute
+}
+
+const AdminRouteChildren: AdminRouteChildren = {
+  AdminAnnouncementsRoute: AdminAnnouncementsRoute,
+  AdminAssessmentsRoute: AdminAssessmentsRoute,
+  AdminAssignmentsRoute: AdminAssignmentsRoute,
+  AdminClassesRoute: AdminClassesRoute,
+  AdminMeditationsRoute: AdminMeditationsRoute,
+  AdminMentorsRoute: AdminMentorsRoute,
+  AdminRemindersRoute: AdminRemindersRoute,
+  AdminStudentsRoute: AdminStudentsRouteWithChildren,
+  AdminIndexRoute: AdminIndexRoute,
+}
+
+const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
+
+interface ClassesRouteChildren {
+  ClassesIndexRoute: typeof ClassesIndexRoute
+  ClassesWatchClassIdRoute: typeof ClassesWatchClassIdRoute
+}
+
+const ClassesRouteChildren: ClassesRouteChildren = {
+  ClassesIndexRoute: ClassesIndexRoute,
+  ClassesWatchClassIdRoute: ClassesWatchClassIdRoute,
+}
+
+const ClassesRouteWithChildren =
+  ClassesRoute._addFileChildren(ClassesRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AdminRoute: AdminRouteWithChildren,
+  AssessmentsRoute: AssessmentsRoute,
+  AssignmentsRoute: AssignmentsRoute,
+  AuthRoute: AuthRoute,
+  ClassesRoute: ClassesRouteWithChildren,
+  DashboardRoute: DashboardRoute,
+  FocusRoute: FocusRoute,
+  JournalRoute: JournalRoute,
+  MeditateRoute: MeditateRoute,
+  MentorsRoute: MentorsRoute,
+  MoodRoute: MoodRoute,
+  OnboardingRoute: OnboardingRoute,
+  ProgressRoute: ProgressRoute,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
+  SupportRoute: SupportRoute,
+  TodoRoute: TodoRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
