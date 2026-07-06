@@ -11,6 +11,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
 import { Trash2 } from "lucide-react";
 import { toast } from "sonner";
+import { celebrate } from "@/lib/celebrate";
 import { format } from "date-fns";
 
 export const Route = createFileRoute("/todo")({
@@ -44,8 +45,12 @@ function TodoPage() {
     mutationFn: async ({ id, done }: { id: string; done: boolean }) => {
       const { error } = await supabase.from("todos").update({ done }).eq("id", id);
       if (error) throw error;
+      return done;
     },
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["todos", uid, today] }),
+    onSuccess: (done) => {
+      if (done) celebrate();
+      qc.invalidateQueries({ queryKey: ["todos", uid, today] });
+    },
   });
 
   const del = useMutation({
@@ -57,7 +62,7 @@ function TodoPage() {
     <div className="space-y-6">
       <div>
         <h1 className="font-display text-2xl font-semibold">Today's to-do</h1>
-        <p className="text-muted-foreground text-sm">Mandatory items come from your mentor.</p>
+        <p className="text-muted-foreground text-sm">Mandatory items come from your mentor. The rest is yours — one at a time.</p>
       </div>
       <Card><CardContent className="p-5 space-y-3">
         <form className="flex gap-2" onSubmit={(e) => { e.preventDefault(); if (title.trim()) add.mutate(); }}>
@@ -75,7 +80,7 @@ function TodoPage() {
               )}
             </div>
           ))}
-          {!todos?.length && <div className="text-sm text-muted-foreground text-center py-4">Nothing yet. Add your first task.</div>}
+          {!todos?.length && <div className="text-sm text-muted-foreground text-center py-4">Nothing on the list yet. Add one thing you can actually finish today.</div>}
         </div>
       </CardContent></Card>
     </div>

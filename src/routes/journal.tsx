@@ -9,6 +9,8 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
+import { celebrate } from "@/lib/celebrate";
+import { Mascot } from "@/components/mascot";
 import { format } from "date-fns";
 
 export const Route = createFileRoute("/journal")({
@@ -42,15 +44,18 @@ function Journal() {
         if (error) throw error;
       }
     },
-    onSuccess: () => { toast.success("Saved"); setBody(""); setFlag(false); qc.invalidateQueries({ queryKey: ["journal", uid] }); },
+    onSuccess: () => { celebrate(todayEntry ? "Updated — thanks for showing up." : "That's today's entry in the books."); setBody(""); setFlag(false); qc.invalidateQueries({ queryKey: ["journal", uid] }); },
     onError: (e: any) => toast.error(e.message),
   });
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="font-display text-2xl font-semibold">Daily journal</h1>
-        <p className="text-muted-foreground text-sm">Private by default. Flag any entry if you'd like a mentor to see it.</p>
+      <div className="flex items-start gap-4">
+        <Mascot mood="encouraging" size={64} className="shrink-0" />
+        <div className="min-w-0">
+          <h1 className="font-display text-2xl font-semibold">Daily journal</h1>
+          <p className="text-muted-foreground text-sm">Private by default. One line counts. Flag any entry if you'd like a mentor to read it.</p>
+        </div>
       </div>
       <Card><CardContent className="p-5 space-y-3">
         <div className="text-sm text-muted-foreground">Today: {format(new Date(), "EEEE, d MMM")}</div>

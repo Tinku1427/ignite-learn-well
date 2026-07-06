@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Wind, Play, Pause } from "lucide-react";
 import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
+import { Mascot } from "@/components/mascot";
 
 export const Route = createFileRoute("/meditate")({
   head: () => ({ meta: [{ title: "Meditate — Guiding Mentor" }] }),
@@ -39,9 +40,12 @@ function Meditate() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="font-display text-2xl font-semibold">Guided meditations</h1>
-        <p className="text-muted-foreground text-sm">Short sessions for breathing, focus, sleep, and exam anxiety.</p>
+      <div className="flex items-start gap-4">
+        <Mascot mood="neutral" size={64} className="shrink-0" />
+        <div className="min-w-0">
+          <h1 className="font-display text-2xl font-semibold">A moment for you</h1>
+          <p className="text-muted-foreground text-sm">Short sessions for breathing, focus, sleep, and exam anxiety.</p>
+        </div>
       </div>
 
       {recommended && (

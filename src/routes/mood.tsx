@@ -7,11 +7,13 @@ import { Protected } from "@/components/protected";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import { celebrate } from "@/lib/celebrate";
+import { Mascot, type MascotMood } from "@/components/mascot";
 import { format, subDays } from "date-fns";
 import { LineChart, Line, ResponsiveContainer, YAxis, XAxis, Tooltip } from "recharts";
 
 export const Route = createFileRoute("/mood")({
-  head: () => ({ meta: [{ title: "Mood — Guiding Mentor" }] }),
+  head: () => ({ meta: [{ title: "Mood check-in — Guiding Mentor" }] }),
   component: () => <Protected><Mood /></Protected>,
 });
 
@@ -44,7 +46,10 @@ function Mood() {
       const { error } = await supabase.from("mood_logs").upsert({ user_id: uid!, log_date: today, score }, { onConflict: "user_id,log_date" });
       if (error) throw error;
     },
-    onSuccess: () => { toast.success("Mood logged"); qc.invalidateQueries({ queryKey: ["mood", uid] }); },
+    onSuccess: () => {
+      celebrate(score && score >= 4 ? "Love that. Logged and locked in." : "Thanks for checking in. We've got you.");
+      qc.invalidateQueries({ queryKey: ["mood", uid] });
+    },
     onError: (e: any) => toast.error(e.message),
   });
 
@@ -56,23 +61,45 @@ function Mood() {
     });
   })();
 
+  const active = score ?? todayLog?.score ?? null;
+  const mascotMood: MascotMood =
+    active == null ? "neutral" : active <= 2 ? "concerned" : active >= 4 ? "celebrating" : "encouraging";
+  const supportLine =
+    active == null ? "No wrong answer here. Just tap what fits." :
+    active <= 2 ? "Thanks for being honest. Rough days pass — I'm here." :
+    active === 3 ? "An okay day is still a day. Nice going." :
+    "Love this energy. Let's channel it.";
+
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="font-display text-2xl font-semibold">How are you feeling?</h1>
-        <p className="text-muted-foreground text-sm">A 10-second check-in each day helps us tailor your support.</p>
+      <div className="flex items-start gap-4">
+        <Mascot mood={mascotMood} size={72} className="shrink-0 mascot-bob" />
+        <div className="min-w-0">
+          <h1 className="font-display text-2xl font-semibold">How are you feeling?</h1>
+          <p className="text-muted-foreground text-sm">Everyone has off days — that's what this is here for. 10 seconds, honest answer.</p>
+        </div>
       </div>
       <Card><CardContent className="p-5 space-y-4">
         <div className="grid grid-cols-5 gap-2">
           {OPTIONS.map((o) => (
-            <button key={o.s} onClick={() => setScore(o.s)}
-              className={`rounded-2xl p-4 text-center border transition ${score === o.s || todayLog?.score === o.s ? "bg-secondary border-primary" : "hover:bg-secondary/50"}`}>
+            <button
+              key={o.s}
+              onClick={() => setScore(o.s)}
+              className={`rounded-2xl p-4 text-center border transition ${
+                score === o.s || todayLog?.score === o.s
+                  ? "bg-secondary border-primary scale-[1.03]"
+                  : "hover:bg-secondary/50"
+              }`}
+            >
               <div className="text-3xl">{o.e}</div>
               <div className="text-xs text-muted-foreground mt-1">{o.l}</div>
             </button>
           ))}
         </div>
-        <Button onClick={() => save.mutate()} disabled={save.isPending || !score}>Save today's mood</Button>
+        <div key={active ?? "none"} className="text-sm text-foreground/70 pop-in">{supportLine}</div>
+        <Button onClick={() => save.mutate()} disabled={save.isPending || !score}>
+          {todayLog ? "Update today's mood" : "Save today's mood"}
+        </Button>
       </CardContent></Card>
 
       <Card><CardContent className="p-5">
