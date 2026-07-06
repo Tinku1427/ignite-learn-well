@@ -210,6 +210,36 @@ export type Database = {
           },
         ]
       }
+      audio_tracks: {
+        Row: {
+          category: string
+          created_at: string
+          description: string | null
+          id: string
+          license: string | null
+          title: string
+          url: string
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          license?: string | null
+          title: string
+          url: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          license?: string | null
+          title?: string
+          url?: string
+        }
+        Relationships: []
+      }
       bookings: {
         Row: {
           availability_id: string | null
@@ -377,6 +407,7 @@ export type Database = {
           entry_date: string
           flag_for_mentor: boolean
           id: string
+          shared_with_mentor_id: string | null
           user_id: string
         }
         Insert: {
@@ -385,6 +416,7 @@ export type Database = {
           entry_date?: string
           flag_for_mentor?: boolean
           id?: string
+          shared_with_mentor_id?: string | null
           user_id: string
         }
         Update: {
@@ -393,9 +425,18 @@ export type Database = {
           entry_date?: string
           flag_for_mentor?: boolean
           id?: string
+          shared_with_mentor_id?: string | null
           user_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "journal_entries_shared_with_mentor_id_fkey"
+            columns: ["shared_with_mentor_id"]
+            isOneToOne: false
+            referencedRelation: "mentors"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       meditations: {
         Row: {
@@ -497,6 +538,7 @@ export type Database = {
       mentors: {
         Row: {
           active: boolean
+          avatar_seed: string | null
           bio: string | null
           created_at: string
           id: string
@@ -505,6 +547,7 @@ export type Database = {
         }
         Insert: {
           active?: boolean
+          avatar_seed?: string | null
           bio?: string | null
           created_at?: string
           id?: string
@@ -513,6 +556,7 @@ export type Database = {
         }
         Update: {
           active?: boolean
+          avatar_seed?: string | null
           bio?: string | null
           created_at?: string
           id?: string
@@ -587,6 +631,8 @@ export type Database = {
           id: string
           onboarded_at: string | null
           phone: string | null
+          preferred_focus_track_id: string | null
+          preferred_relax_track_id: string | null
           target_year: number | null
           updated_at: string
           whatsapp_opt_in: boolean | null
@@ -600,6 +646,8 @@ export type Database = {
           id: string
           onboarded_at?: string | null
           phone?: string | null
+          preferred_focus_track_id?: string | null
+          preferred_relax_track_id?: string | null
           target_year?: number | null
           updated_at?: string
           whatsapp_opt_in?: boolean | null
@@ -613,11 +661,28 @@ export type Database = {
           id?: string
           onboarded_at?: string | null
           phone?: string | null
+          preferred_focus_track_id?: string | null
+          preferred_relax_track_id?: string | null
           target_year?: number | null
           updated_at?: string
           whatsapp_opt_in?: boolean | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "profiles_preferred_focus_track_id_fkey"
+            columns: ["preferred_focus_track_id"]
+            isOneToOne: false
+            referencedRelation: "audio_tracks"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "profiles_preferred_relax_track_id_fkey"
+            columns: ["preferred_relax_track_id"]
+            isOneToOne: false
+            referencedRelation: "audio_tracks"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       reminder_log: {
         Row: {
