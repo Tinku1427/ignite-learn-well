@@ -22,19 +22,33 @@ function AuthPage() {
   const [fullName, setFullName] = useState("");
   const [phone, setPhone] = useState("");
   const [loading, setLoading] = useState(false);
+  const [confirmSent, setConfirmSent] = useState<string | null>(null);
+
+  const routeAfterAuth = async (userId: string) => {
+    const { data } = await supabase.from("user_roles").select("role").eq("user_id", userId);
+    const isAdmin = (data ?? []).some((r) => r.role === "admin");
+    router.navigate({ to: isAdmin ? "/admin" : "/dashboard", replace: true });
+  };
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
-      if (data.session) router.navigate({ to: "/dashboard" });
+      if (data.session?.user) routeAfterAuth(data.session.user.id);
     });
-  }, [router]);
+    const { data: sub } = supabase.auth.onAuthStateChange((event, session) => {
+      if ((event === "SIGNED_IN" || event === "INITIAL_SESSION") && session?.user) {
+        routeAfterAuth(session.user.id);
+      }
+    });
+    return () => sub.subscription.unsubscribe();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     try {
       if (mode === "signup") {
-        const { error } = await supabase.auth.signUp({
+        const { data, error } = await supabase.auth.signUp({
           email,
           password,
           options: {
@@ -43,12 +57,18 @@ function AuthPage() {
           },
         });
         if (error) throw error;
-        toast.success("Welcome! Let's set you up.");
-        router.navigate({ to: "/onboarding" });
+        if (data.session?.user) {
+          toast.success("Welcome! Let's set you up.");
+          router.navigate({ to: "/onboarding" });
+        } else {
+          // Email confirmation required
+          setConfirmSent(email);
+          toast.success("Check your email to confirm your account.");
+        }
       } else {
-        const { error } = await supabase.auth.signInWithPassword({ email, password });
+        const { data, error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
-        router.navigate({ to: "/dashboard" });
+        if (data.user) await routeAfterAuth(data.user.id);
       }
     } catch (err: any) {
       toast.error(err.message ?? "Something went wrong");
@@ -60,8 +80,9 @@ function AuthPage() {
   const google = async () => {
     const res = await lovable.auth.signInWithOAuth("google", { redirect_uri: window.location.origin });
     if (res.error) toast.error(res.error.message ?? "Google sign-in failed");
-    if (!res.redirected && !res.error) router.navigate({ to: "/dashboard" });
+    // On success, onAuthStateChange listener will redirect.
   };
+
 
   return (
     <div className="min-h-screen grid md:grid-cols-2 bg-background">
@@ -86,6 +107,16 @@ function AuthPage() {
             <p className="text-sm text-muted-foreground mt-1">
               {mode === "signin" ? "Sign in to continue your prep." : "Start your JEE/NEET journey with us."}
             </p>
+
+            {confirmSent && (
+              <div className="mt-6 rounded-md border border-primary/30 bg-primary/5 p-4 text-sm">
+                <div className="font-medium">Check your inbox</div>
+                <p className="mt-1 text-muted-foreground">
+                  We sent a confirmation link to <span className="font-medium text-foreground">{confirmSent}</span>. Click it to activate your account, then come back and sign in.
+                </p>
+              </div>
+            )}
+
 
             <Button onClick={google} variant="outline" className="w-full mt-6 gap-2">
               Continue with Google

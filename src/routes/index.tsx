@@ -1,10 +1,30 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
 import { Sparkles, BookOpen, Timer, Heart, Bell, Users, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useEffect } from "react";
+import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/")({ component: Landing });
 
 function Landing() {
+  const router = useRouter();
+
+  useEffect(() => {
+    let cancelled = false;
+    const go = async (userId: string) => {
+      const { data } = await supabase.from("user_roles").select("role").eq("user_id", userId);
+      const isAdmin = (data ?? []).some((r) => r.role === "admin");
+      if (!cancelled) router.navigate({ to: isAdmin ? "/admin" : "/dashboard", replace: true });
+    };
+    supabase.auth.getSession().then(({ data }) => {
+      if (data.session?.user) go(data.session.user.id);
+    });
+    const { data: sub } = supabase.auth.onAuthStateChange((event, session) => {
+      if ((event === "SIGNED_IN" || event === "INITIAL_SESSION") && session?.user) go(session.user.id);
+    });
+    return () => { cancelled = true; sub.subscription.unsubscribe(); };
+  }, [router]);
+
   return (
     <div className="min-h-screen bg-background text-foreground">
       <header className="max-w-6xl mx-auto flex items-center justify-between px-6 py-5">
