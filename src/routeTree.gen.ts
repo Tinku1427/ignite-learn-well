@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TodoRouteImport } from './routes/todo'
 import { Route as SupportRouteImport } from './routes/support'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as ProgressRouteImport } from './routes/progress'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as MoodRouteImport } from './routes/mood'
@@ -28,8 +29,13 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as ClassesIndexRouteImport } from './routes/classes.index'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as AdminStudentsRouteImport } from './routes/admin.students'
+import { Route as AdminRemindersRouteImport } from './routes/admin.reminders'
+import { Route as AdminMentorsRouteImport } from './routes/admin.mentors'
+import { Route as AdminMeditationsRouteImport } from './routes/admin.meditations'
 import { Route as AdminClassesRouteImport } from './routes/admin.classes'
 import { Route as AdminAssignmentsRouteImport } from './routes/admin.assignments'
+import { Route as AdminAssessmentsRouteImport } from './routes/admin.assessments'
+import { Route as AdminAnnouncementsRouteImport } from './routes/admin.announcements'
 import { Route as ClassesWatchClassIdRouteImport } from './routes/classes.watch.$classId'
 import { Route as AdminStudentsIdRouteImport } from './routes/admin.students.$id'
 
@@ -41,6 +47,11 @@ const TodoRoute = TodoRouteImport.update({
 const SupportRoute = SupportRouteImport.update({
   id: '/support',
   path: '/support',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ProgressRoute = ProgressRouteImport.update({
@@ -128,6 +139,21 @@ const AdminStudentsRoute = AdminStudentsRouteImport.update({
   path: '/students',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminRemindersRoute = AdminRemindersRouteImport.update({
+  id: '/reminders',
+  path: '/reminders',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminMentorsRoute = AdminMentorsRouteImport.update({
+  id: '/mentors',
+  path: '/mentors',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminMeditationsRoute = AdminMeditationsRouteImport.update({
+  id: '/meditations',
+  path: '/meditations',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminClassesRoute = AdminClassesRouteImport.update({
   id: '/classes',
   path: '/classes',
@@ -136,6 +162,16 @@ const AdminClassesRoute = AdminClassesRouteImport.update({
 const AdminAssignmentsRoute = AdminAssignmentsRouteImport.update({
   id: '/assignments',
   path: '/assignments',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminAssessmentsRoute = AdminAssessmentsRouteImport.update({
+  id: '/assessments',
+  path: '/assessments',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminAnnouncementsRoute = AdminAnnouncementsRouteImport.update({
+  id: '/announcements',
+  path: '/announcements',
   getParentRoute: () => AdminRoute,
 } as any)
 const ClassesWatchClassIdRoute = ClassesWatchClassIdRouteImport.update({
@@ -164,10 +200,16 @@ export interface FileRoutesByFullPath {
   '/mood': typeof MoodRoute
   '/onboarding': typeof OnboardingRoute
   '/progress': typeof ProgressRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/support': typeof SupportRoute
   '/todo': typeof TodoRoute
+  '/admin/announcements': typeof AdminAnnouncementsRoute
+  '/admin/assessments': typeof AdminAssessmentsRoute
   '/admin/assignments': typeof AdminAssignmentsRoute
   '/admin/classes': typeof AdminClassesRoute
+  '/admin/meditations': typeof AdminMeditationsRoute
+  '/admin/mentors': typeof AdminMentorsRoute
+  '/admin/reminders': typeof AdminRemindersRoute
   '/admin/students': typeof AdminStudentsRouteWithChildren
   '/admin/': typeof AdminIndexRoute
   '/classes/': typeof ClassesIndexRoute
@@ -187,10 +229,16 @@ export interface FileRoutesByTo {
   '/mood': typeof MoodRoute
   '/onboarding': typeof OnboardingRoute
   '/progress': typeof ProgressRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/support': typeof SupportRoute
   '/todo': typeof TodoRoute
+  '/admin/announcements': typeof AdminAnnouncementsRoute
+  '/admin/assessments': typeof AdminAssessmentsRoute
   '/admin/assignments': typeof AdminAssignmentsRoute
   '/admin/classes': typeof AdminClassesRoute
+  '/admin/meditations': typeof AdminMeditationsRoute
+  '/admin/mentors': typeof AdminMentorsRoute
+  '/admin/reminders': typeof AdminRemindersRoute
   '/admin/students': typeof AdminStudentsRouteWithChildren
   '/admin': typeof AdminIndexRoute
   '/classes': typeof ClassesIndexRoute
@@ -213,10 +261,16 @@ export interface FileRoutesById {
   '/mood': typeof MoodRoute
   '/onboarding': typeof OnboardingRoute
   '/progress': typeof ProgressRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/support': typeof SupportRoute
   '/todo': typeof TodoRoute
+  '/admin/announcements': typeof AdminAnnouncementsRoute
+  '/admin/assessments': typeof AdminAssessmentsRoute
   '/admin/assignments': typeof AdminAssignmentsRoute
   '/admin/classes': typeof AdminClassesRoute
+  '/admin/meditations': typeof AdminMeditationsRoute
+  '/admin/mentors': typeof AdminMentorsRoute
+  '/admin/reminders': typeof AdminRemindersRoute
   '/admin/students': typeof AdminStudentsRouteWithChildren
   '/admin/': typeof AdminIndexRoute
   '/classes/': typeof ClassesIndexRoute
@@ -240,10 +294,16 @@ export interface FileRouteTypes {
     | '/mood'
     | '/onboarding'
     | '/progress'
+    | '/sitemap.xml'
     | '/support'
     | '/todo'
+    | '/admin/announcements'
+    | '/admin/assessments'
     | '/admin/assignments'
     | '/admin/classes'
+    | '/admin/meditations'
+    | '/admin/mentors'
+    | '/admin/reminders'
     | '/admin/students'
     | '/admin/'
     | '/classes/'
@@ -263,10 +323,16 @@ export interface FileRouteTypes {
     | '/mood'
     | '/onboarding'
     | '/progress'
+    | '/sitemap.xml'
     | '/support'
     | '/todo'
+    | '/admin/announcements'
+    | '/admin/assessments'
     | '/admin/assignments'
     | '/admin/classes'
+    | '/admin/meditations'
+    | '/admin/mentors'
+    | '/admin/reminders'
     | '/admin/students'
     | '/admin'
     | '/classes'
@@ -288,10 +354,16 @@ export interface FileRouteTypes {
     | '/mood'
     | '/onboarding'
     | '/progress'
+    | '/sitemap.xml'
     | '/support'
     | '/todo'
+    | '/admin/announcements'
+    | '/admin/assessments'
     | '/admin/assignments'
     | '/admin/classes'
+    | '/admin/meditations'
+    | '/admin/mentors'
+    | '/admin/reminders'
     | '/admin/students'
     | '/admin/'
     | '/classes/'
@@ -314,6 +386,7 @@ export interface RootRouteChildren {
   MoodRoute: typeof MoodRoute
   OnboardingRoute: typeof OnboardingRoute
   ProgressRoute: typeof ProgressRoute
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   SupportRoute: typeof SupportRoute
   TodoRoute: typeof TodoRoute
 }
@@ -332,6 +405,13 @@ declare module '@tanstack/react-router' {
       path: '/support'
       fullPath: '/support'
       preLoaderRoute: typeof SupportRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/progress': {
@@ -453,6 +533,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminStudentsRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/reminders': {
+      id: '/admin/reminders'
+      path: '/reminders'
+      fullPath: '/admin/reminders'
+      preLoaderRoute: typeof AdminRemindersRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/mentors': {
+      id: '/admin/mentors'
+      path: '/mentors'
+      fullPath: '/admin/mentors'
+      preLoaderRoute: typeof AdminMentorsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/meditations': {
+      id: '/admin/meditations'
+      path: '/meditations'
+      fullPath: '/admin/meditations'
+      preLoaderRoute: typeof AdminMeditationsRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/classes': {
       id: '/admin/classes'
       path: '/classes'
@@ -465,6 +566,20 @@ declare module '@tanstack/react-router' {
       path: '/assignments'
       fullPath: '/admin/assignments'
       preLoaderRoute: typeof AdminAssignmentsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/assessments': {
+      id: '/admin/assessments'
+      path: '/assessments'
+      fullPath: '/admin/assessments'
+      preLoaderRoute: typeof AdminAssessmentsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/announcements': {
+      id: '/admin/announcements'
+      path: '/announcements'
+      fullPath: '/admin/announcements'
+      preLoaderRoute: typeof AdminAnnouncementsRouteImport
       parentRoute: typeof AdminRoute
     }
     '/classes/watch/$classId': {
@@ -497,15 +612,25 @@ const AdminStudentsRouteWithChildren = AdminStudentsRoute._addFileChildren(
 )
 
 interface AdminRouteChildren {
+  AdminAnnouncementsRoute: typeof AdminAnnouncementsRoute
+  AdminAssessmentsRoute: typeof AdminAssessmentsRoute
   AdminAssignmentsRoute: typeof AdminAssignmentsRoute
   AdminClassesRoute: typeof AdminClassesRoute
+  AdminMeditationsRoute: typeof AdminMeditationsRoute
+  AdminMentorsRoute: typeof AdminMentorsRoute
+  AdminRemindersRoute: typeof AdminRemindersRoute
   AdminStudentsRoute: typeof AdminStudentsRouteWithChildren
   AdminIndexRoute: typeof AdminIndexRoute
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
+  AdminAnnouncementsRoute: AdminAnnouncementsRoute,
+  AdminAssessmentsRoute: AdminAssessmentsRoute,
   AdminAssignmentsRoute: AdminAssignmentsRoute,
   AdminClassesRoute: AdminClassesRoute,
+  AdminMeditationsRoute: AdminMeditationsRoute,
+  AdminMentorsRoute: AdminMentorsRoute,
+  AdminRemindersRoute: AdminRemindersRoute,
   AdminStudentsRoute: AdminStudentsRouteWithChildren,
   AdminIndexRoute: AdminIndexRoute,
 }
@@ -540,6 +665,7 @@ const rootRouteChildren: RootRouteChildren = {
   MoodRoute: MoodRoute,
   OnboardingRoute: OnboardingRoute,
   ProgressRoute: ProgressRoute,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
   SupportRoute: SupportRoute,
   TodoRoute: TodoRoute,
 }
