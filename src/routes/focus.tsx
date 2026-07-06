@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Wind, Music, Pause, Play, RotateCcw, SkipForward } from "lucide-react";
 import { toast } from "sonner";
+import { celebrate } from "@/lib/celebrate";
 
 export const Route = createFileRoute("/focus")({
   head: () => ({ meta: [{ title: "Focus Timer — Guiding Mentor" }] }),
@@ -57,7 +58,7 @@ function Focus() {
   const onPhaseEnd = async () => {
     if (phase === "work") {
       if (uid) await supabase.from("pomodoro_sessions").insert({ user_id: uid, duration_min: duration });
-      toast.success("Focus session done — take a break 🌿");
+      celebrate(`${duration} min done. Take that break — you earned it. 🌿`);
       setPhase("break");
       setRemaining(breakFor(duration) * 60);
       setTimeout(() => setRunning(true), 500);
