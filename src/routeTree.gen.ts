@@ -9,18 +9,67 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TodoRouteImport } from './routes/todo'
+import { Route as SupportRouteImport } from './routes/support'
+import { Route as ProgressRouteImport } from './routes/progress'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
+import { Route as MoodRouteImport } from './routes/mood'
+import { Route as MentorsRouteImport } from './routes/mentors'
+import { Route as MeditateRouteImport } from './routes/meditate'
+import { Route as JournalRouteImport } from './routes/journal'
+import { Route as FocusRouteImport } from './routes/focus'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as ClassesRouteImport } from './routes/classes'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AssignmentsRouteImport } from './routes/assignments'
+import { Route as AssessmentsRouteImport } from './routes/assessments'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ClassesIndexRouteImport } from './routes/classes.index'
 import { Route as ClassesWatchClassIdRouteImport } from './routes/classes.watch.$classId'
 
+const TodoRoute = TodoRouteImport.update({
+  id: '/todo',
+  path: '/todo',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SupportRoute = SupportRouteImport.update({
+  id: '/support',
+  path: '/support',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProgressRoute = ProgressRouteImport.update({
+  id: '/progress',
+  path: '/progress',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const OnboardingRoute = OnboardingRouteImport.update({
   id: '/onboarding',
   path: '/onboarding',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MoodRoute = MoodRouteImport.update({
+  id: '/mood',
+  path: '/mood',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MentorsRoute = MentorsRouteImport.update({
+  id: '/mentors',
+  path: '/mentors',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MeditateRoute = MeditateRouteImport.update({
+  id: '/meditate',
+  path: '/meditate',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const JournalRoute = JournalRouteImport.update({
+  id: '/journal',
+  path: '/journal',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FocusRoute = FocusRouteImport.update({
+  id: '/focus',
+  path: '/focus',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DashboardRoute = DashboardRouteImport.update({
@@ -43,6 +92,11 @@ const AssignmentsRoute = AssignmentsRouteImport.update({
   path: '/assignments',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AssessmentsRoute = AssessmentsRouteImport.update({
+  id: '/assessments',
+  path: '/assessments',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -61,31 +115,58 @@ const ClassesWatchClassIdRoute = ClassesWatchClassIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/assessments': typeof AssessmentsRoute
   '/assignments': typeof AssignmentsRoute
   '/auth': typeof AuthRoute
   '/classes': typeof ClassesRouteWithChildren
   '/dashboard': typeof DashboardRoute
+  '/focus': typeof FocusRoute
+  '/journal': typeof JournalRoute
+  '/meditate': typeof MeditateRoute
+  '/mentors': typeof MentorsRoute
+  '/mood': typeof MoodRoute
   '/onboarding': typeof OnboardingRoute
+  '/progress': typeof ProgressRoute
+  '/support': typeof SupportRoute
+  '/todo': typeof TodoRoute
   '/classes/': typeof ClassesIndexRoute
   '/classes/watch/$classId': typeof ClassesWatchClassIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/assessments': typeof AssessmentsRoute
   '/assignments': typeof AssignmentsRoute
   '/auth': typeof AuthRoute
   '/dashboard': typeof DashboardRoute
+  '/focus': typeof FocusRoute
+  '/journal': typeof JournalRoute
+  '/meditate': typeof MeditateRoute
+  '/mentors': typeof MentorsRoute
+  '/mood': typeof MoodRoute
   '/onboarding': typeof OnboardingRoute
+  '/progress': typeof ProgressRoute
+  '/support': typeof SupportRoute
+  '/todo': typeof TodoRoute
   '/classes': typeof ClassesIndexRoute
   '/classes/watch/$classId': typeof ClassesWatchClassIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/assessments': typeof AssessmentsRoute
   '/assignments': typeof AssignmentsRoute
   '/auth': typeof AuthRoute
   '/classes': typeof ClassesRouteWithChildren
   '/dashboard': typeof DashboardRoute
+  '/focus': typeof FocusRoute
+  '/journal': typeof JournalRoute
+  '/meditate': typeof MeditateRoute
+  '/mentors': typeof MentorsRoute
+  '/mood': typeof MoodRoute
   '/onboarding': typeof OnboardingRoute
+  '/progress': typeof ProgressRoute
+  '/support': typeof SupportRoute
+  '/todo': typeof TodoRoute
   '/classes/': typeof ClassesIndexRoute
   '/classes/watch/$classId': typeof ClassesWatchClassIdRoute
 }
@@ -93,50 +174,142 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/assessments'
     | '/assignments'
     | '/auth'
     | '/classes'
     | '/dashboard'
+    | '/focus'
+    | '/journal'
+    | '/meditate'
+    | '/mentors'
+    | '/mood'
     | '/onboarding'
+    | '/progress'
+    | '/support'
+    | '/todo'
     | '/classes/'
     | '/classes/watch/$classId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/assessments'
     | '/assignments'
     | '/auth'
     | '/dashboard'
+    | '/focus'
+    | '/journal'
+    | '/meditate'
+    | '/mentors'
+    | '/mood'
     | '/onboarding'
+    | '/progress'
+    | '/support'
+    | '/todo'
     | '/classes'
     | '/classes/watch/$classId'
   id:
     | '__root__'
     | '/'
+    | '/assessments'
     | '/assignments'
     | '/auth'
     | '/classes'
     | '/dashboard'
+    | '/focus'
+    | '/journal'
+    | '/meditate'
+    | '/mentors'
+    | '/mood'
     | '/onboarding'
+    | '/progress'
+    | '/support'
+    | '/todo'
     | '/classes/'
     | '/classes/watch/$classId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AssessmentsRoute: typeof AssessmentsRoute
   AssignmentsRoute: typeof AssignmentsRoute
   AuthRoute: typeof AuthRoute
   ClassesRoute: typeof ClassesRouteWithChildren
   DashboardRoute: typeof DashboardRoute
+  FocusRoute: typeof FocusRoute
+  JournalRoute: typeof JournalRoute
+  MeditateRoute: typeof MeditateRoute
+  MentorsRoute: typeof MentorsRoute
+  MoodRoute: typeof MoodRoute
   OnboardingRoute: typeof OnboardingRoute
+  ProgressRoute: typeof ProgressRoute
+  SupportRoute: typeof SupportRoute
+  TodoRoute: typeof TodoRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/todo': {
+      id: '/todo'
+      path: '/todo'
+      fullPath: '/todo'
+      preLoaderRoute: typeof TodoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/support': {
+      id: '/support'
+      path: '/support'
+      fullPath: '/support'
+      preLoaderRoute: typeof SupportRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/progress': {
+      id: '/progress'
+      path: '/progress'
+      fullPath: '/progress'
+      preLoaderRoute: typeof ProgressRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/onboarding': {
       id: '/onboarding'
       path: '/onboarding'
       fullPath: '/onboarding'
       preLoaderRoute: typeof OnboardingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mood': {
+      id: '/mood'
+      path: '/mood'
+      fullPath: '/mood'
+      preLoaderRoute: typeof MoodRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mentors': {
+      id: '/mentors'
+      path: '/mentors'
+      fullPath: '/mentors'
+      preLoaderRoute: typeof MentorsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/meditate': {
+      id: '/meditate'
+      path: '/meditate'
+      fullPath: '/meditate'
+      preLoaderRoute: typeof MeditateRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/journal': {
+      id: '/journal'
+      path: '/journal'
+      fullPath: '/journal'
+      preLoaderRoute: typeof JournalRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/focus': {
+      id: '/focus'
+      path: '/focus'
+      fullPath: '/focus'
+      preLoaderRoute: typeof FocusRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/dashboard': {
@@ -165,6 +338,13 @@ declare module '@tanstack/react-router' {
       path: '/assignments'
       fullPath: '/assignments'
       preLoaderRoute: typeof AssignmentsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/assessments': {
+      id: '/assessments'
+      path: '/assessments'
+      fullPath: '/assessments'
+      preLoaderRoute: typeof AssessmentsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -206,11 +386,20 @@ const ClassesRouteWithChildren =
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AssessmentsRoute: AssessmentsRoute,
   AssignmentsRoute: AssignmentsRoute,
   AuthRoute: AuthRoute,
   ClassesRoute: ClassesRouteWithChildren,
   DashboardRoute: DashboardRoute,
+  FocusRoute: FocusRoute,
+  JournalRoute: JournalRoute,
+  MeditateRoute: MeditateRoute,
+  MentorsRoute: MentorsRoute,
+  MoodRoute: MoodRoute,
   OnboardingRoute: OnboardingRoute,
+  ProgressRoute: ProgressRoute,
+  SupportRoute: SupportRoute,
+  TodoRoute: TodoRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
