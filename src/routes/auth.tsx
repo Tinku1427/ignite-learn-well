@@ -108,6 +108,16 @@ function AuthPage() {
               {mode === "signin" ? "Sign in to continue your prep." : "Start your JEE/NEET journey with us."}
             </p>
 
+            {confirmSent && (
+              <div className="mt-6 rounded-md border border-primary/30 bg-primary/5 p-4 text-sm">
+                <div className="font-medium">Check your inbox</div>
+                <p className="mt-1 text-muted-foreground">
+                  We sent a confirmation link to <span className="font-medium text-foreground">{confirmSent}</span>. Click it to activate your account, then come back and sign in.
+                </p>
+              </div>
+            )}
+
+
             <Button onClick={google} variant="outline" className="w-full mt-6 gap-2">
               Continue with Google
             </Button>
