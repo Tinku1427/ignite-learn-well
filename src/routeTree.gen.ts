@@ -23,9 +23,15 @@ import { Route as ClassesRouteImport } from './routes/classes'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AssignmentsRouteImport } from './routes/assignments'
 import { Route as AssessmentsRouteImport } from './routes/assessments'
+import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ClassesIndexRouteImport } from './routes/classes.index'
+import { Route as AdminIndexRouteImport } from './routes/admin.index'
+import { Route as AdminStudentsRouteImport } from './routes/admin.students'
+import { Route as AdminClassesRouteImport } from './routes/admin.classes'
+import { Route as AdminAssignmentsRouteImport } from './routes/admin.assignments'
 import { Route as ClassesWatchClassIdRouteImport } from './routes/classes.watch.$classId'
+import { Route as AdminStudentsIdRouteImport } from './routes/admin.students.$id'
 
 const TodoRoute = TodoRouteImport.update({
   id: '/todo',
@@ -97,6 +103,11 @@ const AssessmentsRoute = AssessmentsRouteImport.update({
   path: '/assessments',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -107,14 +118,40 @@ const ClassesIndexRoute = ClassesIndexRouteImport.update({
   path: '/',
   getParentRoute: () => ClassesRoute,
 } as any)
+const AdminIndexRoute = AdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminStudentsRoute = AdminStudentsRouteImport.update({
+  id: '/students',
+  path: '/students',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminClassesRoute = AdminClassesRouteImport.update({
+  id: '/classes',
+  path: '/classes',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminAssignmentsRoute = AdminAssignmentsRouteImport.update({
+  id: '/assignments',
+  path: '/assignments',
+  getParentRoute: () => AdminRoute,
+} as any)
 const ClassesWatchClassIdRoute = ClassesWatchClassIdRouteImport.update({
   id: '/watch/$classId',
   path: '/watch/$classId',
   getParentRoute: () => ClassesRoute,
 } as any)
+const AdminStudentsIdRoute = AdminStudentsIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => AdminStudentsRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRouteWithChildren
   '/assessments': typeof AssessmentsRoute
   '/assignments': typeof AssignmentsRoute
   '/auth': typeof AuthRoute
@@ -129,7 +166,12 @@ export interface FileRoutesByFullPath {
   '/progress': typeof ProgressRoute
   '/support': typeof SupportRoute
   '/todo': typeof TodoRoute
+  '/admin/assignments': typeof AdminAssignmentsRoute
+  '/admin/classes': typeof AdminClassesRoute
+  '/admin/students': typeof AdminStudentsRouteWithChildren
+  '/admin/': typeof AdminIndexRoute
   '/classes/': typeof ClassesIndexRoute
+  '/admin/students/$id': typeof AdminStudentsIdRoute
   '/classes/watch/$classId': typeof ClassesWatchClassIdRoute
 }
 export interface FileRoutesByTo {
@@ -147,12 +189,18 @@ export interface FileRoutesByTo {
   '/progress': typeof ProgressRoute
   '/support': typeof SupportRoute
   '/todo': typeof TodoRoute
+  '/admin/assignments': typeof AdminAssignmentsRoute
+  '/admin/classes': typeof AdminClassesRoute
+  '/admin/students': typeof AdminStudentsRouteWithChildren
+  '/admin': typeof AdminIndexRoute
   '/classes': typeof ClassesIndexRoute
+  '/admin/students/$id': typeof AdminStudentsIdRoute
   '/classes/watch/$classId': typeof ClassesWatchClassIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/admin': typeof AdminRouteWithChildren
   '/assessments': typeof AssessmentsRoute
   '/assignments': typeof AssignmentsRoute
   '/auth': typeof AuthRoute
@@ -167,13 +215,19 @@ export interface FileRoutesById {
   '/progress': typeof ProgressRoute
   '/support': typeof SupportRoute
   '/todo': typeof TodoRoute
+  '/admin/assignments': typeof AdminAssignmentsRoute
+  '/admin/classes': typeof AdminClassesRoute
+  '/admin/students': typeof AdminStudentsRouteWithChildren
+  '/admin/': typeof AdminIndexRoute
   '/classes/': typeof ClassesIndexRoute
+  '/admin/students/$id': typeof AdminStudentsIdRoute
   '/classes/watch/$classId': typeof ClassesWatchClassIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/admin'
     | '/assessments'
     | '/assignments'
     | '/auth'
@@ -188,7 +242,12 @@ export interface FileRouteTypes {
     | '/progress'
     | '/support'
     | '/todo'
+    | '/admin/assignments'
+    | '/admin/classes'
+    | '/admin/students'
+    | '/admin/'
     | '/classes/'
+    | '/admin/students/$id'
     | '/classes/watch/$classId'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -206,11 +265,17 @@ export interface FileRouteTypes {
     | '/progress'
     | '/support'
     | '/todo'
+    | '/admin/assignments'
+    | '/admin/classes'
+    | '/admin/students'
+    | '/admin'
     | '/classes'
+    | '/admin/students/$id'
     | '/classes/watch/$classId'
   id:
     | '__root__'
     | '/'
+    | '/admin'
     | '/assessments'
     | '/assignments'
     | '/auth'
@@ -225,12 +290,18 @@ export interface FileRouteTypes {
     | '/progress'
     | '/support'
     | '/todo'
+    | '/admin/assignments'
+    | '/admin/classes'
+    | '/admin/students'
+    | '/admin/'
     | '/classes/'
+    | '/admin/students/$id'
     | '/classes/watch/$classId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AdminRoute: typeof AdminRouteWithChildren
   AssessmentsRoute: typeof AssessmentsRoute
   AssignmentsRoute: typeof AssignmentsRoute
   AuthRoute: typeof AuthRoute
@@ -347,6 +418,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AssessmentsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -361,6 +439,34 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ClassesIndexRouteImport
       parentRoute: typeof ClassesRoute
     }
+    '/admin/': {
+      id: '/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/students': {
+      id: '/admin/students'
+      path: '/students'
+      fullPath: '/admin/students'
+      preLoaderRoute: typeof AdminStudentsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/classes': {
+      id: '/admin/classes'
+      path: '/classes'
+      fullPath: '/admin/classes'
+      preLoaderRoute: typeof AdminClassesRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/assignments': {
+      id: '/admin/assignments'
+      path: '/assignments'
+      fullPath: '/admin/assignments'
+      preLoaderRoute: typeof AdminAssignmentsRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/classes/watch/$classId': {
       id: '/classes/watch/$classId'
       path: '/watch/$classId'
@@ -368,8 +474,43 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ClassesWatchClassIdRouteImport
       parentRoute: typeof ClassesRoute
     }
+    '/admin/students/$id': {
+      id: '/admin/students/$id'
+      path: '/$id'
+      fullPath: '/admin/students/$id'
+      preLoaderRoute: typeof AdminStudentsIdRouteImport
+      parentRoute: typeof AdminStudentsRoute
+    }
   }
 }
+
+interface AdminStudentsRouteChildren {
+  AdminStudentsIdRoute: typeof AdminStudentsIdRoute
+}
+
+const AdminStudentsRouteChildren: AdminStudentsRouteChildren = {
+  AdminStudentsIdRoute: AdminStudentsIdRoute,
+}
+
+const AdminStudentsRouteWithChildren = AdminStudentsRoute._addFileChildren(
+  AdminStudentsRouteChildren,
+)
+
+interface AdminRouteChildren {
+  AdminAssignmentsRoute: typeof AdminAssignmentsRoute
+  AdminClassesRoute: typeof AdminClassesRoute
+  AdminStudentsRoute: typeof AdminStudentsRouteWithChildren
+  AdminIndexRoute: typeof AdminIndexRoute
+}
+
+const AdminRouteChildren: AdminRouteChildren = {
+  AdminAssignmentsRoute: AdminAssignmentsRoute,
+  AdminClassesRoute: AdminClassesRoute,
+  AdminStudentsRoute: AdminStudentsRouteWithChildren,
+  AdminIndexRoute: AdminIndexRoute,
+}
+
+const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
 interface ClassesRouteChildren {
   ClassesIndexRoute: typeof ClassesIndexRoute
@@ -386,6 +527,7 @@ const ClassesRouteWithChildren =
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AdminRoute: AdminRouteWithChildren,
   AssessmentsRoute: AssessmentsRoute,
   AssignmentsRoute: AssignmentsRoute,
   AuthRoute: AuthRoute,
