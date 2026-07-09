@@ -39,8 +39,8 @@ const CONCERNS: Concern[] = [
   {
     key: "motivation",
     title: "Low motivation",
-    blurb: "Your daily dose of a spark.",
-    to: "/dashboard",
+    blurb: "Stack one small win.",
+    to: "/todo",
     icon: Sparkles,
     bg: "from-[oklch(0.92_0.08_60)] to-[oklch(0.83_0.12_40)]",
   },
