@@ -104,6 +104,9 @@ function Mood() {
         </Button>
       </CardContent></Card>
 
+      <SleepLog uid={uid} today={today} />
+
+
       <Card><CardContent className="p-5">
         <div className="text-sm font-medium mb-3">Last 30 days</div>
         <div className="h-56">
