@@ -123,3 +123,94 @@ function Mood() {
     </div>
   );
 }
+
+function SleepLog({ uid, today }: { uid: string | undefined; today: string }) {
+  const qc = useQueryClient();
+  const anchorRef = useRef<HTMLDivElement>(null);
+  const [hours, setHours] = useState<string>("");
+  const [quality, setQuality] = useState<number | null>(null);
+
+  useEffect(() => {
+    if (typeof window !== "undefined" && window.location.hash === "#sleep") {
+      anchorRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }, []);
+
+  const { data: existing } = useQuery({
+    queryKey: ["sleep", uid, today],
+    queryFn: async () =>
+      (await supabase.from("sleep_logs").select("*").eq("user_id", uid!).eq("log_date", today).maybeSingle()).data,
+    enabled: !!uid,
+  });
+
+  useEffect(() => {
+    if (existing) {
+      setHours(String(existing.hours));
+      setQuality(existing.quality);
+    }
+  }, [existing]);
+
+  const save = useMutation({
+    mutationFn: async () => {
+      const h = parseFloat(hours);
+      if (!h || !quality) throw new Error("Add hours and a quality rating.");
+      const { error } = await supabase
+        .from("sleep_logs")
+        .upsert({ user_id: uid!, log_date: today, hours: h, quality }, { onConflict: "user_id,log_date" });
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      celebrate("Logged. Sleep is the real secret weapon.");
+      qc.invalidateQueries({ queryKey: ["sleep", uid] });
+    },
+    onError: (e: any) => toast.error(e.message),
+  });
+
+  return (
+    <div id="sleep" ref={anchorRef}>
+      <Card><CardContent className="p-5 space-y-4">
+        <div className="flex items-center gap-2">
+          <Moon className="size-4 text-primary" />
+          <div className="text-sm font-medium">Last night's sleep</div>
+          <div className="text-xs text-muted-foreground">15 seconds — real answer, not the goal one.</div>
+        </div>
+        <div className="grid grid-cols-2 gap-3">
+          <div>
+            <label className="text-xs text-muted-foreground">Hours</label>
+            <Input
+              type="number"
+              min={0}
+              max={24}
+              step="0.5"
+              inputMode="decimal"
+              placeholder="e.g. 6.5"
+              value={hours}
+              onChange={(e) => setHours(e.target.value)}
+            />
+          </div>
+          <div>
+            <label className="text-xs text-muted-foreground">Quality</label>
+            <div className="flex gap-1 mt-1">
+              {[1, 2, 3, 4, 5].map((q) => (
+                <button
+                  key={q}
+                  type="button"
+                  onClick={() => setQuality(q)}
+                  className={`flex-1 rounded-lg py-2 text-sm border transition ${
+                    quality === q ? "bg-secondary border-primary" : "hover:bg-secondary/50"
+                  }`}
+                >
+                  {q}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+        <Button onClick={() => save.mutate()} disabled={save.isPending}>
+          {existing ? "Update sleep log" : "Save sleep log"}
+        </Button>
+      </CardContent></Card>
+    </div>
+  );
+}
+
