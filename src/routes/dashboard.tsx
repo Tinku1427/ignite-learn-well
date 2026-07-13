@@ -136,7 +136,7 @@ function Dashboard() {
             <Mascot mood={mood} size={112} />
           </div>
           <div className="min-w-0 flex-1">
-            <div className="text-xs uppercase tracking-widest text-primary/80">{hello}, {name}</div>
+            <div className="text-xs font-medium text-primary/80">{hello}, {name}</div>
             <h1 className="font-display text-2xl md:text-3xl font-semibold leading-tight mt-1">
               {line}
             </h1>
