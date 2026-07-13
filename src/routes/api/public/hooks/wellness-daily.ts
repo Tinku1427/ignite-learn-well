@@ -1,5 +1,4 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { createClient } from "@supabase/supabase-js";
 import { scoreDay, type DayInputs } from "@/lib/wellness-scoring.server";
 
 // Compute wellness scores for a range of days.
@@ -13,11 +12,8 @@ export const Route = createFileRoute("/api/public/hooks/wellness-daily")({
           return new Response("Unauthorized", { status: 401 });
         }
 
-        const url = process.env.SUPABASE_URL!;
-        const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
-        const admin = createClient(url, serviceKey, {
-          auth: { persistSession: false, autoRefreshToken: false },
-        });
+        const { supabaseAdmin: admin } = await import("@/integrations/supabase/client.server");
+
 
         let days = 1;
         try {
