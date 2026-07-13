@@ -35,74 +35,63 @@ export const Route = createFileRoute("/api/public/hooks/wellness-daily")({
         const { data: students, error: sErr } = await admin.from("profiles").select("id");
         if (sErr) return new Response(sErr.message, { status: 500 });
 
-        const results = await computeAndUpsert(admin, students ?? [], dates);
-        return Response.json({ ok: true, days, students: students?.length ?? 0, upserts: results });
+        let upserts = 0;
+        for (const s of students ?? []) {
+          const rows: Array<Record<string, unknown>> = [];
+
+          for (const date of dates) {
+            const startIso = `${date}T00:00:00.000Z`;
+            const endIso = `${date}T23:59:59.999Z`;
+
+            const [pomos, sleep, journal, mood, msgs, bookings] = await Promise.all([
+              admin.from("pomodoro_sessions").select("duration_min")
+                .eq("user_id", s.id).gte("completed_at", startIso).lte("completed_at", endIso),
+              admin.from("sleep_logs").select("hours,quality")
+                .eq("user_id", s.id).eq("log_date", date).maybeSingle(),
+              admin.from("journal_entries").select("id")
+                .eq("user_id", s.id).eq("entry_date", date).maybeSingle(),
+              admin.from("mood_logs").select("score")
+                .eq("user_id", s.id).eq("log_date", date).maybeSingle(),
+              admin.from("mentor_messages").select("id")
+                .eq("student_id", s.id).gte("created_at", startIso).lte("created_at", endIso),
+              admin.from("bookings").select("id")
+                .eq("student_id", s.id).gte("scheduled_at", startIso).lte("scheduled_at", endIso),
+            ]);
+
+            const pomodoroMinutes = ((pomos.data ?? []) as Array<{ duration_min: number | null }>)
+              .reduce((sum, r) => sum + (r.duration_min ?? 0), 0);
+            const sleepRow = sleep.data as { hours: number; quality: number } | null;
+            const moodRow = mood.data as { score: number } | null;
+            const mentorTouches = (msgs.data?.length ?? 0) + (bookings.data?.length ?? 0);
+
+            const inputs: DayInputs = {
+              pomodoroMinutes,
+              sleepHours: sleepRow?.hours ?? null,
+              sleepQuality: sleepRow?.quality ?? null,
+              journaled: !!journal.data,
+              moodLogged: !!moodRow,
+              moodScore: moodRow?.score ?? null,
+              mentorTouches,
+            };
+            const sc = scoreDay(inputs);
+            rows.push({
+              user_id: s.id, score_date: date,
+              focus_score: sc.focus, rest_score: sc.rest,
+              reflection_score: sc.reflection, connection_score: sc.connection,
+              composite: sc.composite, risk_band: sc.risk_band, reasons: sc.reasons,
+            });
+          }
+
+          if (rows.length) {
+            const { error } = await admin.from("wellness_scores")
+              .upsert(rows as never, { onConflict: "user_id,score_date" });
+            if (!error) upserts += rows.length;
+          }
+        }
+
+        return Response.json({ ok: true, days, students: students?.length ?? 0, upserts });
       },
     },
   },
 });
 
-async function computeAndUpsert(
-  admin: ReturnType<typeof createClient>,
-  students: { id: string }[],
-  dates: string[],
-) {
-  let upserts = 0;
-  for (const s of students) {
-    const rows: Array<{
-      user_id: string; score_date: string;
-      focus_score: number; rest_score: number; reflection_score: number;
-      connection_score: number; composite: number; risk_band: string; reasons: string[];
-    }> = [];
-
-    for (const date of dates) {
-      const startIso = `${date}T00:00:00.000Z`;
-      const endIso = `${date}T23:59:59.999Z`;
-
-      const [pomos, sleep, journal, mood, msgs, bookings] = await Promise.all([
-        admin.from("pomodoro_sessions").select("duration_min")
-          .eq("user_id", s.id).gte("completed_at", startIso).lte("completed_at", endIso),
-        admin.from("sleep_logs").select("hours,quality")
-          .eq("user_id", s.id).eq("log_date", date).maybeSingle(),
-        admin.from("journal_entries").select("id")
-          .eq("user_id", s.id).eq("entry_date", date).maybeSingle(),
-        admin.from("mood_logs").select("score")
-          .eq("user_id", s.id).eq("log_date", date).maybeSingle(),
-        admin.from("mentor_messages").select("id")
-          .eq("student_id", s.id).gte("created_at", startIso).lte("created_at", endIso),
-        admin.from("bookings").select("id")
-          .eq("student_id", s.id).gte("scheduled_at", startIso).lte("scheduled_at", endIso),
-      ]);
-
-      const pomodoroMinutes = ((pomos.data ?? []) as { duration_min: number | null }[])
-        .reduce((sum, r) => sum + (r.duration_min ?? 0), 0);
-      const sleepRow = sleep.data as { hours: number; quality: number } | null;
-      const moodRow = mood.data as { score: number } | null;
-      const mentorTouches = (msgs.data?.length ?? 0) + (bookings.data?.length ?? 0);
-
-      const inputs: DayInputs = {
-        pomodoroMinutes,
-        sleepHours: sleepRow?.hours ?? null,
-        sleepQuality: sleepRow?.quality ?? null,
-        journaled: !!journal.data,
-        moodLogged: !!moodRow,
-        moodScore: moodRow?.score ?? null,
-        mentorTouches,
-      };
-      const sc = scoreDay(inputs);
-      rows.push({
-        user_id: s.id, score_date: date,
-        focus_score: sc.focus, rest_score: sc.rest,
-        reflection_score: sc.reflection, connection_score: sc.connection,
-        composite: sc.composite, risk_band: sc.risk_band, reasons: sc.reasons,
-      });
-    }
-
-    if (rows.length) {
-      const { error } = await admin.from("wellness_scores")
-        .upsert(rows, { onConflict: "user_id,score_date" });
-      if (!error) upserts += rows.length;
-    }
-  }
-  return upserts;
-}

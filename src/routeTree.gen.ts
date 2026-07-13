@@ -38,6 +38,7 @@ import { Route as AdminAssessmentsRouteImport } from './routes/admin.assessments
 import { Route as AdminAnnouncementsRouteImport } from './routes/admin.announcements'
 import { Route as ClassesWatchClassIdRouteImport } from './routes/classes.watch.$classId'
 import { Route as AdminStudentsIdRouteImport } from './routes/admin.students.$id'
+import { Route as ApiPublicHooksWellnessDailyRouteImport } from './routes/api/public/hooks/wellness-daily'
 
 const TodoRoute = TodoRouteImport.update({
   id: '/todo',
@@ -184,6 +185,12 @@ const AdminStudentsIdRoute = AdminStudentsIdRouteImport.update({
   path: '/$id',
   getParentRoute: () => AdminStudentsRoute,
 } as any)
+const ApiPublicHooksWellnessDailyRoute =
+  ApiPublicHooksWellnessDailyRouteImport.update({
+    id: '/api/public/hooks/wellness-daily',
+    path: '/api/public/hooks/wellness-daily',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -215,6 +222,7 @@ export interface FileRoutesByFullPath {
   '/classes/': typeof ClassesIndexRoute
   '/admin/students/$id': typeof AdminStudentsIdRoute
   '/classes/watch/$classId': typeof ClassesWatchClassIdRoute
+  '/api/public/hooks/wellness-daily': typeof ApiPublicHooksWellnessDailyRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -244,6 +252,7 @@ export interface FileRoutesByTo {
   '/classes': typeof ClassesIndexRoute
   '/admin/students/$id': typeof AdminStudentsIdRoute
   '/classes/watch/$classId': typeof ClassesWatchClassIdRoute
+  '/api/public/hooks/wellness-daily': typeof ApiPublicHooksWellnessDailyRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -276,6 +285,7 @@ export interface FileRoutesById {
   '/classes/': typeof ClassesIndexRoute
   '/admin/students/$id': typeof AdminStudentsIdRoute
   '/classes/watch/$classId': typeof ClassesWatchClassIdRoute
+  '/api/public/hooks/wellness-daily': typeof ApiPublicHooksWellnessDailyRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -309,6 +319,7 @@ export interface FileRouteTypes {
     | '/classes/'
     | '/admin/students/$id'
     | '/classes/watch/$classId'
+    | '/api/public/hooks/wellness-daily'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -338,6 +349,7 @@ export interface FileRouteTypes {
     | '/classes'
     | '/admin/students/$id'
     | '/classes/watch/$classId'
+    | '/api/public/hooks/wellness-daily'
   id:
     | '__root__'
     | '/'
@@ -369,6 +381,7 @@ export interface FileRouteTypes {
     | '/classes/'
     | '/admin/students/$id'
     | '/classes/watch/$classId'
+    | '/api/public/hooks/wellness-daily'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -389,6 +402,7 @@ export interface RootRouteChildren {
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   SupportRoute: typeof SupportRoute
   TodoRoute: typeof TodoRoute
+  ApiPublicHooksWellnessDailyRoute: typeof ApiPublicHooksWellnessDailyRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -596,6 +610,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminStudentsIdRouteImport
       parentRoute: typeof AdminStudentsRoute
     }
+    '/api/public/hooks/wellness-daily': {
+      id: '/api/public/hooks/wellness-daily'
+      path: '/api/public/hooks/wellness-daily'
+      fullPath: '/api/public/hooks/wellness-daily'
+      preLoaderRoute: typeof ApiPublicHooksWellnessDailyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -668,6 +689,7 @@ const rootRouteChildren: RootRouteChildren = {
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   SupportRoute: SupportRoute,
   TodoRoute: TodoRoute,
+  ApiPublicHooksWellnessDailyRoute: ApiPublicHooksWellnessDailyRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
