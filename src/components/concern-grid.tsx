@@ -31,8 +31,8 @@ const CONCERNS: Concern[] = [
   {
     key: "sleep",
     title: "Sleep trouble",
-    blurb: "A wind-down for tonight.",
-    to: "/meditate",
+    blurb: "Log last night + wind-down.",
+    to: "/mood",
     icon: Moon,
     bg: "from-[oklch(0.88_0.05_280)] to-[oklch(0.78_0.09_270)]",
   },
