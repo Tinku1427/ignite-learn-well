@@ -31,8 +31,8 @@ const CONCERNS: Concern[] = [
   {
     key: "sleep",
     title: "Sleep trouble",
-    blurb: "A wind-down for tonight.",
-    to: "/meditate",
+    blurb: "Log last night + wind-down.",
+    to: "/mood",
     icon: Moon,
     bg: "from-[oklch(0.88_0.05_280)] to-[oklch(0.78_0.09_270)]",
   },
@@ -81,6 +81,7 @@ export function ConcernGrid() {
           <Link
             key={c.key}
             to={c.to}
+            hash={c.key === "sleep" ? "sleep" : undefined}
             className={`group relative overflow-hidden rounded-2xl p-4 bg-gradient-to-br ${c.bg} text-foreground/80 border border-white/40 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all min-h-[112px] flex flex-col justify-between`}
           >
             <c.icon className="size-5 text-foreground/70" />

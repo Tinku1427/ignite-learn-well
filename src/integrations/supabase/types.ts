@@ -14,6 +14,30 @@ export type Database = {
   }
   public: {
     Tables: {
+      agent_events: {
+        Row: {
+          created_at: string
+          detail: Json
+          event_type: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          detail?: Json
+          event_type: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          detail?: Json
+          event_type?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       announcements: {
         Row: {
           active: boolean
@@ -600,6 +624,47 @@ export type Database = {
         }
         Relationships: []
       }
+      nudges: {
+        Row: {
+          body: string
+          created_at: string
+          dismissed_at: string | null
+          id: string
+          seen_at: string | null
+          source_event_id: string | null
+          tone: string | null
+          user_id: string
+        }
+        Insert: {
+          body: string
+          created_at?: string
+          dismissed_at?: string | null
+          id?: string
+          seen_at?: string | null
+          source_event_id?: string | null
+          tone?: string | null
+          user_id: string
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          dismissed_at?: string | null
+          id?: string
+          seen_at?: string | null
+          source_event_id?: string | null
+          tone?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "nudges_source_event_id_fkey"
+            columns: ["source_event_id"]
+            isOneToOne: false
+            referencedRelation: "agent_events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       pomodoro_sessions: {
         Row: {
           completed_at: string
@@ -623,6 +688,7 @@ export type Database = {
       }
       profiles: {
         Row: {
+          agent_enabled: boolean
           break_pref: string | null
           created_at: string
           daily_goal_hours: number | null
@@ -633,11 +699,14 @@ export type Database = {
           phone: string | null
           preferred_focus_track_id: string | null
           preferred_relax_track_id: string | null
+          quiet_hours_end: string
+          quiet_hours_start: string
           target_year: number | null
           updated_at: string
           whatsapp_opt_in: boolean | null
         }
         Insert: {
+          agent_enabled?: boolean
           break_pref?: string | null
           created_at?: string
           daily_goal_hours?: number | null
@@ -648,11 +717,14 @@ export type Database = {
           phone?: string | null
           preferred_focus_track_id?: string | null
           preferred_relax_track_id?: string | null
+          quiet_hours_end?: string
+          quiet_hours_start?: string
           target_year?: number | null
           updated_at?: string
           whatsapp_opt_in?: boolean | null
         }
         Update: {
+          agent_enabled?: boolean
           break_pref?: string | null
           created_at?: string
           daily_goal_hours?: number | null
@@ -663,6 +735,8 @@ export type Database = {
           phone?: string | null
           preferred_focus_track_id?: string | null
           preferred_relax_track_id?: string | null
+          quiet_hours_end?: string
+          quiet_hours_start?: string
           target_year?: number | null
           updated_at?: string
           whatsapp_opt_in?: boolean | null
@@ -752,6 +826,36 @@ export type Database = {
         }
         Relationships: []
       }
+      sleep_logs: {
+        Row: {
+          created_at: string
+          hours: number
+          id: string
+          log_date: string
+          quality: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          hours: number
+          id?: string
+          log_date?: string
+          quality: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          hours?: number
+          id?: string
+          log_date?: string
+          quality?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       subjects: {
         Row: {
           created_at: string
@@ -817,6 +921,48 @@ export type Database = {
         Update: {
           id?: string
           role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
+      wellness_scores: {
+        Row: {
+          composite: number
+          connection_score: number
+          created_at: string
+          focus_score: number
+          id: string
+          reasons: string[]
+          reflection_score: number
+          rest_score: number
+          risk_band: string
+          score_date: string
+          user_id: string
+        }
+        Insert: {
+          composite: number
+          connection_score: number
+          created_at?: string
+          focus_score: number
+          id?: string
+          reasons?: string[]
+          reflection_score: number
+          rest_score: number
+          risk_band: string
+          score_date?: string
+          user_id: string
+        }
+        Update: {
+          composite?: number
+          connection_score?: number
+          created_at?: string
+          focus_score?: number
+          id?: string
+          reasons?: string[]
+          reflection_score?: number
+          rest_score?: number
+          risk_band?: string
+          score_date?: string
           user_id?: string
         }
         Relationships: []

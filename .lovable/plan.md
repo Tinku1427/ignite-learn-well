@@ -1,113 +1,121 @@
+# Wellness Agent
 
-# Guiding Mentor — v1 Build Plan
+A background layer that scores each student's mental wellness daily, flags burnout risk, and sends one personalized nudge. Existing features stay untouched.
 
-A wellness + LMS platform for JEE/NEET aspirants, with a Student panel and an Admin panel. WhatsApp sending is stubbed (reminder engine, admin config, and delivery log UI all built; no external send). Recorded classes are embedded YouTube/Vimeo URLs.
+Shipped in 5 phases. I stop and report after each so you can steer.
 
-## Design system
+---
 
-- Calming palette (oklch tokens in `src/styles.css`): teal/indigo primary, warm coral accent, soft neutrals, generous rounding.
-- Typography: Figtree (body) + Outfit (display) via `@fontsource`.
-- Mobile-first layouts, soft rounded cards, subtle shadows, no harsh reds (destructive muted).
-- Single semantic token set — no hardcoded colors in components.
+## Phase 0 — Small fixes (bundled with Phase 1)
 
-## Backend (Lovable Cloud / Supabase)
+- Fix `GOOD AFTERNOON, REVANTHAI` — the greeting concatenates `hello` + name without the comma/space in the uppercase chip. Repair the template.
+- Add a **Sleep log** 15-second input on `/mood` (hours + quality 1–5).
+- Point the "Sleep trouble" concern card at `/mood#sleep` so it lands on the sleep input.
 
-Enable Cloud, then create schema + RLS + GRANTs in one migration.
+---
 
-Tables:
-- `profiles` (id → auth.users, name, phone, exam JEE/NEET, target_year, daily_goal_hours, break_pref, whatsapp_opt_in, onboarded_at)
-- `app_role` enum (`student`, `admin`, `mentor`) + `user_roles` + `has_role()` SECURITY DEFINER
-- `subjects`, `chapters`
-- `classes` (subject, chapter, title, video_url, attachments[], duration_min, published)
-- `class_progress` (user, class, watched_seconds, completed_at)
-- `assignments` (subject, chapter, title, instructions, due_at, attachment_url)
-- `assignment_submissions` (assignment, user, file_url / text, status, grade, feedback, submitted_at)
-- `pomodoro_sessions` (user, duration_min, completed_at)
-- `journal_entries` (user, date, prompt_response) — private, admin sees completion only
-- `mood_logs` (user, date, score 1–5)
-- `todos` (user, title, done, is_mandatory, source: user/admin, date)
-- `meditations` (title, category, audio_url, duration_min, tags[])
-- `meditation_plays` (user, meditation, played_at)
-- `assessments` (title, questions jsonb) + `assessment_responses` (user, answers, score, interpretation)
-- `mentors` (profile fk, bio, specialties) + `mentor_availability` + `bookings` (student, mentor, slot, status, notes)
-- `mentor_messages` (thread: student↔mentor, body, sent_at)
-- `announcements` (title, body, image_url, cta_url, starts_at, ends_at, active)
-- `reminder_rules` (activity type, time_of_day, template, active)
-- `reminder_log` (user, rule, channel: whatsapp/in_app, status: queued/sent/failed/stubbed, sent_at, payload)
-- `streaks_view` (SQL view: per-user daily completion → streak count)
+## Phase 1 — Data foundation
 
-RLS:
-- Students: read/write only own rows for progress/journal/mood/todos/submissions/bookings/messages.
-- Admins (`has_role(auth.uid(),'admin')`): full read across, plus content writes.
-- Mentors: read assigned students, write bookings/notes.
-- Public read on `classes`, `meditations`, `announcements` (published/active) to `authenticated` only (no anon).
-- GRANTs on every public.* table per platform rules.
+New tables (RLS on; students read their own rows; admins read all via `has_role`):
 
-Triggers:
-- `on_auth_user_created` → insert profile + default `student` role.
-- Post-completion trigger recomputes streak counter.
+- `sleep_logs` — one row per user per day. Students insert/update their own.
+- `wellness_scores` — daily per-student; **service-role writes only**, clients read-only.
+- `agent_events` — audit log (`score_computed | nudge_sent | risk_change | crisis_flag`).
+- `nudges` — messages the agent has sent; student can mark seen/dismissed.
 
-## Frontend architecture (TanStack Start)
+Extend `profiles` with `quiet_hours_start` (22:30), `quiet_hours_end` (07:00), `agent_enabled` (true).
 
-Public:
-- `/` marketing landing (calming hero, exam badges, feature strip, CTA to /auth)
-- `/auth` sign-in / sign-up with onboarding fields
-- `/reset-password`
+Deliverable: migration + Sleep UI + greeting fix + concern-card fix.
 
-Authenticated student (`_authenticated/`):
-- `/dashboard` — greeting, today's snapshot (study min, pomodoros, assignments due, streak), quick-launch tiles, announcement carousel
-- `/classes`, `/classes/$subject`, `/classes/$subject/$chapter`, `/classes/watch/$classId` (embed player + notes + mark complete)
-- `/assignments` list + `/assignments/$id` (submit upload/text, see feedback, monthly progress bar)
-- `/focus` Pomodoro (5/25/45/90 presets + custom; break screen with ambient audio player + breathing animation; auto-log)
-- `/journal` daily prompt (private)
-- `/mood` emoji/slider check-in + 30-day trend chart
-- `/meditate` library with "recommended today" tag from latest mood
-- `/todo` merged admin-mandatory + personal
-- `/assessments` list + take + results
-- `/mentors` list, availability slots, booking + `/mentors/$id/chat`
-- `/support` always-visible urgent contact card
-- `/progress` personal analytics + badges
+---
 
-Authenticated admin (`_authenticated/admin/`, gated by `has_role admin`):
-- `/admin` overview: active students, completion %, avg mood trend, at-risk list
-- `/admin/students`, `/admin/students/$id` full 360° profile
-- `/admin/classes` CRUD, `/admin/assignments` CRUD + submission review
-- `/admin/meditations` CRUD, `/admin/announcements` CRUD
-- `/admin/assessments` CRUD + aggregate results w/ high-stress flagging
-- `/admin/mentors` mentor + availability mgmt, bookings view
-- `/admin/reminders` rule config + delivery log + manual one-off send (stubbed)
-- CSV export per-student / per-batch
+## Phase 2 — Scoring engine
 
-Shared:
-- `AppShell` with side nav (desktop) / bottom nav (mobile), role-aware links.
-- `useCurrentUser` hook + role guard for `/admin/*`.
-- All data via `createServerFn` + TanStack Query (`ensureQueryData` in loaders, `useSuspenseQuery` in components); no admin/service-role reads leaked to client.
+Edge function `wellness-score`, cron **21:30 IST daily**. For each opted-in student, over the last 7 days:
 
-## Nudge engine (stubbed sending)
+- **Focus** (0.25) — focus sessions, class watch time, on-time assignments. Non-monotonic: penalizes >10h/day sustained.
+- **Rest** (0.30, highest weight) — sleep hours+quality, meditations, pomodoro breaks actually taken, longest quiet gap.
+- **Reflection** (0.25) — journal entries, mood check-ins.
+- **Connection** (0.20) — mentor bookings attended, messages, entries shared with mentors.
 
-- Server fn `evaluateReminders` iterates active `reminder_rules` for the current user, checks whether the mandatory activity is complete today, and inserts `reminder_log` rows with `status='stubbed'` + in-app notification.
-- Admin can trigger manual sends → same log path.
-- `sendWhatsApp()` is a single function with a TODO for provider — swap later without touching callers.
+`composite` = weighted mean.
 
-## Build order (single pass, batched edits)
+`risk_band` is **not** derived from composite alone. Any of these trip amber/watch and push a human-readable string into `reasons[]`:
 
-1. Enable Cloud, apply full migration (schema + roles + RLS + GRANTs + triggers).
-2. Design tokens + fonts + AppShell + auth pages + role guard + onboarding.
-3. Student: dashboard, classes, assignments, focus timer w/ break, journal, mood, todo, meditate.
-4. Assessments + mentors/booking/chat + progress/badges.
-5. Admin: overview + students 360 + content CRUD + submissions review + assessments + mentors + announcements.
-6. Reminder rules UI + delivery log + manual send + evaluator server fn.
-7. SEO metadata per public route, sitemap.xml, robots.txt.
-8. Placeholder replacement, mobile pass, security scan.
+- mood ≤ 2 on 3+ of last 5 check-ins → **watch**
+- zero activity 4+ days after being active → **watch**
+- focus hours +40% WoW while rest score falls → **amber**
+- sleep < 5h on 3+ nights → **amber**
+- >70% pomodoro breaks skipped → **amber**
+- journal flagged for mentor → **amber**
+- composite drop >20 pts vs last week → **amber**
 
-## Explicit non-goals (v2)
+Writes: one `wellness_scores` + one `agent_events(score_computed)` per student per day; `risk_change` when band flips.
 
-AI chatbot, gamified leaderboard, browser push, parent view, real WhatsApp send.
+---
 
-## Notes for you
+## Phase 3 — Nudge engine
 
-- WhatsApp: everything is wired end-to-end except the actual HTTP call. When you pick a provider, we add one function body + one secret.
-- Videos: admin pastes YouTube/Vimeo unlisted URLs; player uses an iframe embed.
-- Journals stay private; admins only see "completed today" boolean unless the student explicitly flags an entry for mentor review.
+Edge function `wellness-nudge`, cron **21:45 IST** (after scoring).
 
-This is a large build — expect several minutes of edits. Approve and I'll ship it end to end.
+Assembles each student's actual week and calls **Lovable AI (`google/gemini-2.5-flash`)** with the exact Buddy system prompt from your spec (no guilt, no comparison, no "should", rest > grind).
+
+Hard rules:
+- 1 nudge per student per 24h.
+- Never during quiet hours.
+- Every send → row in `nudges` + `agent_events(nudge_sent)` with the triggering reason.
+
+Channels:
+- **In-app** — soft dismissible card on `/dashboard` under the Buddy hero (not toast, not modal).
+- **Email** — Lovable native email (best-effort, non-blocking).
+- **WhatsApp** — `sendWhatsApp()` adapter that logs `status: 'stubbed'` until a key exists. No fake sends.
+
+> Note on model: your spec says Anthropic. Lovable AI has no Anthropic. I'll use `google/gemini-2.5-flash` (fast, cheap, no key needed). Say the word if you'd rather bring your own Anthropic key.
+
+---
+
+## Phase 4 — Safety layer
+
+On every journal save and mood check-in, run a crisis-signal check (self-harm / hopelessness / suicidal ideation — keyword pre-filter + Lovable AI classifier for ambiguous cases).
+
+If triggered:
+- Calm in-place card with **Tele-MANAS 14416** and **Kiran 1800-599-0019**. Warm, not scary.
+- `agent_events(crisis_flag)` row.
+- Student pinned to the top of Admin Overview with a high-priority marker.
+
+Plus a permanent low-key "Need to talk to someone right now?" link in the student footer.
+
+The agent never counsels — it notices and routes to a human.
+
+---
+
+## Phase 5 — Admin Wellness command centre (`/admin/wellness`)
+
+- **Cohort distribution** — green/amber/watch counts + 30-day trend.
+- **Needs attention** — ranked list, each row shows the agent's plain-English reason. Crisis flags pinned above everything.
+- **The Burnout Scatter** — engagement (x) vs wellness (y). Centrepiece chart; high-effort / low-wellness quadrant is the whole point.
+- **Student 360** — wellness ring over time, mood trend, focus/rest balance, full `agent_events` timeline.
+- **Agent control room** — edit thresholds & quiet hours, nudge delivery log, one-off nudge send, dry-run any rule against the live cohort.
+
+Admin stays cool and dense — no Buddy, no confetti in admin.
+
+---
+
+## Technical notes
+
+- Scoring & nudge functions run as **service role** to write `wellness_scores` and read across all students. Crisis check runs from the student's own server function using their session.
+- `pg_cron` + `pg_net` schedules both edge functions against stable published URLs. Cron SQL runs via `supabase--insert` (not migration), since it holds env-specific URLs.
+- Thresholds live in a small `agent_config` table so admins can edit without a code change (added in Phase 5).
+- Nothing in existing student features changes behaviour — the new card on `/dashboard` is additive and only appears when a nudge exists.
+
+---
+
+## Delivery order
+
+1. Phase 1 (schema + fixes) → report.
+2. Phase 2 (scoring + cron) → report.
+3. Phase 3 (nudge + in-app card) → report.
+4. Phase 4 (safety) → report.
+5. Phase 5 (admin) → report.
+
+Reply "go" to start Phase 1, or tell me what to adjust.
