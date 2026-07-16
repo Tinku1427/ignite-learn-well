@@ -981,7 +981,7 @@ export type Database = {
       }
     }
     Enums: {
-      app_role: "student" | "admin" | "mentor"
+      app_role: "student" | "admin" | "mentor" | "counsellor"
       booking_status: "requested" | "confirmed" | "completed" | "cancelled"
       exam_type: "JEE" | "NEET"
       reminder_channel: "whatsapp" | "in_app"
@@ -1114,7 +1114,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      app_role: ["student", "admin", "mentor"],
+      app_role: ["student", "admin", "mentor", "counsellor"],
       booking_status: ["requested", "confirmed", "completed", "cancelled"],
       exam_type: ["JEE", "NEET"],
       reminder_channel: ["whatsapp", "in_app"],
