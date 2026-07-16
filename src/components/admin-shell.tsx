@@ -4,14 +4,15 @@ import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 import { supabase } from "@/integrations/supabase/client";
 
-const NAV = [
-  { to: "/admin",                 label: "Overview",         icon: LayoutDashboard, exact: true },
-  { to: "/admin/students",        label: "Students",         icon: Users },
-  { to: "/admin/reports",         label: "Reports",          icon: FileText },
-  { to: "/admin/content",         label: "Content",          icon: BookOpen },
-  { to: "/admin/agent",           label: "Agent",            icon: Bot },
-  { to: "/admin/announcements",   label: "Announcements",    icon: Megaphone },
-] as const;
+type NavItem = { to: string; label: string; icon: typeof LayoutDashboard; exact?: boolean };
+const NAV: NavItem[] = [
+  { to: "/admin",               label: "Overview",      icon: LayoutDashboard, exact: true },
+  { to: "/admin/students",      label: "Students",      icon: Users },
+  { to: "/admin/reports",       label: "Reports",       icon: FileText },
+  { to: "/admin/content",       label: "Content",       icon: BookOpen },
+  { to: "/admin/agent",         label: "Agent",         icon: Bot },
+  { to: "/admin/announcements", label: "Announcements", icon: Megaphone },
+];
 
 export function AdminShell({ children }: { children: ReactNode }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });

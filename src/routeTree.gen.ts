@@ -10,32 +10,246 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as PracticeRouteImport } from './routes/practice'
+import { Route as OnboardingRouteImport } from './routes/onboarding'
+import { Route as MeRouteImport } from './routes/me'
+import { Route as LearnRouteImport } from './routes/learn'
+import { Route as HomeRouteImport } from './routes/home'
+import { Route as FocusRouteImport } from './routes/focus'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AdminLoginRouteImport } from './routes/admin-login'
+import { Route as AdminRouteImport } from './routes/admin'
+import { Route as IndexRouteImport } from './routes/index'
+import { Route as PracticeIndexRouteImport } from './routes/practice.index'
+import { Route as AdminIndexRouteImport } from './routes/admin.index'
+import { Route as PracticeMoodRouteImport } from './routes/practice.mood'
+import { Route as PracticeMeditateRouteImport } from './routes/practice.meditate'
+import { Route as PracticeJournalRouteImport } from './routes/practice.journal'
+import { Route as PracticeBreatheRouteImport } from './routes/practice.breathe'
+import { Route as PracticeAffirmRouteImport } from './routes/practice.affirm'
 
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
   path: '/sitemap.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PracticeRoute = PracticeRouteImport.update({
+  id: '/practice',
+  path: '/practice',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OnboardingRoute = OnboardingRouteImport.update({
+  id: '/onboarding',
+  path: '/onboarding',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MeRoute = MeRouteImport.update({
+  id: '/me',
+  path: '/me',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LearnRoute = LearnRouteImport.update({
+  id: '/learn',
+  path: '/learn',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HomeRoute = HomeRouteImport.update({
+  id: '/home',
+  path: '/home',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FocusRoute = FocusRouteImport.update({
+  id: '/focus',
+  path: '/focus',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminLoginRoute = AdminLoginRouteImport.update({
+  id: '/admin-login',
+  path: '/admin-login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PracticeIndexRoute = PracticeIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => PracticeRoute,
+} as any)
+const AdminIndexRoute = AdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminRoute,
+} as any)
+const PracticeMoodRoute = PracticeMoodRouteImport.update({
+  id: '/mood',
+  path: '/mood',
+  getParentRoute: () => PracticeRoute,
+} as any)
+const PracticeMeditateRoute = PracticeMeditateRouteImport.update({
+  id: '/meditate',
+  path: '/meditate',
+  getParentRoute: () => PracticeRoute,
+} as any)
+const PracticeJournalRoute = PracticeJournalRouteImport.update({
+  id: '/journal',
+  path: '/journal',
+  getParentRoute: () => PracticeRoute,
+} as any)
+const PracticeBreatheRoute = PracticeBreatheRouteImport.update({
+  id: '/breathe',
+  path: '/breathe',
+  getParentRoute: () => PracticeRoute,
+} as any)
+const PracticeAffirmRoute = PracticeAffirmRouteImport.update({
+  id: '/affirm',
+  path: '/affirm',
+  getParentRoute: () => PracticeRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
+  '/': typeof IndexRoute
+  '/admin': typeof AdminRouteWithChildren
+  '/admin-login': typeof AdminLoginRoute
+  '/auth': typeof AuthRoute
+  '/focus': typeof FocusRoute
+  '/home': typeof HomeRoute
+  '/learn': typeof LearnRoute
+  '/me': typeof MeRoute
+  '/onboarding': typeof OnboardingRoute
+  '/practice': typeof PracticeRouteWithChildren
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/practice/affirm': typeof PracticeAffirmRoute
+  '/practice/breathe': typeof PracticeBreatheRoute
+  '/practice/journal': typeof PracticeJournalRoute
+  '/practice/meditate': typeof PracticeMeditateRoute
+  '/practice/mood': typeof PracticeMoodRoute
+  '/admin/': typeof AdminIndexRoute
+  '/practice/': typeof PracticeIndexRoute
 }
 export interface FileRoutesByTo {
+  '/': typeof IndexRoute
+  '/admin-login': typeof AdminLoginRoute
+  '/auth': typeof AuthRoute
+  '/focus': typeof FocusRoute
+  '/home': typeof HomeRoute
+  '/learn': typeof LearnRoute
+  '/me': typeof MeRoute
+  '/onboarding': typeof OnboardingRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/practice/affirm': typeof PracticeAffirmRoute
+  '/practice/breathe': typeof PracticeBreatheRoute
+  '/practice/journal': typeof PracticeJournalRoute
+  '/practice/meditate': typeof PracticeMeditateRoute
+  '/practice/mood': typeof PracticeMoodRoute
+  '/admin': typeof AdminIndexRoute
+  '/practice': typeof PracticeIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
+  '/': typeof IndexRoute
+  '/admin': typeof AdminRouteWithChildren
+  '/admin-login': typeof AdminLoginRoute
+  '/auth': typeof AuthRoute
+  '/focus': typeof FocusRoute
+  '/home': typeof HomeRoute
+  '/learn': typeof LearnRoute
+  '/me': typeof MeRoute
+  '/onboarding': typeof OnboardingRoute
+  '/practice': typeof PracticeRouteWithChildren
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/practice/affirm': typeof PracticeAffirmRoute
+  '/practice/breathe': typeof PracticeBreatheRoute
+  '/practice/journal': typeof PracticeJournalRoute
+  '/practice/meditate': typeof PracticeMeditateRoute
+  '/practice/mood': typeof PracticeMoodRoute
+  '/admin/': typeof AdminIndexRoute
+  '/practice/': typeof PracticeIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/sitemap.xml'
+  fullPaths:
+    | '/'
+    | '/admin'
+    | '/admin-login'
+    | '/auth'
+    | '/focus'
+    | '/home'
+    | '/learn'
+    | '/me'
+    | '/onboarding'
+    | '/practice'
+    | '/sitemap.xml'
+    | '/practice/affirm'
+    | '/practice/breathe'
+    | '/practice/journal'
+    | '/practice/meditate'
+    | '/practice/mood'
+    | '/admin/'
+    | '/practice/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/sitemap.xml'
-  id: '__root__' | '/sitemap.xml'
+  to:
+    | '/'
+    | '/admin-login'
+    | '/auth'
+    | '/focus'
+    | '/home'
+    | '/learn'
+    | '/me'
+    | '/onboarding'
+    | '/sitemap.xml'
+    | '/practice/affirm'
+    | '/practice/breathe'
+    | '/practice/journal'
+    | '/practice/meditate'
+    | '/practice/mood'
+    | '/admin'
+    | '/practice'
+  id:
+    | '__root__'
+    | '/'
+    | '/admin'
+    | '/admin-login'
+    | '/auth'
+    | '/focus'
+    | '/home'
+    | '/learn'
+    | '/me'
+    | '/onboarding'
+    | '/practice'
+    | '/sitemap.xml'
+    | '/practice/affirm'
+    | '/practice/breathe'
+    | '/practice/journal'
+    | '/practice/meditate'
+    | '/practice/mood'
+    | '/admin/'
+    | '/practice/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
+  IndexRoute: typeof IndexRoute
+  AdminRoute: typeof AdminRouteWithChildren
+  AdminLoginRoute: typeof AdminLoginRoute
+  AuthRoute: typeof AuthRoute
+  FocusRoute: typeof FocusRoute
+  HomeRoute: typeof HomeRoute
+  LearnRoute: typeof LearnRoute
+  MeRoute: typeof MeRoute
+  OnboardingRoute: typeof OnboardingRoute
+  PracticeRoute: typeof PracticeRouteWithChildren
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
 }
 
@@ -48,10 +262,171 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SitemapDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/practice': {
+      id: '/practice'
+      path: '/practice'
+      fullPath: '/practice'
+      preLoaderRoute: typeof PracticeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/onboarding': {
+      id: '/onboarding'
+      path: '/onboarding'
+      fullPath: '/onboarding'
+      preLoaderRoute: typeof OnboardingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/me': {
+      id: '/me'
+      path: '/me'
+      fullPath: '/me'
+      preLoaderRoute: typeof MeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/learn': {
+      id: '/learn'
+      path: '/learn'
+      fullPath: '/learn'
+      preLoaderRoute: typeof LearnRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/home': {
+      id: '/home'
+      path: '/home'
+      fullPath: '/home'
+      preLoaderRoute: typeof HomeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/focus': {
+      id: '/focus'
+      path: '/focus'
+      fullPath: '/focus'
+      preLoaderRoute: typeof FocusRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin-login': {
+      id: '/admin-login'
+      path: '/admin-login'
+      fullPath: '/admin-login'
+      preLoaderRoute: typeof AdminLoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/practice/': {
+      id: '/practice/'
+      path: '/'
+      fullPath: '/practice/'
+      preLoaderRoute: typeof PracticeIndexRouteImport
+      parentRoute: typeof PracticeRoute
+    }
+    '/admin/': {
+      id: '/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/practice/mood': {
+      id: '/practice/mood'
+      path: '/mood'
+      fullPath: '/practice/mood'
+      preLoaderRoute: typeof PracticeMoodRouteImport
+      parentRoute: typeof PracticeRoute
+    }
+    '/practice/meditate': {
+      id: '/practice/meditate'
+      path: '/meditate'
+      fullPath: '/practice/meditate'
+      preLoaderRoute: typeof PracticeMeditateRouteImport
+      parentRoute: typeof PracticeRoute
+    }
+    '/practice/journal': {
+      id: '/practice/journal'
+      path: '/journal'
+      fullPath: '/practice/journal'
+      preLoaderRoute: typeof PracticeJournalRouteImport
+      parentRoute: typeof PracticeRoute
+    }
+    '/practice/breathe': {
+      id: '/practice/breathe'
+      path: '/breathe'
+      fullPath: '/practice/breathe'
+      preLoaderRoute: typeof PracticeBreatheRouteImport
+      parentRoute: typeof PracticeRoute
+    }
+    '/practice/affirm': {
+      id: '/practice/affirm'
+      path: '/affirm'
+      fullPath: '/practice/affirm'
+      preLoaderRoute: typeof PracticeAffirmRouteImport
+      parentRoute: typeof PracticeRoute
+    }
   }
 }
 
+interface AdminRouteChildren {
+  AdminIndexRoute: typeof AdminIndexRoute
+}
+
+const AdminRouteChildren: AdminRouteChildren = {
+  AdminIndexRoute: AdminIndexRoute,
+}
+
+const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
+
+interface PracticeRouteChildren {
+  PracticeAffirmRoute: typeof PracticeAffirmRoute
+  PracticeBreatheRoute: typeof PracticeBreatheRoute
+  PracticeJournalRoute: typeof PracticeJournalRoute
+  PracticeMeditateRoute: typeof PracticeMeditateRoute
+  PracticeMoodRoute: typeof PracticeMoodRoute
+  PracticeIndexRoute: typeof PracticeIndexRoute
+}
+
+const PracticeRouteChildren: PracticeRouteChildren = {
+  PracticeAffirmRoute: PracticeAffirmRoute,
+  PracticeBreatheRoute: PracticeBreatheRoute,
+  PracticeJournalRoute: PracticeJournalRoute,
+  PracticeMeditateRoute: PracticeMeditateRoute,
+  PracticeMoodRoute: PracticeMoodRoute,
+  PracticeIndexRoute: PracticeIndexRoute,
+}
+
+const PracticeRouteWithChildren = PracticeRoute._addFileChildren(
+  PracticeRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
+  IndexRoute: IndexRoute,
+  AdminRoute: AdminRouteWithChildren,
+  AdminLoginRoute: AdminLoginRoute,
+  AuthRoute: AuthRoute,
+  FocusRoute: FocusRoute,
+  HomeRoute: HomeRoute,
+  LearnRoute: LearnRoute,
+  MeRoute: MeRoute,
+  OnboardingRoute: OnboardingRoute,
+  PracticeRoute: PracticeRouteWithChildren,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
 }
 export const routeTree = rootRouteImport
