@@ -10,23 +10,17 @@ import {
 import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
-import "../lib/fonts";
 import { reportLovableError } from "../lib/lovable-error-reporting";
+import { Toaster } from "sonner";
 
 function NotFoundComponent() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="max-w-md text-center">
-        <h1 className="text-7xl font-bold text-foreground">404</h1>
-        <h2 className="mt-4 text-xl font-semibold">Page not found</h2>
-        <p className="mt-2 text-sm text-muted-foreground">
-          The page you're looking for doesn't exist.
-        </p>
+        <h1 className="font-display text-6xl">Off the path</h1>
+        <p className="mt-3 text-sm text-muted-foreground">That page doesn't exist. Let's head back.</p>
         <div className="mt-6">
-          <Link
-            to="/"
-            className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"
-          >
+          <Link to="/" className="inline-flex items-center rounded-full bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground">
             Go home
           </Link>
         </div>
@@ -36,50 +30,44 @@ function NotFoundComponent() {
 }
 
 function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
-  console.error(error);
   const router = useRouter();
-  useEffect(() => {
-    reportLovableError(error, { boundary: "tanstack_root_error_component" });
-  }, [error]);
+  useEffect(() => { reportLovableError(error, { boundary: "tanstack_root_error_component" }); }, [error]);
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="max-w-md text-center">
-        <h1 className="text-xl font-semibold">This page didn't load</h1>
-        <p className="mt-2 text-sm text-muted-foreground">Something went wrong. Try again or head home.</p>
-        <div className="mt-6 flex flex-wrap justify-center gap-2">
-          <button
-            onClick={() => { router.invalidate(); reset(); }}
-            className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"
-          >
-            Try again
-          </button>
-          <a href="/" className="rounded-md border bg-background px-4 py-2 text-sm font-medium hover:bg-accent">Go home</a>
+        <h1 className="font-display text-2xl">Something's a bit off.</h1>
+        <p className="mt-2 text-sm text-muted-foreground">Take a breath. Try again in a second.</p>
+        <div className="mt-6 flex justify-center gap-2">
+          <button onClick={() => { router.invalidate(); reset(); }} className="rounded-full bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground">Try again</button>
+          <a href="/" className="rounded-full border bg-background px-5 py-2.5 text-sm">Go home</a>
         </div>
       </div>
     </div>
   );
 }
 
+const description = "A calm daily wellness companion for NEET aspirants. Guided meditations, journaling, focus, and a transformation arc — never a leaderboard.";
+
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
   head: () => ({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Guiding Mentor — Study smart. Stay well." },
-      { name: "description", content: "A JEE/NEET learning + wellness platform: recorded classes, assignments, Pomodoro focus, journaling, mood tracking, meditation, and 1:1 mentor support." },
-      { name: "author", content: "Guiding Mentor" },
-      { property: "og:title", content: "Guiding Mentor — Study smart. Stay well." },
-      { property: "og:description", content: "A JEE/NEET learning + wellness platform: recorded classes, assignments, Pomodoro focus, journaling, mood tracking, meditation, and 1:1 mentor support." },
+      { title: "Guiding Mentor — A calmer way to prepare" },
+      { name: "description", content: description },
+      { property: "og:title", content: "Guiding Mentor — A calmer way to prepare" },
+      { property: "og:description", content: description },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: "Guiding Mentor — Study smart. Stay well." },
-      { name: "twitter:description", content: "A JEE/NEET learning + wellness platform: recorded classes, assignments, Pomodoro focus, journaling, mood tracking, meditation, and 1:1 mentor support." },
-      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/ff9355cc-ae1d-4386-99a5-08ef004e7155/id-preview-272e4093--d5353825-a476-4a3b-98fc-212c6386b5ad.lovable.app-1783317238516.png" },
-      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/ff9355cc-ae1d-4386-99a5-08ef004e7155/id-preview-272e4093--d5353825-a476-4a3b-98fc-212c6386b5ad.lovable.app-1783317238516.png" },
+      { name: "twitter:title", content: "Guiding Mentor — A calmer way to prepare" },
+      { name: "twitter:description", content: description },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
       { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
+      { rel: "preconnect", href: "https://fonts.googleapis.com" },
+      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
+      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter+Tight:wght@400;500;600;700&display=swap" },
     ],
   }),
   shellComponent: RootShell,
@@ -102,6 +90,7 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <Outlet />
+      <Toaster position="top-center" richColors={false} />
     </QueryClientProvider>
   );
 }

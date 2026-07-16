@@ -1,121 +1,63 @@
-# Wellness Agent
+# Guiding Mentor — Clean-Slate Rebuild Plan
 
-A background layer that scores each student's mental wellness daily, flags burnout risk, and sends one personalized nudge. Existing features stay untouched.
+This is a full re-architecture. The current app is an LMS with wellness bolted on; the brief inverts that. I will delete the existing routes, reset the schema, and rebuild in 7 reviewable phases, stopping after each.
 
-Shipped in 5 phases. I stop and report after each so you can steer.
+## Non-negotiables baked into every phase
+- No red, no leaderboards, no streak-shaming, no peer comparison.
+- Palette: `--ink #1B2430`, `--paper #FBF7F2`, `--surface #FFFFFF`, `--sage #4F7C6D`, `--sage-soft #E3EFE9`, `--dusk #5B5BD6`, `--apricot #E8A33D`, `--slate #8A94A6`. Dark mode required.
+- Type: Fraunces (headings, 500–600 only) + Inter Tight (body). Loaded via `<link>` in root head — not CSS `@import`.
+- Radius 16/12/999, soft shadows, 180ms ease-out transitions, respect `prefers-reduced-motion`.
+- Buddy the owl only on wellness surfaces; never in Learn/Focus/Admin.
+- Parent RLS boundary is load-bearing: parents cannot read `journal_entries` or `mood_checkins` rows — enforced in policies, not UI.
 
----
+## Phase 1 — Foundation
+- Reset schema: drop the LMS-heavy tables (classes/chapters/subjects/assignments/assessments-as-LMS, class_progress, pomodoro_sessions repurposed, etc.) and rebuild the data model in the brief.
+- Create tables (all RLS-on, GRANTs in same migration): `profiles` (with cohort_id, class_level, quiet hours, consent, timezone, opt-ins), `user_roles` (restrictive no-self-escalate), `cohorts`, `parent_links`, `meditation_tracks`, `affirmations`, `journal_entries` (is_private default true, shared_with_mentor_id), `mood_checkins`, `breathing_sessions`, `sleep_logs`, `focus_sessions`, `todos`, `ambient_tracks`, `assessments`, `assessment_responses`, `wellness_scores` (service-role write only), `agent_events`, `nudges`, `live_sessions`, `session_attendance`, `mentors`, `mentor_availability`, `bookings`, `mentor_messages`, `reminder_rules`, `reminder_log`, `announcements`.
+- Rewrite `src/styles.css` with the dawn palette + Fraunces/Inter Tight tokens; load fonts via `<link>` in `__root.tsx`. Add dark mode via `@custom-variant`.
+- Build `<WellnessRing />` once (SVG, four arcs Focus/Rest/Reflection/Connection, non-monotonic, breathes when balanced, reduced-motion aware).
+- Two shells: student (bottom tabs Home/Practice/Focus/Learn/Me) and admin (dense sidebar, no Buddy). `/admin-login` branded page (same Supabase auth, rejects non-admin/counsellor via `has_role`).
+- Onboarding flow: exam track, class level, baseline assessment (validated-style stress/sleep/focus/mood), parental consent capture (`parental_consent_at/by`), transparency screen ("who sees what").
 
-## Phase 0 — Small fixes (bundled with Phase 1)
+## Phase 2 — The core loop (the demo)
+Practice tab, built beautifully:
+- Guided meditations (morning/evening, coach-recorded audio URL), player with soft bloom on completion.
+- Affirmations (short cards, mark as spoken).
+- Journal — private vault by default, per-entry mentor share toggle, warm empty state.
+- Mood check-in (1–5 + energy + tags).
+- Breathe (box / 4-7-8 / coherent animations).
+- Home hero: WellnessRing + Buddy + today's four core prompts + concern grid.
 
-- Fix `GOOD AFTERNOON, REVANTHAI` — the greeting concatenates `hello` + name without the comma/space in the uppercase chip. Repair the template.
-- Add a **Sleep log** 15-second input on `/mood` (hours + quality 1–5).
-- Point the "Sleep trouble" concern card at `/mood#sleep` so it lands on the sleep input.
+## Phase 3 — Add-ons
+- Focus timer (5/25/45/90/custom) with **enforced non-skippable break** offering 2-min breathe/stretch; logs breaks + interruptions.
+- Ambient audio picker (plain "calm ambient audio" copy, no health claims).
+- To-do list.
+- Learn tab: upcoming live sessions (Zoom URL), past recordings appearing after session, minimal.
 
----
+## Phase 4 — Wellness Agent
+- **Supabase Edge Function** on `pg_cron` (not a TanStack route — the brief is explicit; service-role reads have failed before here). Verify with a live query that the function reads rows before wiring UI.
+- Job A nightly 21:30 IST: compute Focus/Rest/Reflection/Connection sub-scores. Focus is **non-monotonic** — falls above ~10h/day sustained. Composite weights Rest 0.30, Focus 0.25, Reflection 0.25, Connection 0.20.
+- Risk bands from pattern rules (low mood streak, 4-day silence, focus↑/rest↓, <5h sleep 3x, break-skip >70%, composite drop >20). Store `reasons[]` in plain English.
+- Job B 21:45 IST: Anthropic API (needs `ANTHROPIC_API_KEY` secret — I'll request it when we reach this phase; Buddy system prompt verbatim, 2 sentences, 1/24h, quiet-hours aware).
+- Job C Sunday 19:00 IST: weekly recap card + email.
+- In-app nudge card on Home under Buddy (soft dismissible, not toast/modal).
+- Safety: crisis-signal check on journal/mood save → helpline card (Tele-MANAS 14416, Kiran 1800-599-0019), `crisis_flag` event, pin to admin top.
 
-## Phase 1 — Data foundation
+## Phase 5 — Admin
+- Overview: cohort distribution, crisis flags pinned, needs-attention list with agent's reason, **Burnout Scatter** (engagement × wellness).
+- Students 360°: ring over time, mood trend, habit consistency, baseline→now deltas, full `agent_events` timeline, bookings. Counsellors see raw journal only if student explicitly shared.
+- Agent control room: thresholds, quiet hours, nudge log, one-off send, dry-run any rule.
+- Content CRUD, mentors, announcements, flagged-journal queue.
 
-New tables (RLS on; students read their own rows; admins read all via `has_role`):
+## Phase 6 — Transformation Report
+- Student's own arc view on `/me`.
+- Parent-facing arc-only report (printable): consistency counts, mood trend direction, focus/calm improvement, baseline→checkpoint→outcome deltas, warm coach note. **No raw journal text, no daily moods** — RLS enforced.
+- Checkpoint + outcome assessment flows using same baseline questions.
 
-- `sleep_logs` — one row per user per day. Students insert/update their own.
-- `wellness_scores` — daily per-student; **service-role writes only**, clients read-only.
-- `agent_events` — audit log (`score_computed | nudge_sent | risk_change | crisis_flag`).
-- `nudges` — messages the agent has sent; student can mark seen/dismissed.
+## Phase 7 — Channels
+- Native email nudges + weekly recap.
+- Twilio WhatsApp adapter `sendWhatsApp(to, body)`. Until Twilio connector linked, log `status: 'stubbed'` — never fake sends.
 
-Extend `profiles` with `quiet_hours_start` (22:30), `quiet_hours_end` (07:00), `agent_enabled` (true).
+## Delivery
+Reply **"go phase 1"** to start. I will delete the existing app scaffolding, run the schema reset migration, and rebuild the shells + WellnessRing + onboarding, then stop and show you.
 
-Deliverable: migration + Sleep UI + greeting fix + concern-card fix.
-
----
-
-## Phase 2 — Scoring engine
-
-Edge function `wellness-score`, cron **21:30 IST daily**. For each opted-in student, over the last 7 days:
-
-- **Focus** (0.25) — focus sessions, class watch time, on-time assignments. Non-monotonic: penalizes >10h/day sustained.
-- **Rest** (0.30, highest weight) — sleep hours+quality, meditations, pomodoro breaks actually taken, longest quiet gap.
-- **Reflection** (0.25) — journal entries, mood check-ins.
-- **Connection** (0.20) — mentor bookings attended, messages, entries shared with mentors.
-
-`composite` = weighted mean.
-
-`risk_band` is **not** derived from composite alone. Any of these trip amber/watch and push a human-readable string into `reasons[]`:
-
-- mood ≤ 2 on 3+ of last 5 check-ins → **watch**
-- zero activity 4+ days after being active → **watch**
-- focus hours +40% WoW while rest score falls → **amber**
-- sleep < 5h on 3+ nights → **amber**
-- >70% pomodoro breaks skipped → **amber**
-- journal flagged for mentor → **amber**
-- composite drop >20 pts vs last week → **amber**
-
-Writes: one `wellness_scores` + one `agent_events(score_computed)` per student per day; `risk_change` when band flips.
-
----
-
-## Phase 3 — Nudge engine
-
-Edge function `wellness-nudge`, cron **21:45 IST** (after scoring).
-
-Assembles each student's actual week and calls **Lovable AI (`google/gemini-2.5-flash`)** with the exact Buddy system prompt from your spec (no guilt, no comparison, no "should", rest > grind).
-
-Hard rules:
-- 1 nudge per student per 24h.
-- Never during quiet hours.
-- Every send → row in `nudges` + `agent_events(nudge_sent)` with the triggering reason.
-
-Channels:
-- **In-app** — soft dismissible card on `/dashboard` under the Buddy hero (not toast, not modal).
-- **Email** — Lovable native email (best-effort, non-blocking).
-- **WhatsApp** — `sendWhatsApp()` adapter that logs `status: 'stubbed'` until a key exists. No fake sends.
-
-> Note on model: your spec says Anthropic. Lovable AI has no Anthropic. I'll use `google/gemini-2.5-flash` (fast, cheap, no key needed). Say the word if you'd rather bring your own Anthropic key.
-
----
-
-## Phase 4 — Safety layer
-
-On every journal save and mood check-in, run a crisis-signal check (self-harm / hopelessness / suicidal ideation — keyword pre-filter + Lovable AI classifier for ambiguous cases).
-
-If triggered:
-- Calm in-place card with **Tele-MANAS 14416** and **Kiran 1800-599-0019**. Warm, not scary.
-- `agent_events(crisis_flag)` row.
-- Student pinned to the top of Admin Overview with a high-priority marker.
-
-Plus a permanent low-key "Need to talk to someone right now?" link in the student footer.
-
-The agent never counsels — it notices and routes to a human.
-
----
-
-## Phase 5 — Admin Wellness command centre (`/admin/wellness`)
-
-- **Cohort distribution** — green/amber/watch counts + 30-day trend.
-- **Needs attention** — ranked list, each row shows the agent's plain-English reason. Crisis flags pinned above everything.
-- **The Burnout Scatter** — engagement (x) vs wellness (y). Centrepiece chart; high-effort / low-wellness quadrant is the whole point.
-- **Student 360** — wellness ring over time, mood trend, focus/rest balance, full `agent_events` timeline.
-- **Agent control room** — edit thresholds & quiet hours, nudge delivery log, one-off nudge send, dry-run any rule against the live cohort.
-
-Admin stays cool and dense — no Buddy, no confetti in admin.
-
----
-
-## Technical notes
-
-- Scoring & nudge functions run as **service role** to write `wellness_scores` and read across all students. Crisis check runs from the student's own server function using their session.
-- `pg_cron` + `pg_net` schedules both edge functions against stable published URLs. Cron SQL runs via `supabase--insert` (not migration), since it holds env-specific URLs.
-- Thresholds live in a small `agent_config` table so admins can edit without a code change (added in Phase 5).
-- Nothing in existing student features changes behaviour — the new card on `/dashboard` is additive and only appears when a nudge exists.
-
----
-
-## Delivery order
-
-1. Phase 1 (schema + fixes) → report.
-2. Phase 2 (scoring + cron) → report.
-3. Phase 3 (nudge + in-app card) → report.
-4. Phase 4 (safety) → report.
-5. Phase 5 (admin) → report.
-
-Reply "go" to start Phase 1, or tell me what to adjust.
+One flag: the brief says Anthropic for nudges. Lovable AI Gateway does not carry Anthropic — I can either (a) add `ANTHROPIC_API_KEY` as a user-provided secret when we reach Phase 4, or (b) use `google/gemini-2.5-flash` through Lovable AI (no key, no cost surprise). Tell me which at Phase 4; either works with the same Buddy system prompt.

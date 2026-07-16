@@ -1,97 +1,65 @@
 import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
-import { Sparkles, BookOpen, Timer, Heart, Bell, Users, ArrowRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { WellnessRing } from "@/components/wellness-ring";
+import { Buddy } from "@/components/buddy";
 
 export const Route = createFileRoute("/")({ component: Landing });
 
 function Landing() {
   const router = useRouter();
-
   useEffect(() => {
-    let cancelled = false;
-    const go = async (userId: string) => {
-      const { data } = await supabase.from("user_roles").select("role").eq("user_id", userId);
-      const isAdmin = (data ?? []).some((r) => r.role === "admin");
-      if (!cancelled) router.navigate({ to: isAdmin ? "/admin" : "/dashboard", replace: true });
-    };
-    supabase.auth.getSession().then(({ data }) => {
-      if (data.session?.user) go(data.session.user.id);
+    const { data: sub } = supabase.auth.onAuthStateChange((_e, session) => {
+      if (session?.user) router.navigate({ to: "/home" });
     });
-    const { data: sub } = supabase.auth.onAuthStateChange((event, session) => {
-      if ((event === "SIGNED_IN" || event === "INITIAL_SESSION") && session?.user) go(session.user.id);
-    });
-    return () => { cancelled = true; sub.subscription.unsubscribe(); };
+    supabase.auth.getSession().then(({ data }) => { if (data.session?.user) router.navigate({ to: "/home" }); });
+    return () => sub.subscription.unsubscribe();
   }, [router]);
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <header className="max-w-6xl mx-auto flex items-center justify-between px-6 py-5">
-        <div className="flex items-center gap-2">
-          <div className="size-9 rounded-xl gradient-calm grid place-items-center text-primary-foreground">
-            <Sparkles className="size-5" />
-          </div>
-          <span className="font-display font-semibold text-lg">Guiding Mentor</span>
-        </div>
-        <nav className="flex items-center gap-2">
-          <Link to="/auth"><Button variant="ghost">Sign in</Button></Link>
-          <Link to="/auth"><Button>Get started</Button></Link>
-        </nav>
+      <header className="mx-auto flex max-w-5xl items-center justify-between px-6 py-6">
+        <div className="font-display text-lg">Guiding Mentor</div>
+        <Link to="/auth" className="rounded-full border border-border bg-card px-4 py-2 text-sm hover:bg-secondary">Sign in</Link>
       </header>
 
-      <section className="max-w-6xl mx-auto px-6 pt-10 pb-20 md:pt-16 md:pb-28 grid md:grid-cols-2 gap-10 items-center">
+      <section className="mx-auto grid max-w-5xl items-center gap-10 px-6 py-10 md:grid-cols-2 md:py-20">
         <div>
-          <span className="inline-flex items-center gap-2 rounded-full bg-secondary px-3 py-1 text-xs font-medium text-secondary-foreground">
-            <span className="size-2 rounded-full bg-success" /> Built for JEE & NEET aspirants
-          </span>
-          <h1 className="mt-5 text-4xl md:text-6xl font-display font-semibold leading-[1.05] tracking-tight">
-            Study smart. <span className="text-primary">Stay well.</span>
+          <p className="text-sm font-medium text-primary">For NEET aspirants</p>
+          <h1 className="mt-3 font-display text-4xl leading-[1.1] md:text-6xl">
+            We track the student, <em className="not-italic text-primary">not the syllabus.</em>
           </h1>
-          <p className="mt-5 text-lg text-muted-foreground max-w-xl">
-            Recorded classes, assignments, focused Pomodoro sessions, journaling, mood tracking and 1:1
-            mentor support — everything you need for calm, consistent exam prep in one place.
+          <p className="mt-5 max-w-md text-base text-muted-foreground">
+            A calm daily companion — guided meditations, journaling, focus, and a real transformation arc across your prep. No leaderboards. Ever.
           </p>
-          <div className="mt-8 flex flex-wrap gap-3">
-            <Link to="/auth">
-              <Button size="lg" className="gap-2">Start your journey <ArrowRight className="size-4" /></Button>
-            </Link>
-            <Link to="/auth"><Button size="lg" variant="outline">I already have an account</Button></Link>
-          </div>
-          <div className="mt-8 flex items-center gap-5 text-sm text-muted-foreground">
-            <div><span className="text-foreground font-semibold">7-day</span> streaks</div>
-            <div><span className="text-foreground font-semibold">1:1</span> counsellor support</div>
-            <div><span className="text-foreground font-semibold">Daily</span> nudges</div>
+          <div className="mt-8 flex gap-3">
+            <Link to="/auth" className="rounded-full bg-primary px-6 py-3 text-sm font-medium text-primary-foreground">Begin</Link>
+            <a href="#how" className="rounded-full border border-border bg-card px-6 py-3 text-sm">How it works</a>
           </div>
         </div>
-        <div className="relative">
-          <div className="soft-card p-6 md:p-8">
-            <div className="grid grid-cols-2 gap-4">
-              {[
-                { icon: BookOpen, label: "Recorded classes", tone: "gradient-calm" },
-                { icon: Timer, label: "Pomodoro focus", tone: "gradient-warm" },
-                { icon: Heart, label: "Mood + journal", tone: "gradient-calm" },
-                { icon: Bell, label: "Daily nudges", tone: "gradient-warm" },
-                { icon: Users, label: "Mentor 1:1", tone: "gradient-calm" },
-                { icon: Sparkles, label: "Streaks & badges", tone: "gradient-warm" },
-              ].map((f) => (
-                <div key={f.label} className="rounded-2xl p-4 bg-secondary/60">
-                  <div className={`size-9 rounded-xl ${f.tone} grid place-items-center text-primary-foreground mb-3`}>
-                    <f.icon className="size-4" />
-                  </div>
-                  <div className="text-sm font-medium">{f.label}</div>
-                </div>
-              ))}
-            </div>
-          </div>
+        <div className="flex flex-col items-center">
+          <WellnessRing arcs={{ focus: 70, rest: 65, reflection: 72, connection: 60 }} />
+          <Buddy mood="encouraging" size={80} className="-mt-6" />
         </div>
       </section>
 
-      <footer className="border-t">
-        <div className="max-w-6xl mx-auto px-6 py-6 text-sm text-muted-foreground flex flex-wrap justify-between gap-2">
-          <div>© {new Date().getFullYear()} Guiding Mentor</div>
-          <div>Made with care for JEE & NEET aspirants.</div>
+      <section id="how" className="mx-auto max-w-5xl px-6 pb-24">
+        <div className="grid gap-6 md:grid-cols-3">
+          {[
+            { t: "The core loop", d: "Morning meditation, an affirmation, a journal entry, evening meditation. Small daily practice — everything else supports these four." },
+            { t: "A real arc", d: "A baseline at the start, checkpoints along the way, an outcome at the end. Your parent sees the arc — never the diary." },
+            { t: "Notices you", d: "Buddy watches your week and sends one warm nudge when needed. If it senses real distress, it routes to a human, gently." },
+          ].map((c) => (
+            <div key={c.t} className="soft-card p-6">
+              <h3 className="font-display text-xl">{c.t}</h3>
+              <p className="mt-2 text-sm text-muted-foreground">{c.d}</p>
+            </div>
+          ))}
         </div>
+      </section>
+
+      <footer className="border-t border-border py-8 text-center text-xs text-muted-foreground">
+        Guiding Mentor · A calmer way to prepare
       </footer>
     </div>
   );

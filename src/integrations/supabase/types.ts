@@ -14,6 +14,59 @@ export type Database = {
   }
   public: {
     Tables: {
+      affirmation_completions: {
+        Row: {
+          affirmation_id: string | null
+          created_at: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          affirmation_id?: string | null
+          created_at?: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          affirmation_id?: string | null
+          created_at?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "affirmation_completions_affirmation_id_fkey"
+            columns: ["affirmation_id"]
+            isOneToOne: false
+            referencedRelation: "affirmations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      affirmations: {
+        Row: {
+          body: string
+          category: string | null
+          created_at: string
+          id: string
+          is_published: boolean
+        }
+        Insert: {
+          body: string
+          category?: string | null
+          created_at?: string
+          id?: string
+          is_published?: boolean
+        }
+        Update: {
+          body?: string
+          category?: string | null
+          created_at?: string
+          id?: string
+          is_published?: boolean
+        }
+        Relationships: []
+      }
       agent_events: {
         Row: {
           created_at: string
@@ -35,6 +88,33 @@ export type Database = {
           event_type?: string
           id?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      ambient_tracks: {
+        Row: {
+          audio_url: string
+          category: string | null
+          created_at: string
+          id: string
+          is_published: boolean
+          title: string
+        }
+        Insert: {
+          audio_url: string
+          category?: string | null
+          created_at?: string
+          id?: string
+          is_published?: boolean
+          title: string
+        }
+        Update: {
+          audio_url?: string
+          category?: string | null
+          created_at?: string
+          id?: string
+          is_published?: boolean
+          title?: string
         }
         Relationships: []
       }
@@ -78,28 +158,22 @@ export type Database = {
         Row: {
           answers: Json
           assessment_id: string
-          created_at: string
           id: string
-          interpretation: string | null
-          score: number | null
+          taken_at: string
           user_id: string
         }
         Insert: {
           answers: Json
           assessment_id: string
-          created_at?: string
           id?: string
-          interpretation?: string | null
-          score?: number | null
+          taken_at?: string
           user_id: string
         }
         Update: {
           answers?: Json
           assessment_id?: string
-          created_at?: string
           id?: string
-          interpretation?: string | null
-          score?: number | null
+          taken_at?: string
           user_id?: string
         }
         Relationships: [
@@ -114,153 +188,28 @@ export type Database = {
       }
       assessments: {
         Row: {
-          active: boolean
           created_at: string
-          description: string | null
           id: string
+          is_active: boolean
+          kind: string
           questions: Json
           title: string
         }
         Insert: {
-          active?: boolean
           created_at?: string
-          description?: string | null
           id?: string
+          is_active?: boolean
+          kind: string
+          questions: Json
+          title: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          kind?: string
           questions?: Json
-          title: string
-        }
-        Update: {
-          active?: boolean
-          created_at?: string
-          description?: string | null
-          id?: string
-          questions?: Json
           title?: string
-        }
-        Relationships: []
-      }
-      assignment_submissions: {
-        Row: {
-          assignment_id: string
-          feedback: string | null
-          file_url: string | null
-          grade: string | null
-          id: string
-          reviewed_at: string | null
-          status: Database["public"]["Enums"]["submission_status"]
-          submitted_at: string
-          text_answer: string | null
-          user_id: string
-        }
-        Insert: {
-          assignment_id: string
-          feedback?: string | null
-          file_url?: string | null
-          grade?: string | null
-          id?: string
-          reviewed_at?: string | null
-          status?: Database["public"]["Enums"]["submission_status"]
-          submitted_at?: string
-          text_answer?: string | null
-          user_id: string
-        }
-        Update: {
-          assignment_id?: string
-          feedback?: string | null
-          file_url?: string | null
-          grade?: string | null
-          id?: string
-          reviewed_at?: string | null
-          status?: Database["public"]["Enums"]["submission_status"]
-          submitted_at?: string
-          text_answer?: string | null
-          user_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "assignment_submissions_assignment_id_fkey"
-            columns: ["assignment_id"]
-            isOneToOne: false
-            referencedRelation: "assignments"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      assignments: {
-        Row: {
-          attachment_url: string | null
-          chapter_id: string | null
-          created_at: string
-          due_at: string | null
-          id: string
-          instructions: string | null
-          subject_id: string | null
-          title: string
-        }
-        Insert: {
-          attachment_url?: string | null
-          chapter_id?: string | null
-          created_at?: string
-          due_at?: string | null
-          id?: string
-          instructions?: string | null
-          subject_id?: string | null
-          title: string
-        }
-        Update: {
-          attachment_url?: string | null
-          chapter_id?: string | null
-          created_at?: string
-          due_at?: string | null
-          id?: string
-          instructions?: string | null
-          subject_id?: string | null
-          title?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "assignments_chapter_id_fkey"
-            columns: ["chapter_id"]
-            isOneToOne: false
-            referencedRelation: "chapters"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "assignments_subject_id_fkey"
-            columns: ["subject_id"]
-            isOneToOne: false
-            referencedRelation: "subjects"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      audio_tracks: {
-        Row: {
-          category: string
-          created_at: string
-          description: string | null
-          id: string
-          license: string | null
-          title: string
-          url: string
-        }
-        Insert: {
-          category: string
-          created_at?: string
-          description?: string | null
-          id?: string
-          license?: string | null
-          title: string
-          url: string
-        }
-        Update: {
-          category?: string
-          created_at?: string
-          description?: string | null
-          id?: string
-          license?: string | null
-          title?: string
-          url?: string
         }
         Relationships: []
       }
@@ -309,120 +258,89 @@ export type Database = {
           },
         ]
       }
-      chapters: {
+      breathing_sessions: {
         Row: {
           created_at: string
+          cycles: number
+          duration_seconds: number
           id: string
-          name: string
-          sort_order: number | null
-          subject_id: string
-        }
-        Insert: {
-          created_at?: string
-          id?: string
-          name: string
-          sort_order?: number | null
-          subject_id: string
-        }
-        Update: {
-          created_at?: string
-          id?: string
-          name?: string
-          sort_order?: number | null
-          subject_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "chapters_subject_id_fkey"
-            columns: ["subject_id"]
-            isOneToOne: false
-            referencedRelation: "subjects"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      class_progress: {
-        Row: {
-          class_id: string
-          completed_at: string | null
-          id: string
+          pattern: string
           user_id: string
         }
         Insert: {
-          class_id: string
-          completed_at?: string | null
+          created_at?: string
+          cycles?: number
+          duration_seconds?: number
           id?: string
+          pattern: string
           user_id: string
         }
         Update: {
-          class_id?: string
-          completed_at?: string | null
+          created_at?: string
+          cycles?: number
+          duration_seconds?: number
           id?: string
+          pattern?: string
           user_id?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "class_progress_class_id_fkey"
-            columns: ["class_id"]
-            isOneToOne: false
-            referencedRelation: "classes"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
-      classes: {
+      cohorts: {
         Row: {
-          chapter_id: string | null
           created_at: string
-          description: string | null
-          duration_min: number | null
           id: string
-          notes_url: string | null
-          published: boolean
-          subject_id: string | null
-          title: string
-          video_url: string
+          institute_name: string | null
+          name: string
+          start_date: string | null
         }
         Insert: {
-          chapter_id?: string | null
           created_at?: string
-          description?: string | null
-          duration_min?: number | null
           id?: string
-          notes_url?: string | null
-          published?: boolean
-          subject_id?: string | null
-          title: string
-          video_url: string
+          institute_name?: string | null
+          name: string
+          start_date?: string | null
         }
         Update: {
-          chapter_id?: string | null
           created_at?: string
-          description?: string | null
-          duration_min?: number | null
           id?: string
-          notes_url?: string | null
-          published?: boolean
-          subject_id?: string | null
-          title?: string
-          video_url?: string
+          institute_name?: string | null
+          name?: string
+          start_date?: string | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "classes_chapter_id_fkey"
-            columns: ["chapter_id"]
-            isOneToOne: false
-            referencedRelation: "chapters"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "classes_subject_id_fkey"
-            columns: ["subject_id"]
-            isOneToOne: false
-            referencedRelation: "subjects"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
+      }
+      focus_sessions: {
+        Row: {
+          actual_minutes: number
+          breaks_taken: number
+          completed: boolean
+          created_at: string
+          id: string
+          interruptions: number
+          planned_minutes: number
+          user_id: string
+        }
+        Insert: {
+          actual_minutes?: number
+          breaks_taken?: number
+          completed?: boolean
+          created_at?: string
+          id?: string
+          interruptions?: number
+          planned_minutes: number
+          user_id: string
+        }
+        Update: {
+          actual_minutes?: number
+          breaks_taken?: number
+          completed?: boolean
+          created_at?: string
+          id?: string
+          interruptions?: number
+          planned_minutes?: number
+          user_id?: string
+        }
+        Relationships: []
       }
       journal_entries: {
         Row: {
@@ -431,6 +349,7 @@ export type Database = {
           entry_date: string
           flag_for_mentor: boolean
           id: string
+          is_private: boolean
           shared_with_mentor_id: string | null
           user_id: string
         }
@@ -440,6 +359,7 @@ export type Database = {
           entry_date?: string
           flag_for_mentor?: boolean
           id?: string
+          is_private?: boolean
           shared_with_mentor_id?: string | null
           user_id: string
         }
@@ -449,6 +369,7 @@ export type Database = {
           entry_date?: string
           flag_for_mentor?: boolean
           id?: string
+          is_private?: boolean
           shared_with_mentor_id?: string | null
           user_id?: string
         }
@@ -462,32 +383,120 @@ export type Database = {
           },
         ]
       }
-      meditations: {
+      live_sessions: {
+        Row: {
+          cohort_id: string | null
+          created_at: string
+          description: string | null
+          duration_minutes: number
+          id: string
+          recording_url: string | null
+          scheduled_at: string
+          title: string
+          zoom_url: string | null
+        }
+        Insert: {
+          cohort_id?: string | null
+          created_at?: string
+          description?: string | null
+          duration_minutes?: number
+          id?: string
+          recording_url?: string | null
+          scheduled_at: string
+          title: string
+          zoom_url?: string | null
+        }
+        Update: {
+          cohort_id?: string | null
+          created_at?: string
+          description?: string | null
+          duration_minutes?: number
+          id?: string
+          recording_url?: string | null
+          scheduled_at?: string
+          title?: string
+          zoom_url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "live_sessions_cohort_id_fkey"
+            columns: ["cohort_id"]
+            isOneToOne: false
+            referencedRelation: "cohorts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      meditation_sessions: {
+        Row: {
+          completed: boolean
+          created_at: string
+          duration_seconds: number
+          id: string
+          time_of_day: string | null
+          track_id: string | null
+          user_id: string
+        }
+        Insert: {
+          completed?: boolean
+          created_at?: string
+          duration_seconds?: number
+          id?: string
+          time_of_day?: string | null
+          track_id?: string | null
+          user_id: string
+        }
+        Update: {
+          completed?: boolean
+          created_at?: string
+          duration_seconds?: number
+          id?: string
+          time_of_day?: string | null
+          track_id?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "meditation_sessions_track_id_fkey"
+            columns: ["track_id"]
+            isOneToOne: false
+            referencedRelation: "meditation_tracks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      meditation_tracks: {
         Row: {
           audio_url: string
-          category: string | null
+          coach_name: string | null
           created_at: string
-          duration_min: number | null
+          description: string | null
+          duration_seconds: number
           id: string
-          tags: string[] | null
+          is_published: boolean
+          time_of_day: string
           title: string
         }
         Insert: {
           audio_url: string
-          category?: string | null
+          coach_name?: string | null
           created_at?: string
-          duration_min?: number | null
+          description?: string | null
+          duration_seconds?: number
           id?: string
-          tags?: string[] | null
+          is_published?: boolean
+          time_of_day?: string
           title: string
         }
         Update: {
           audio_url?: string
-          category?: string | null
+          coach_name?: string | null
           created_at?: string
-          duration_min?: number | null
+          description?: string | null
+          duration_seconds?: number
           id?: string
-          tags?: string[] | null
+          is_published?: boolean
+          time_of_day?: string
           title?: string
         }
         Relationships: []
@@ -597,29 +606,32 @@ export type Database = {
           },
         ]
       }
-      mood_logs: {
+      mood_checkins: {
         Row: {
           created_at: string
+          energy: number | null
           id: string
-          log_date: string
+          mood_score: number
           note: string | null
-          score: number
+          tags: string[] | null
           user_id: string
         }
         Insert: {
           created_at?: string
+          energy?: number | null
           id?: string
-          log_date?: string
+          mood_score: number
           note?: string | null
-          score: number
+          tags?: string[] | null
           user_id: string
         }
         Update: {
           created_at?: string
+          energy?: number | null
           id?: string
-          log_date?: string
+          mood_score?: number
           note?: string | null
-          score?: number
+          tags?: string[] | null
           user_id?: string
         }
         Relationships: []
@@ -665,24 +677,30 @@ export type Database = {
           },
         ]
       }
-      pomodoro_sessions: {
+      parent_links: {
         Row: {
-          completed_at: string
-          duration_min: number
+          created_at: string
           id: string
-          user_id: string
+          parent_email: string
+          parent_name: string | null
+          student_id: string
+          verified_at: string | null
         }
         Insert: {
-          completed_at?: string
-          duration_min: number
+          created_at?: string
           id?: string
-          user_id: string
+          parent_email: string
+          parent_name?: string | null
+          student_id: string
+          verified_at?: string | null
         }
         Update: {
-          completed_at?: string
-          duration_min?: number
+          created_at?: string
           id?: string
-          user_id?: string
+          parent_email?: string
+          parent_name?: string | null
+          student_id?: string
+          verified_at?: string | null
         }
         Relationships: []
       }
@@ -690,70 +708,90 @@ export type Database = {
         Row: {
           agent_enabled: boolean
           break_pref: string | null
+          class_level: string | null
+          cohort_id: string | null
           created_at: string
           daily_goal_hours: number | null
+          email_opt_in: boolean
           exam: Database["public"]["Enums"]["exam_type"] | null
+          exam_track: string
           full_name: string
           id: string
           onboarded_at: string | null
+          onboarding_complete: boolean
+          parent_contact: string | null
+          parental_consent_at: string | null
+          parental_consent_by: string | null
           phone: string | null
           preferred_focus_track_id: string | null
           preferred_relax_track_id: string | null
           quiet_hours_end: string
           quiet_hours_start: string
           target_year: number | null
+          timezone: string
           updated_at: string
           whatsapp_opt_in: boolean | null
         }
         Insert: {
           agent_enabled?: boolean
           break_pref?: string | null
+          class_level?: string | null
+          cohort_id?: string | null
           created_at?: string
           daily_goal_hours?: number | null
+          email_opt_in?: boolean
           exam?: Database["public"]["Enums"]["exam_type"] | null
+          exam_track?: string
           full_name?: string
           id: string
           onboarded_at?: string | null
+          onboarding_complete?: boolean
+          parent_contact?: string | null
+          parental_consent_at?: string | null
+          parental_consent_by?: string | null
           phone?: string | null
           preferred_focus_track_id?: string | null
           preferred_relax_track_id?: string | null
           quiet_hours_end?: string
           quiet_hours_start?: string
           target_year?: number | null
+          timezone?: string
           updated_at?: string
           whatsapp_opt_in?: boolean | null
         }
         Update: {
           agent_enabled?: boolean
           break_pref?: string | null
+          class_level?: string | null
+          cohort_id?: string | null
           created_at?: string
           daily_goal_hours?: number | null
+          email_opt_in?: boolean
           exam?: Database["public"]["Enums"]["exam_type"] | null
+          exam_track?: string
           full_name?: string
           id?: string
           onboarded_at?: string | null
+          onboarding_complete?: boolean
+          parent_contact?: string | null
+          parental_consent_at?: string | null
+          parental_consent_by?: string | null
           phone?: string | null
           preferred_focus_track_id?: string | null
           preferred_relax_track_id?: string | null
           quiet_hours_end?: string
           quiet_hours_start?: string
           target_year?: number | null
+          timezone?: string
           updated_at?: string
           whatsapp_opt_in?: boolean | null
         }
         Relationships: [
           {
-            foreignKeyName: "profiles_preferred_focus_track_id_fkey"
-            columns: ["preferred_focus_track_id"]
+            foreignKeyName: "profiles_cohort_id_fkey"
+            columns: ["cohort_id"]
             isOneToOne: false
-            referencedRelation: "audio_tracks"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "profiles_preferred_relax_track_id_fkey"
-            columns: ["preferred_relax_track_id"]
-            isOneToOne: false
-            referencedRelation: "audio_tracks"
+            referencedRelation: "cohorts"
             referencedColumns: ["id"]
           },
         ]
@@ -826,6 +864,41 @@ export type Database = {
         }
         Relationships: []
       }
+      session_attendance: {
+        Row: {
+          attended: boolean
+          created_at: string
+          id: string
+          session_id: string
+          user_id: string
+          watched_seconds: number
+        }
+        Insert: {
+          attended?: boolean
+          created_at?: string
+          id?: string
+          session_id: string
+          user_id: string
+          watched_seconds?: number
+        }
+        Update: {
+          attended?: boolean
+          created_at?: string
+          id?: string
+          session_id?: string
+          user_id?: string
+          watched_seconds?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "session_attendance_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "live_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       sleep_logs: {
         Row: {
           created_at: string
@@ -853,27 +926,6 @@ export type Database = {
           quality?: number
           updated_at?: string
           user_id?: string
-        }
-        Relationships: []
-      }
-      subjects: {
-        Row: {
-          created_at: string
-          exam: Database["public"]["Enums"]["exam_type"]
-          id: string
-          name: string
-        }
-        Insert: {
-          created_at?: string
-          exam: Database["public"]["Enums"]["exam_type"]
-          id?: string
-          name: string
-        }
-        Update: {
-          created_at?: string
-          exam?: Database["public"]["Enums"]["exam_type"]
-          id?: string
-          name?: string
         }
         Relationships: []
       }
@@ -981,7 +1033,7 @@ export type Database = {
       }
     }
     Enums: {
-      app_role: "student" | "admin" | "mentor"
+      app_role: "student" | "admin" | "mentor" | "counsellor"
       booking_status: "requested" | "confirmed" | "completed" | "cancelled"
       exam_type: "JEE" | "NEET"
       reminder_channel: "whatsapp" | "in_app"
@@ -1114,7 +1166,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      app_role: ["student", "admin", "mentor"],
+      app_role: ["student", "admin", "mentor", "counsellor"],
       booking_status: ["requested", "confirmed", "completed", "cancelled"],
       exam_type: ["JEE", "NEET"],
       reminder_channel: ["whatsapp", "in_app"],

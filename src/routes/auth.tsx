@@ -1,165 +1,99 @@
-import { createFileRoute, useRouter, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent } from "@/components/ui/card";
-import { Sparkles } from "lucide-react";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/auth")({
-  head: () => ({ meta: [{ title: "Sign in — Guiding Mentor" }] }),
-  component: AuthPage,
-});
+export const Route = createFileRoute("/auth")({ component: Auth });
 
-function AuthPage() {
+function Auth() {
   const router = useRouter();
   const [mode, setMode] = useState<"signin" | "signup">("signin");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [fullName, setFullName] = useState("");
-  const [phone, setPhone] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [confirmSent, setConfirmSent] = useState<string | null>(null);
-
-  const routeAfterAuth = async (userId: string) => {
-    const { data } = await supabase.from("user_roles").select("role").eq("user_id", userId);
-    const isAdmin = (data ?? []).some((r) => r.role === "admin");
-    router.navigate({ to: isAdmin ? "/admin" : "/dashboard", replace: true });
-  };
+  const [name, setName] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [checkInbox, setCheckInbox] = useState(false);
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => {
-      if (data.session?.user) routeAfterAuth(data.session.user.id);
-    });
-    const { data: sub } = supabase.auth.onAuthStateChange((event, session) => {
-      if ((event === "SIGNED_IN" || event === "INITIAL_SESSION") && session?.user) {
-        routeAfterAuth(session.user.id);
-      }
+    const { data: sub } = supabase.auth.onAuthStateChange((_e, session) => {
+      if (session?.user) router.navigate({ to: "/home" });
     });
     return () => sub.subscription.unsubscribe();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [router]);
+
+  const google = async () => {
+    try { await lovable.auth.signInWithOAuth("google", { redirect_uri: window.location.origin }); }
+    catch (e) { toast.error(e instanceof Error ? e.message : "Google sign-in failed"); }
+  };
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
-    try {
-      if (mode === "signup") {
-        const { data, error } = await supabase.auth.signUp({
-          email,
-          password,
-          options: {
-            emailRedirectTo: window.location.origin,
-            data: { full_name: fullName, phone },
-          },
-        });
-        if (error) throw error;
-        if (data.session?.user) {
-          toast.success("Welcome! Let's set you up.");
-          router.navigate({ to: "/onboarding" });
-        } else {
-          // Email confirmation required
-          setConfirmSent(email);
-          toast.success("Check your email to confirm your account.");
-        }
-      } else {
-        const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-        if (error) throw error;
-        if (data.user) await routeAfterAuth(data.user.id);
-      }
-    } catch (err: any) {
-      toast.error(err.message ?? "Something went wrong");
-    } finally {
-      setLoading(false);
+    setBusy(true);
+    if (mode === "signup") {
+      const { data, error } = await supabase.auth.signUp({
+        email, password,
+        options: { emailRedirectTo: window.location.origin, data: { full_name: name } },
+      });
+      setBusy(false);
+      if (error) return toast.error(error.message);
+      if (!data.session) { setCheckInbox(true); return; }
+    } else {
+      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      setBusy(false);
+      if (error) return toast.error(error.message);
     }
   };
 
-  const google = async () => {
-    const res = await lovable.auth.signInWithOAuth("google", { redirect_uri: window.location.origin });
-    if (res.error) toast.error(res.error.message ?? "Google sign-in failed");
-    // On success, onAuthStateChange listener will redirect.
-  };
-
-
   return (
-    <div className="min-h-screen grid md:grid-cols-2 bg-background">
-      <div className="hidden md:flex flex-col justify-between p-10 gradient-calm text-primary-foreground">
-        <Link to="/" className="flex items-center gap-2">
-          <div className="size-9 rounded-xl bg-white/20 grid place-items-center"><Sparkles className="size-5" /></div>
-          <span className="font-display font-semibold">Guiding Mentor</span>
-        </Link>
-        <div>
-          <h2 className="font-display text-3xl font-semibold leading-tight">Calm minds. Consistent progress.</h2>
-          <p className="mt-3 text-white/90 max-w-md">Your daily companion for JEE / NEET — study, reflect, meditate, and stay on track.</p>
-        </div>
-        <div className="text-sm text-white/80">© {new Date().getFullYear()} Guiding Mentor</div>
-      </div>
+    <div className="min-h-screen grid place-items-center bg-background px-4 py-10">
+      <div className="w-full max-w-md">
+        <Link to="/" className="mb-8 block text-center font-display text-xl">Guiding Mentor</Link>
 
-      <div className="flex items-center justify-center p-6">
-        <Card className="w-full max-w-md">
-          <CardContent className="p-6 md:p-8">
-            <h1 className="font-display text-2xl font-semibold">
-              {mode === "signin" ? "Welcome back" : "Create your account"}
-            </h1>
-            <p className="text-sm text-muted-foreground mt-1">
-              {mode === "signin" ? "Sign in to continue your prep." : "Start your JEE/NEET journey with us."}
-            </p>
+        {checkInbox ? (
+          <div className="soft-card p-8 text-center">
+            <h2 className="font-display text-2xl">Check your inbox</h2>
+            <p className="mt-2 text-sm text-muted-foreground">We sent a confirmation link to <b>{email}</b>. Open it to begin.</p>
+          </div>
+        ) : (
+          <div className="soft-card p-8">
+            <h1 className="font-display text-3xl">{mode === "signin" ? "Welcome back" : "Begin your practice"}</h1>
+            <p className="mt-1 text-sm text-muted-foreground">{mode === "signin" ? "Pick up where you left off." : "A minute to set up, a lifetime of quiet."}</p>
 
-            {confirmSent && (
-              <div className="mt-6 rounded-md border border-primary/30 bg-primary/5 p-4 text-sm">
-                <div className="font-medium">Check your inbox</div>
-                <p className="mt-1 text-muted-foreground">
-                  We sent a confirmation link to <span className="font-medium text-foreground">{confirmSent}</span>. Click it to activate your account, then come back and sign in.
-                </p>
-              </div>
-            )}
+            <Button type="button" onClick={google} variant="outline" className="mt-6 w-full rounded-full">Continue with Google</Button>
+            <div className="my-4 flex items-center gap-3 text-xs text-muted-foreground"><div className="h-px flex-1 bg-border" />or<div className="h-px flex-1 bg-border" /></div>
 
-
-            <Button onClick={google} variant="outline" className="w-full mt-6 gap-2">
-              Continue with Google
-            </Button>
-            <div className="my-4 flex items-center gap-3 text-xs text-muted-foreground">
-              <div className="h-px flex-1 bg-border" /> or <div className="h-px flex-1 bg-border" />
-            </div>
-
-            <form onSubmit={submit} className="space-y-3">
+            <form onSubmit={submit} className="space-y-4">
               {mode === "signup" && (
-                <>
-                  <div>
-                    <Label htmlFor="fn">Full name</Label>
-                    <Input id="fn" value={fullName} onChange={(e) => setFullName(e.target.value)} required />
-                  </div>
-                  <div>
-                    <Label htmlFor="ph">Phone (for WhatsApp nudges)</Label>
-                    <Input id="ph" type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="+91…" />
-                  </div>
-                </>
+                <div>
+                  <Label htmlFor="name">Your name</Label>
+                  <Input id="name" required value={name} onChange={(e) => setName(e.target.value)} placeholder="Riya" />
+                </div>
               )}
               <div>
-                <Label htmlFor="em">Email</Label>
-                <Input id="em" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+                <Label htmlFor="email">Email</Label>
+                <Input id="email" required type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
               </div>
               <div>
-                <Label htmlFor="pw">Password</Label>
-                <Input id="pw" type="password" minLength={6} value={password} onChange={(e) => setPassword(e.target.value)} required />
+                <Label htmlFor="password">Password</Label>
+                <Input id="password" required type="password" minLength={6} value={password} onChange={(e) => setPassword(e.target.value)} />
               </div>
-              <Button type="submit" className="w-full" disabled={loading}>
-                {loading ? "Please wait…" : mode === "signin" ? "Sign in" : "Create account"}
+              <Button type="submit" disabled={busy} className="w-full rounded-full">
+                {busy ? "…" : mode === "signin" ? "Sign in" : "Create account"}
               </Button>
             </form>
 
             <button
-              type="button"
               onClick={() => setMode(mode === "signin" ? "signup" : "signin")}
-              className="mt-4 text-sm text-primary hover:underline w-full text-center"
+              className="mt-5 w-full text-center text-sm text-muted-foreground hover:text-foreground"
             >
-              {mode === "signin" ? "New here? Create an account" : "Already registered? Sign in"}
+              {mode === "signin" ? "New here? Create an account" : "Have an account? Sign in"}
             </button>
-          </CardContent>
-        </Card>
+          </div>
+        )}
       </div>
     </div>
   );

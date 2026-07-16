@@ -9,55 +9,33 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as TodoRouteImport } from './routes/todo'
-import { Route as SupportRouteImport } from './routes/support'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
-import { Route as ProgressRouteImport } from './routes/progress'
+import { Route as PracticeRouteImport } from './routes/practice'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
-import { Route as MoodRouteImport } from './routes/mood'
-import { Route as MentorsRouteImport } from './routes/mentors'
-import { Route as MeditateRouteImport } from './routes/meditate'
-import { Route as JournalRouteImport } from './routes/journal'
+import { Route as MeRouteImport } from './routes/me'
+import { Route as LearnRouteImport } from './routes/learn'
+import { Route as HomeRouteImport } from './routes/home'
 import { Route as FocusRouteImport } from './routes/focus'
-import { Route as DashboardRouteImport } from './routes/dashboard'
-import { Route as ClassesRouteImport } from './routes/classes'
 import { Route as AuthRouteImport } from './routes/auth'
-import { Route as AssignmentsRouteImport } from './routes/assignments'
-import { Route as AssessmentsRouteImport } from './routes/assessments'
+import { Route as AdminLoginRouteImport } from './routes/admin-login'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as ClassesIndexRouteImport } from './routes/classes.index'
+import { Route as PracticeIndexRouteImport } from './routes/practice.index'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
-import { Route as AdminStudentsRouteImport } from './routes/admin.students'
-import { Route as AdminRemindersRouteImport } from './routes/admin.reminders'
-import { Route as AdminMentorsRouteImport } from './routes/admin.mentors'
-import { Route as AdminMeditationsRouteImport } from './routes/admin.meditations'
-import { Route as AdminClassesRouteImport } from './routes/admin.classes'
-import { Route as AdminAssignmentsRouteImport } from './routes/admin.assignments'
-import { Route as AdminAssessmentsRouteImport } from './routes/admin.assessments'
-import { Route as AdminAnnouncementsRouteImport } from './routes/admin.announcements'
-import { Route as ClassesWatchClassIdRouteImport } from './routes/classes.watch.$classId'
-import { Route as AdminStudentsIdRouteImport } from './routes/admin.students.$id'
-import { Route as ApiPublicHooksWellnessDailyRouteImport } from './routes/api/public/hooks/wellness-daily'
+import { Route as PracticeMoodRouteImport } from './routes/practice.mood'
+import { Route as PracticeMeditateRouteImport } from './routes/practice.meditate'
+import { Route as PracticeJournalRouteImport } from './routes/practice.journal'
+import { Route as PracticeBreatheRouteImport } from './routes/practice.breathe'
+import { Route as PracticeAffirmRouteImport } from './routes/practice.affirm'
 
-const TodoRoute = TodoRouteImport.update({
-  id: '/todo',
-  path: '/todo',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SupportRoute = SupportRouteImport.update({
-  id: '/support',
-  path: '/support',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
   path: '/sitemap.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ProgressRoute = ProgressRouteImport.update({
-  id: '/progress',
-  path: '/progress',
+const PracticeRoute = PracticeRouteImport.update({
+  id: '/practice',
+  path: '/practice',
   getParentRoute: () => rootRouteImport,
 } as any)
 const OnboardingRoute = OnboardingRouteImport.update({
@@ -65,24 +43,19 @@ const OnboardingRoute = OnboardingRouteImport.update({
   path: '/onboarding',
   getParentRoute: () => rootRouteImport,
 } as any)
-const MoodRoute = MoodRouteImport.update({
-  id: '/mood',
-  path: '/mood',
+const MeRoute = MeRouteImport.update({
+  id: '/me',
+  path: '/me',
   getParentRoute: () => rootRouteImport,
 } as any)
-const MentorsRoute = MentorsRouteImport.update({
-  id: '/mentors',
-  path: '/mentors',
+const LearnRoute = LearnRouteImport.update({
+  id: '/learn',
+  path: '/learn',
   getParentRoute: () => rootRouteImport,
 } as any)
-const MeditateRoute = MeditateRouteImport.update({
-  id: '/meditate',
-  path: '/meditate',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const JournalRoute = JournalRouteImport.update({
-  id: '/journal',
-  path: '/journal',
+const HomeRoute = HomeRouteImport.update({
+  id: '/home',
+  path: '/home',
   getParentRoute: () => rootRouteImport,
 } as any)
 const FocusRoute = FocusRouteImport.update({
@@ -90,29 +63,14 @@ const FocusRoute = FocusRouteImport.update({
   path: '/focus',
   getParentRoute: () => rootRouteImport,
 } as any)
-const DashboardRoute = DashboardRouteImport.update({
-  id: '/dashboard',
-  path: '/dashboard',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ClassesRoute = ClassesRouteImport.update({
-  id: '/classes',
-  path: '/classes',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AssignmentsRoute = AssignmentsRouteImport.update({
-  id: '/assignments',
-  path: '/assignments',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AssessmentsRoute = AssessmentsRouteImport.update({
-  id: '/assessments',
-  path: '/assessments',
+const AdminLoginRoute = AdminLoginRouteImport.update({
+  id: '/admin-login',
+  path: '/admin-login',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminRoute = AdminRouteImport.update({
@@ -125,302 +83,178 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ClassesIndexRoute = ClassesIndexRouteImport.update({
+const PracticeIndexRoute = PracticeIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => ClassesRoute,
+  getParentRoute: () => PracticeRoute,
 } as any)
 const AdminIndexRoute = AdminIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AdminRoute,
 } as any)
-const AdminStudentsRoute = AdminStudentsRouteImport.update({
-  id: '/students',
-  path: '/students',
-  getParentRoute: () => AdminRoute,
+const PracticeMoodRoute = PracticeMoodRouteImport.update({
+  id: '/mood',
+  path: '/mood',
+  getParentRoute: () => PracticeRoute,
 } as any)
-const AdminRemindersRoute = AdminRemindersRouteImport.update({
-  id: '/reminders',
-  path: '/reminders',
-  getParentRoute: () => AdminRoute,
+const PracticeMeditateRoute = PracticeMeditateRouteImport.update({
+  id: '/meditate',
+  path: '/meditate',
+  getParentRoute: () => PracticeRoute,
 } as any)
-const AdminMentorsRoute = AdminMentorsRouteImport.update({
-  id: '/mentors',
-  path: '/mentors',
-  getParentRoute: () => AdminRoute,
+const PracticeJournalRoute = PracticeJournalRouteImport.update({
+  id: '/journal',
+  path: '/journal',
+  getParentRoute: () => PracticeRoute,
 } as any)
-const AdminMeditationsRoute = AdminMeditationsRouteImport.update({
-  id: '/meditations',
-  path: '/meditations',
-  getParentRoute: () => AdminRoute,
+const PracticeBreatheRoute = PracticeBreatheRouteImport.update({
+  id: '/breathe',
+  path: '/breathe',
+  getParentRoute: () => PracticeRoute,
 } as any)
-const AdminClassesRoute = AdminClassesRouteImport.update({
-  id: '/classes',
-  path: '/classes',
-  getParentRoute: () => AdminRoute,
+const PracticeAffirmRoute = PracticeAffirmRouteImport.update({
+  id: '/affirm',
+  path: '/affirm',
+  getParentRoute: () => PracticeRoute,
 } as any)
-const AdminAssignmentsRoute = AdminAssignmentsRouteImport.update({
-  id: '/assignments',
-  path: '/assignments',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminAssessmentsRoute = AdminAssessmentsRouteImport.update({
-  id: '/assessments',
-  path: '/assessments',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminAnnouncementsRoute = AdminAnnouncementsRouteImport.update({
-  id: '/announcements',
-  path: '/announcements',
-  getParentRoute: () => AdminRoute,
-} as any)
-const ClassesWatchClassIdRoute = ClassesWatchClassIdRouteImport.update({
-  id: '/watch/$classId',
-  path: '/watch/$classId',
-  getParentRoute: () => ClassesRoute,
-} as any)
-const AdminStudentsIdRoute = AdminStudentsIdRouteImport.update({
-  id: '/$id',
-  path: '/$id',
-  getParentRoute: () => AdminStudentsRoute,
-} as any)
-const ApiPublicHooksWellnessDailyRoute =
-  ApiPublicHooksWellnessDailyRouteImport.update({
-    id: '/api/public/hooks/wellness-daily',
-    path: '/api/public/hooks/wellness-daily',
-    getParentRoute: () => rootRouteImport,
-  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
-  '/assessments': typeof AssessmentsRoute
-  '/assignments': typeof AssignmentsRoute
+  '/admin-login': typeof AdminLoginRoute
   '/auth': typeof AuthRoute
-  '/classes': typeof ClassesRouteWithChildren
-  '/dashboard': typeof DashboardRoute
   '/focus': typeof FocusRoute
-  '/journal': typeof JournalRoute
-  '/meditate': typeof MeditateRoute
-  '/mentors': typeof MentorsRoute
-  '/mood': typeof MoodRoute
+  '/home': typeof HomeRoute
+  '/learn': typeof LearnRoute
+  '/me': typeof MeRoute
   '/onboarding': typeof OnboardingRoute
-  '/progress': typeof ProgressRoute
+  '/practice': typeof PracticeRouteWithChildren
   '/sitemap.xml': typeof SitemapDotxmlRoute
-  '/support': typeof SupportRoute
-  '/todo': typeof TodoRoute
-  '/admin/announcements': typeof AdminAnnouncementsRoute
-  '/admin/assessments': typeof AdminAssessmentsRoute
-  '/admin/assignments': typeof AdminAssignmentsRoute
-  '/admin/classes': typeof AdminClassesRoute
-  '/admin/meditations': typeof AdminMeditationsRoute
-  '/admin/mentors': typeof AdminMentorsRoute
-  '/admin/reminders': typeof AdminRemindersRoute
-  '/admin/students': typeof AdminStudentsRouteWithChildren
+  '/practice/affirm': typeof PracticeAffirmRoute
+  '/practice/breathe': typeof PracticeBreatheRoute
+  '/practice/journal': typeof PracticeJournalRoute
+  '/practice/meditate': typeof PracticeMeditateRoute
+  '/practice/mood': typeof PracticeMoodRoute
   '/admin/': typeof AdminIndexRoute
-  '/classes/': typeof ClassesIndexRoute
-  '/admin/students/$id': typeof AdminStudentsIdRoute
-  '/classes/watch/$classId': typeof ClassesWatchClassIdRoute
-  '/api/public/hooks/wellness-daily': typeof ApiPublicHooksWellnessDailyRoute
+  '/practice/': typeof PracticeIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/assessments': typeof AssessmentsRoute
-  '/assignments': typeof AssignmentsRoute
+  '/admin-login': typeof AdminLoginRoute
   '/auth': typeof AuthRoute
-  '/dashboard': typeof DashboardRoute
   '/focus': typeof FocusRoute
-  '/journal': typeof JournalRoute
-  '/meditate': typeof MeditateRoute
-  '/mentors': typeof MentorsRoute
-  '/mood': typeof MoodRoute
+  '/home': typeof HomeRoute
+  '/learn': typeof LearnRoute
+  '/me': typeof MeRoute
   '/onboarding': typeof OnboardingRoute
-  '/progress': typeof ProgressRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
-  '/support': typeof SupportRoute
-  '/todo': typeof TodoRoute
-  '/admin/announcements': typeof AdminAnnouncementsRoute
-  '/admin/assessments': typeof AdminAssessmentsRoute
-  '/admin/assignments': typeof AdminAssignmentsRoute
-  '/admin/classes': typeof AdminClassesRoute
-  '/admin/meditations': typeof AdminMeditationsRoute
-  '/admin/mentors': typeof AdminMentorsRoute
-  '/admin/reminders': typeof AdminRemindersRoute
-  '/admin/students': typeof AdminStudentsRouteWithChildren
+  '/practice/affirm': typeof PracticeAffirmRoute
+  '/practice/breathe': typeof PracticeBreatheRoute
+  '/practice/journal': typeof PracticeJournalRoute
+  '/practice/meditate': typeof PracticeMeditateRoute
+  '/practice/mood': typeof PracticeMoodRoute
   '/admin': typeof AdminIndexRoute
-  '/classes': typeof ClassesIndexRoute
-  '/admin/students/$id': typeof AdminStudentsIdRoute
-  '/classes/watch/$classId': typeof ClassesWatchClassIdRoute
-  '/api/public/hooks/wellness-daily': typeof ApiPublicHooksWellnessDailyRoute
+  '/practice': typeof PracticeIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
-  '/assessments': typeof AssessmentsRoute
-  '/assignments': typeof AssignmentsRoute
+  '/admin-login': typeof AdminLoginRoute
   '/auth': typeof AuthRoute
-  '/classes': typeof ClassesRouteWithChildren
-  '/dashboard': typeof DashboardRoute
   '/focus': typeof FocusRoute
-  '/journal': typeof JournalRoute
-  '/meditate': typeof MeditateRoute
-  '/mentors': typeof MentorsRoute
-  '/mood': typeof MoodRoute
+  '/home': typeof HomeRoute
+  '/learn': typeof LearnRoute
+  '/me': typeof MeRoute
   '/onboarding': typeof OnboardingRoute
-  '/progress': typeof ProgressRoute
+  '/practice': typeof PracticeRouteWithChildren
   '/sitemap.xml': typeof SitemapDotxmlRoute
-  '/support': typeof SupportRoute
-  '/todo': typeof TodoRoute
-  '/admin/announcements': typeof AdminAnnouncementsRoute
-  '/admin/assessments': typeof AdminAssessmentsRoute
-  '/admin/assignments': typeof AdminAssignmentsRoute
-  '/admin/classes': typeof AdminClassesRoute
-  '/admin/meditations': typeof AdminMeditationsRoute
-  '/admin/mentors': typeof AdminMentorsRoute
-  '/admin/reminders': typeof AdminRemindersRoute
-  '/admin/students': typeof AdminStudentsRouteWithChildren
+  '/practice/affirm': typeof PracticeAffirmRoute
+  '/practice/breathe': typeof PracticeBreatheRoute
+  '/practice/journal': typeof PracticeJournalRoute
+  '/practice/meditate': typeof PracticeMeditateRoute
+  '/practice/mood': typeof PracticeMoodRoute
   '/admin/': typeof AdminIndexRoute
-  '/classes/': typeof ClassesIndexRoute
-  '/admin/students/$id': typeof AdminStudentsIdRoute
-  '/classes/watch/$classId': typeof ClassesWatchClassIdRoute
-  '/api/public/hooks/wellness-daily': typeof ApiPublicHooksWellnessDailyRoute
+  '/practice/': typeof PracticeIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/admin'
-    | '/assessments'
-    | '/assignments'
+    | '/admin-login'
     | '/auth'
-    | '/classes'
-    | '/dashboard'
     | '/focus'
-    | '/journal'
-    | '/meditate'
-    | '/mentors'
-    | '/mood'
+    | '/home'
+    | '/learn'
+    | '/me'
     | '/onboarding'
-    | '/progress'
+    | '/practice'
     | '/sitemap.xml'
-    | '/support'
-    | '/todo'
-    | '/admin/announcements'
-    | '/admin/assessments'
-    | '/admin/assignments'
-    | '/admin/classes'
-    | '/admin/meditations'
-    | '/admin/mentors'
-    | '/admin/reminders'
-    | '/admin/students'
+    | '/practice/affirm'
+    | '/practice/breathe'
+    | '/practice/journal'
+    | '/practice/meditate'
+    | '/practice/mood'
     | '/admin/'
-    | '/classes/'
-    | '/admin/students/$id'
-    | '/classes/watch/$classId'
-    | '/api/public/hooks/wellness-daily'
+    | '/practice/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/assessments'
-    | '/assignments'
+    | '/admin-login'
     | '/auth'
-    | '/dashboard'
     | '/focus'
-    | '/journal'
-    | '/meditate'
-    | '/mentors'
-    | '/mood'
+    | '/home'
+    | '/learn'
+    | '/me'
     | '/onboarding'
-    | '/progress'
     | '/sitemap.xml'
-    | '/support'
-    | '/todo'
-    | '/admin/announcements'
-    | '/admin/assessments'
-    | '/admin/assignments'
-    | '/admin/classes'
-    | '/admin/meditations'
-    | '/admin/mentors'
-    | '/admin/reminders'
-    | '/admin/students'
+    | '/practice/affirm'
+    | '/practice/breathe'
+    | '/practice/journal'
+    | '/practice/meditate'
+    | '/practice/mood'
     | '/admin'
-    | '/classes'
-    | '/admin/students/$id'
-    | '/classes/watch/$classId'
-    | '/api/public/hooks/wellness-daily'
+    | '/practice'
   id:
     | '__root__'
     | '/'
     | '/admin'
-    | '/assessments'
-    | '/assignments'
+    | '/admin-login'
     | '/auth'
-    | '/classes'
-    | '/dashboard'
     | '/focus'
-    | '/journal'
-    | '/meditate'
-    | '/mentors'
-    | '/mood'
+    | '/home'
+    | '/learn'
+    | '/me'
     | '/onboarding'
-    | '/progress'
+    | '/practice'
     | '/sitemap.xml'
-    | '/support'
-    | '/todo'
-    | '/admin/announcements'
-    | '/admin/assessments'
-    | '/admin/assignments'
-    | '/admin/classes'
-    | '/admin/meditations'
-    | '/admin/mentors'
-    | '/admin/reminders'
-    | '/admin/students'
+    | '/practice/affirm'
+    | '/practice/breathe'
+    | '/practice/journal'
+    | '/practice/meditate'
+    | '/practice/mood'
     | '/admin/'
-    | '/classes/'
-    | '/admin/students/$id'
-    | '/classes/watch/$classId'
-    | '/api/public/hooks/wellness-daily'
+    | '/practice/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRouteWithChildren
-  AssessmentsRoute: typeof AssessmentsRoute
-  AssignmentsRoute: typeof AssignmentsRoute
+  AdminLoginRoute: typeof AdminLoginRoute
   AuthRoute: typeof AuthRoute
-  ClassesRoute: typeof ClassesRouteWithChildren
-  DashboardRoute: typeof DashboardRoute
   FocusRoute: typeof FocusRoute
-  JournalRoute: typeof JournalRoute
-  MeditateRoute: typeof MeditateRoute
-  MentorsRoute: typeof MentorsRoute
-  MoodRoute: typeof MoodRoute
+  HomeRoute: typeof HomeRoute
+  LearnRoute: typeof LearnRoute
+  MeRoute: typeof MeRoute
   OnboardingRoute: typeof OnboardingRoute
-  ProgressRoute: typeof ProgressRoute
+  PracticeRoute: typeof PracticeRouteWithChildren
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
-  SupportRoute: typeof SupportRoute
-  TodoRoute: typeof TodoRoute
-  ApiPublicHooksWellnessDailyRoute: typeof ApiPublicHooksWellnessDailyRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/todo': {
-      id: '/todo'
-      path: '/todo'
-      fullPath: '/todo'
-      preLoaderRoute: typeof TodoRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/support': {
-      id: '/support'
-      path: '/support'
-      fullPath: '/support'
-      preLoaderRoute: typeof SupportRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/sitemap.xml': {
       id: '/sitemap.xml'
       path: '/sitemap.xml'
@@ -428,11 +262,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SitemapDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/progress': {
-      id: '/progress'
-      path: '/progress'
-      fullPath: '/progress'
-      preLoaderRoute: typeof ProgressRouteImport
+    '/practice': {
+      id: '/practice'
+      path: '/practice'
+      fullPath: '/practice'
+      preLoaderRoute: typeof PracticeRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/onboarding': {
@@ -442,32 +276,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OnboardingRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/mood': {
-      id: '/mood'
-      path: '/mood'
-      fullPath: '/mood'
-      preLoaderRoute: typeof MoodRouteImport
+    '/me': {
+      id: '/me'
+      path: '/me'
+      fullPath: '/me'
+      preLoaderRoute: typeof MeRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/mentors': {
-      id: '/mentors'
-      path: '/mentors'
-      fullPath: '/mentors'
-      preLoaderRoute: typeof MentorsRouteImport
+    '/learn': {
+      id: '/learn'
+      path: '/learn'
+      fullPath: '/learn'
+      preLoaderRoute: typeof LearnRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/meditate': {
-      id: '/meditate'
-      path: '/meditate'
-      fullPath: '/meditate'
-      preLoaderRoute: typeof MeditateRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/journal': {
-      id: '/journal'
-      path: '/journal'
-      fullPath: '/journal'
-      preLoaderRoute: typeof JournalRouteImport
+    '/home': {
+      id: '/home'
+      path: '/home'
+      fullPath: '/home'
+      preLoaderRoute: typeof HomeRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/focus': {
@@ -477,20 +304,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof FocusRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/dashboard': {
-      id: '/dashboard'
-      path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof DashboardRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/classes': {
-      id: '/classes'
-      path: '/classes'
-      fullPath: '/classes'
-      preLoaderRoute: typeof ClassesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/auth': {
       id: '/auth'
       path: '/auth'
@@ -498,18 +311,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/assignments': {
-      id: '/assignments'
-      path: '/assignments'
-      fullPath: '/assignments'
-      preLoaderRoute: typeof AssignmentsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/assessments': {
-      id: '/assessments'
-      path: '/assessments'
-      fullPath: '/assessments'
-      preLoaderRoute: typeof AssessmentsRouteImport
+    '/admin-login': {
+      id: '/admin-login'
+      path: '/admin-login'
+      fullPath: '/admin-login'
+      preLoaderRoute: typeof AdminLoginRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin': {
@@ -526,12 +332,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/classes/': {
-      id: '/classes/'
+    '/practice/': {
+      id: '/practice/'
       path: '/'
-      fullPath: '/classes/'
-      preLoaderRoute: typeof ClassesIndexRouteImport
-      parentRoute: typeof ClassesRoute
+      fullPath: '/practice/'
+      preLoaderRoute: typeof PracticeIndexRouteImport
+      parentRoute: typeof PracticeRoute
     }
     '/admin/': {
       id: '/admin/'
@@ -540,167 +346,89 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminIndexRouteImport
       parentRoute: typeof AdminRoute
     }
-    '/admin/students': {
-      id: '/admin/students'
-      path: '/students'
-      fullPath: '/admin/students'
-      preLoaderRoute: typeof AdminStudentsRouteImport
-      parentRoute: typeof AdminRoute
+    '/practice/mood': {
+      id: '/practice/mood'
+      path: '/mood'
+      fullPath: '/practice/mood'
+      preLoaderRoute: typeof PracticeMoodRouteImport
+      parentRoute: typeof PracticeRoute
     }
-    '/admin/reminders': {
-      id: '/admin/reminders'
-      path: '/reminders'
-      fullPath: '/admin/reminders'
-      preLoaderRoute: typeof AdminRemindersRouteImport
-      parentRoute: typeof AdminRoute
+    '/practice/meditate': {
+      id: '/practice/meditate'
+      path: '/meditate'
+      fullPath: '/practice/meditate'
+      preLoaderRoute: typeof PracticeMeditateRouteImport
+      parentRoute: typeof PracticeRoute
     }
-    '/admin/mentors': {
-      id: '/admin/mentors'
-      path: '/mentors'
-      fullPath: '/admin/mentors'
-      preLoaderRoute: typeof AdminMentorsRouteImport
-      parentRoute: typeof AdminRoute
+    '/practice/journal': {
+      id: '/practice/journal'
+      path: '/journal'
+      fullPath: '/practice/journal'
+      preLoaderRoute: typeof PracticeJournalRouteImport
+      parentRoute: typeof PracticeRoute
     }
-    '/admin/meditations': {
-      id: '/admin/meditations'
-      path: '/meditations'
-      fullPath: '/admin/meditations'
-      preLoaderRoute: typeof AdminMeditationsRouteImport
-      parentRoute: typeof AdminRoute
+    '/practice/breathe': {
+      id: '/practice/breathe'
+      path: '/breathe'
+      fullPath: '/practice/breathe'
+      preLoaderRoute: typeof PracticeBreatheRouteImport
+      parentRoute: typeof PracticeRoute
     }
-    '/admin/classes': {
-      id: '/admin/classes'
-      path: '/classes'
-      fullPath: '/admin/classes'
-      preLoaderRoute: typeof AdminClassesRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/assignments': {
-      id: '/admin/assignments'
-      path: '/assignments'
-      fullPath: '/admin/assignments'
-      preLoaderRoute: typeof AdminAssignmentsRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/assessments': {
-      id: '/admin/assessments'
-      path: '/assessments'
-      fullPath: '/admin/assessments'
-      preLoaderRoute: typeof AdminAssessmentsRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/announcements': {
-      id: '/admin/announcements'
-      path: '/announcements'
-      fullPath: '/admin/announcements'
-      preLoaderRoute: typeof AdminAnnouncementsRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/classes/watch/$classId': {
-      id: '/classes/watch/$classId'
-      path: '/watch/$classId'
-      fullPath: '/classes/watch/$classId'
-      preLoaderRoute: typeof ClassesWatchClassIdRouteImport
-      parentRoute: typeof ClassesRoute
-    }
-    '/admin/students/$id': {
-      id: '/admin/students/$id'
-      path: '/$id'
-      fullPath: '/admin/students/$id'
-      preLoaderRoute: typeof AdminStudentsIdRouteImport
-      parentRoute: typeof AdminStudentsRoute
-    }
-    '/api/public/hooks/wellness-daily': {
-      id: '/api/public/hooks/wellness-daily'
-      path: '/api/public/hooks/wellness-daily'
-      fullPath: '/api/public/hooks/wellness-daily'
-      preLoaderRoute: typeof ApiPublicHooksWellnessDailyRouteImport
-      parentRoute: typeof rootRouteImport
+    '/practice/affirm': {
+      id: '/practice/affirm'
+      path: '/affirm'
+      fullPath: '/practice/affirm'
+      preLoaderRoute: typeof PracticeAffirmRouteImport
+      parentRoute: typeof PracticeRoute
     }
   }
 }
 
-interface AdminStudentsRouteChildren {
-  AdminStudentsIdRoute: typeof AdminStudentsIdRoute
-}
-
-const AdminStudentsRouteChildren: AdminStudentsRouteChildren = {
-  AdminStudentsIdRoute: AdminStudentsIdRoute,
-}
-
-const AdminStudentsRouteWithChildren = AdminStudentsRoute._addFileChildren(
-  AdminStudentsRouteChildren,
-)
-
 interface AdminRouteChildren {
-  AdminAnnouncementsRoute: typeof AdminAnnouncementsRoute
-  AdminAssessmentsRoute: typeof AdminAssessmentsRoute
-  AdminAssignmentsRoute: typeof AdminAssignmentsRoute
-  AdminClassesRoute: typeof AdminClassesRoute
-  AdminMeditationsRoute: typeof AdminMeditationsRoute
-  AdminMentorsRoute: typeof AdminMentorsRoute
-  AdminRemindersRoute: typeof AdminRemindersRoute
-  AdminStudentsRoute: typeof AdminStudentsRouteWithChildren
   AdminIndexRoute: typeof AdminIndexRoute
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
-  AdminAnnouncementsRoute: AdminAnnouncementsRoute,
-  AdminAssessmentsRoute: AdminAssessmentsRoute,
-  AdminAssignmentsRoute: AdminAssignmentsRoute,
-  AdminClassesRoute: AdminClassesRoute,
-  AdminMeditationsRoute: AdminMeditationsRoute,
-  AdminMentorsRoute: AdminMentorsRoute,
-  AdminRemindersRoute: AdminRemindersRoute,
-  AdminStudentsRoute: AdminStudentsRouteWithChildren,
   AdminIndexRoute: AdminIndexRoute,
 }
 
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
-interface ClassesRouteChildren {
-  ClassesIndexRoute: typeof ClassesIndexRoute
-  ClassesWatchClassIdRoute: typeof ClassesWatchClassIdRoute
+interface PracticeRouteChildren {
+  PracticeAffirmRoute: typeof PracticeAffirmRoute
+  PracticeBreatheRoute: typeof PracticeBreatheRoute
+  PracticeJournalRoute: typeof PracticeJournalRoute
+  PracticeMeditateRoute: typeof PracticeMeditateRoute
+  PracticeMoodRoute: typeof PracticeMoodRoute
+  PracticeIndexRoute: typeof PracticeIndexRoute
 }
 
-const ClassesRouteChildren: ClassesRouteChildren = {
-  ClassesIndexRoute: ClassesIndexRoute,
-  ClassesWatchClassIdRoute: ClassesWatchClassIdRoute,
+const PracticeRouteChildren: PracticeRouteChildren = {
+  PracticeAffirmRoute: PracticeAffirmRoute,
+  PracticeBreatheRoute: PracticeBreatheRoute,
+  PracticeJournalRoute: PracticeJournalRoute,
+  PracticeMeditateRoute: PracticeMeditateRoute,
+  PracticeMoodRoute: PracticeMoodRoute,
+  PracticeIndexRoute: PracticeIndexRoute,
 }
 
-const ClassesRouteWithChildren =
-  ClassesRoute._addFileChildren(ClassesRouteChildren)
+const PracticeRouteWithChildren = PracticeRoute._addFileChildren(
+  PracticeRouteChildren,
+)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRouteWithChildren,
-  AssessmentsRoute: AssessmentsRoute,
-  AssignmentsRoute: AssignmentsRoute,
+  AdminLoginRoute: AdminLoginRoute,
   AuthRoute: AuthRoute,
-  ClassesRoute: ClassesRouteWithChildren,
-  DashboardRoute: DashboardRoute,
   FocusRoute: FocusRoute,
-  JournalRoute: JournalRoute,
-  MeditateRoute: MeditateRoute,
-  MentorsRoute: MentorsRoute,
-  MoodRoute: MoodRoute,
+  HomeRoute: HomeRoute,
+  LearnRoute: LearnRoute,
+  MeRoute: MeRoute,
   OnboardingRoute: OnboardingRoute,
-  ProgressRoute: ProgressRoute,
+  PracticeRoute: PracticeRouteWithChildren,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
-  SupportRoute: SupportRoute,
-  TodoRoute: TodoRoute,
-  ApiPublicHooksWellnessDailyRoute: ApiPublicHooksWellnessDailyRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
