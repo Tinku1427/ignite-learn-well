@@ -25,7 +25,8 @@ function Onboarding() {
   const router = useRouter();
   const [uid, setUid] = useState<string | null>(null);
   const [step, setStep] = useState<Step>("welcome");
-  const [name, setName] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [examTrack, setExamTrack] = useState("neet");
   const [classLevel, setClassLevel] = useState("12");
   const [parentEmail, setParentEmail] = useState("");
@@ -40,13 +41,18 @@ function Onboarding() {
     supabase.auth.getUser().then(({ data }) => {
       if (!data.user) return router.navigate({ to: "/auth" });
       setUid(data.user.id);
-      supabase.from("profiles").select("full_name, onboarding_complete").eq("id", data.user.id).maybeSingle()
+      supabase.from("profiles").select("full_name, onboarding_complete, parental_consent_at").eq("id", data.user.id).maybeSingle()
         .then(({ data: p }) => {
-          if (p?.onboarding_complete) router.navigate({ to: "/home" });
-          if (p?.full_name) setName(p.full_name);
+          if (p?.onboarding_complete && p?.parental_consent_at) router.navigate({ to: "/home" });
+          if (p?.full_name) {
+            const parts = p.full_name.trim().split(/\s+/);
+            setFirstName(parts[0] ?? "");
+            setLastName(parts.slice(1).join(" "));
+          }
         });
     });
   }, [router]);
+
 
   const finish = async () => {
     if (!uid) return;
