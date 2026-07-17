@@ -25,7 +25,8 @@ function Onboarding() {
   const router = useRouter();
   const [uid, setUid] = useState<string | null>(null);
   const [step, setStep] = useState<Step>("welcome");
-  const [name, setName] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [examTrack, setExamTrack] = useState("neet");
   const [classLevel, setClassLevel] = useState("12");
   const [parentEmail, setParentEmail] = useState("");
@@ -40,20 +41,27 @@ function Onboarding() {
     supabase.auth.getUser().then(({ data }) => {
       if (!data.user) return router.navigate({ to: "/auth" });
       setUid(data.user.id);
-      supabase.from("profiles").select("full_name, onboarding_complete").eq("id", data.user.id).maybeSingle()
+      supabase.from("profiles").select("full_name, onboarding_complete, parental_consent_at").eq("id", data.user.id).maybeSingle()
         .then(({ data: p }) => {
-          if (p?.onboarding_complete) router.navigate({ to: "/home" });
-          if (p?.full_name) setName(p.full_name);
+          if (p?.onboarding_complete && p?.parental_consent_at) router.navigate({ to: "/home" });
+          if (p?.full_name) {
+            const parts = p.full_name.trim().split(/\s+/);
+            setFirstName(parts[0] ?? "");
+            setLastName(parts.slice(1).join(" "));
+          }
         });
     });
   }, [router]);
+
 
   const finish = async () => {
     if (!uid) return;
     setSaving(true);
     try {
+      const fullName = `${firstName.trim()} ${lastName.trim()}`.trim();
       const { error: pErr } = await supabase.from("profiles").update({
-        full_name: name.trim(),
+        full_name: fullName,
+
         exam_track: examTrack,
         class_level: classLevel,
         parental_consent_at: new Date().toISOString(),
@@ -113,10 +121,17 @@ function Onboarding() {
             <>
               <h2 className="font-display text-2xl">Tell me about you</h2>
               <div className="mt-5 space-y-4">
-                <div>
-                  <Label>Your name</Label>
-                  <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="Riya" />
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <Label>First name</Label>
+                    <Input value={firstName} onChange={(e) => setFirstName(e.target.value)} placeholder="Riya" />
+                  </div>
+                  <div>
+                    <Label>Last name</Label>
+                    <Input value={lastName} onChange={(e) => setLastName(e.target.value)} placeholder="Sharma" />
+                  </div>
                 </div>
+
                 <div>
                   <Label>Class</Label>
                   <RadioGroup value={classLevel} onValueChange={setClassLevel} className="grid grid-cols-3 gap-2 mt-2">
@@ -138,7 +153,7 @@ function Onboarding() {
                   </RadioGroup>
                 </div>
               </div>
-              <Button className="mt-6 w-full rounded-full" disabled={!name.trim()} onClick={() => setStep("transparency")}>Continue</Button>
+              <Button className="mt-6 w-full rounded-full" disabled={!firstName.trim()} onClick={() => setStep("transparency")}>Continue</Button>
             </>
           )}
 
