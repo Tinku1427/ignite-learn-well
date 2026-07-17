@@ -48,11 +48,18 @@ function Journal() {
   const { data: mentors = [] } = useQuery({
     queryKey: ["mentors-list"],
     queryFn: async () => {
-      const { data, error } = await supabase.from("mentors").select("id,display_name").eq("active", true);
+      const { data, error } = await supabase
+        .from("mentors")
+        .select("id, profile:profiles!mentors_profile_id_fkey(full_name)")
+        .eq("active", true);
       if (error) throw error;
-      return data as Mentor[];
+      return (data ?? []).map((m: { id: string; profile: { full_name: string } | null }) => ({
+        id: m.id,
+        display_name: m.profile?.full_name ?? "Mentor",
+      })) as Mentor[];
     },
   });
+
 
   const save = useMutation({
     mutationFn: async () => {
