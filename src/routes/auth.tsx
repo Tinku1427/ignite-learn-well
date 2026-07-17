@@ -14,8 +14,10 @@ function Auth() {
   const [mode, setMode] = useState<"signin" | "signup">("signin");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [name, setName] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [busy, setBusy] = useState(false);
+
   const [checkInbox, setCheckInbox] = useState(false);
 
   useEffect(() => {
@@ -34,10 +36,12 @@ function Auth() {
     e.preventDefault();
     setBusy(true);
     if (mode === "signup") {
+      const fullName = `${firstName.trim()} ${lastName.trim()}`.trim();
       const { data, error } = await supabase.auth.signUp({
         email, password,
-        options: { emailRedirectTo: window.location.origin, data: { full_name: name } },
+        options: { emailRedirectTo: window.location.origin, data: { full_name: fullName } },
       });
+
       setBusy(false);
       if (error) return toast.error(error.message);
       if (!data.session) { setCheckInbox(true); return; }
@@ -68,11 +72,18 @@ function Auth() {
 
             <form onSubmit={submit} className="space-y-4">
               {mode === "signup" && (
-                <div>
-                  <Label htmlFor="name">Your name</Label>
-                  <Input id="name" required value={name} onChange={(e) => setName(e.target.value)} placeholder="Riya" />
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <Label htmlFor="first">First name</Label>
+                    <Input id="first" required value={firstName} onChange={(e) => setFirstName(e.target.value)} placeholder="Riya" />
+                  </div>
+                  <div>
+                    <Label htmlFor="last">Last name</Label>
+                    <Input id="last" value={lastName} onChange={(e) => setLastName(e.target.value)} placeholder="Sharma" />
+                  </div>
                 </div>
               )}
+
               <div>
                 <Label htmlFor="email">Email</Label>
                 <Input id="email" required type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
