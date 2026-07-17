@@ -58,8 +58,10 @@ function Onboarding() {
     if (!uid) return;
     setSaving(true);
     try {
+      const fullName = `${firstName.trim()} ${lastName.trim()}`.trim();
       const { error: pErr } = await supabase.from("profiles").update({
-        full_name: name.trim(),
+        full_name: fullName,
+
         exam_track: examTrack,
         class_level: classLevel,
         parental_consent_at: new Date().toISOString(),
@@ -119,10 +121,17 @@ function Onboarding() {
             <>
               <h2 className="font-display text-2xl">Tell me about you</h2>
               <div className="mt-5 space-y-4">
-                <div>
-                  <Label>Your name</Label>
-                  <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="Riya" />
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <Label>First name</Label>
+                    <Input value={firstName} onChange={(e) => setFirstName(e.target.value)} placeholder="Riya" />
+                  </div>
+                  <div>
+                    <Label>Last name</Label>
+                    <Input value={lastName} onChange={(e) => setLastName(e.target.value)} placeholder="Sharma" />
+                  </div>
                 </div>
+
                 <div>
                   <Label>Class</Label>
                   <RadioGroup value={classLevel} onValueChange={setClassLevel} className="grid grid-cols-3 gap-2 mt-2">
@@ -144,7 +153,7 @@ function Onboarding() {
                   </RadioGroup>
                 </div>
               </div>
-              <Button className="mt-6 w-full rounded-full" disabled={!name.trim()} onClick={() => setStep("transparency")}>Continue</Button>
+              <Button className="mt-6 w-full rounded-full" disabled={!firstName.trim()} onClick={() => setStep("transparency")}>Continue</Button>
             </>
           )}
 
