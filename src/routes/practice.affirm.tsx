@@ -60,7 +60,7 @@ function Affirm() {
       if (error) throw error;
     },
     onSuccess: () => {
-      toast.success("Held. Take that with you.");
+      setCelebrate(true);
       qc.invalidateQueries({ queryKey: ["aff-done"] });
     },
   });
