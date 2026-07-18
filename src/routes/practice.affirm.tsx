@@ -69,8 +69,12 @@ function Affirm() {
 
   return (
     <div className="space-y-6">
+      <Celebrate scene="affirm" open={celebrate} onClose={() => setCelebrate(false)} intensity="soft" />
       <div className="soft-card relative overflow-hidden bg-gradient-to-br from-paper via-card to-sage-soft/40 p-8 md:p-12">
-        <div className="text-xs uppercase tracking-widest text-muted-foreground">Today's line</div>
+        <div className="flex items-start justify-between gap-4">
+          <div className="text-xs uppercase tracking-widest text-muted-foreground">Today's line</div>
+          <Scene kind="affirm" size={72} />
+        </div>
         <p className="mt-4 font-display text-3xl leading-snug md:text-4xl">"{cur.body}"</p>
         {cur.category && <div className="mt-6 text-xs text-muted-foreground">— {cur.category}</div>}
 
