@@ -4,10 +4,11 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { Button } from "@/components/ui/button";
-import { Slider } from "@/components/ui/slider";
+import { TouchSlider } from "@/components/touch-slider";
 import { Play, Pause, RotateCcw, Volume2, Sunrise, Moon } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { toast } from "sonner";
+import { Scene } from "@/components/scene";
+import { Celebrate } from "@/components/celebrate";
 
 type Track = {
   id: string; title: string; description: string | null;
@@ -35,6 +36,7 @@ function Meditate() {
   const [pos, setPos] = useState(0);
   const [dur, setDur] = useState(0);
   const [vol, setVol] = useState(70);
+  const [celebrate, setCelebrate] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const { data: tracks = [], isLoading } = useQuery({
@@ -82,11 +84,13 @@ function Meditate() {
   const onEnded = () => {
     setPlaying(false);
     if (active) logSession.mutate({ track_id: active.id, seconds: Math.round(dur), completed: true });
-    toast.success("Practice complete. Notice how you feel.");
+    setCelebrate(true);
   };
 
   return (
     <div className="space-y-6">
+      <Celebrate scene="meditate" open={celebrate} onClose={() => setCelebrate(false)} next={{ label: "" }} />
+
       <div className="inline-flex rounded-full bg-secondary p-1 text-sm">
         <button onClick={() => setTab("morning")} className={cn("inline-flex items-center gap-1.5 rounded-full px-4 py-1.5", tab === "morning" && "bg-card shadow-sm")}>
           <Sunrise className="size-4" /> Morning
@@ -95,6 +99,15 @@ function Meditate() {
           <Moon className="size-4" /> Evening
         </button>
       </div>
+
+      {!active && (
+        <div className="soft-card grid place-items-center p-6">
+          <Scene kind="meditate" size={200} />
+          <p className="mt-2 text-center text-sm text-muted-foreground max-w-xs">
+            Pick a track. Five minutes is enough.
+          </p>
+        </div>
+      )}
 
       {active && (
         <div className="soft-card overflow-hidden">
@@ -105,9 +118,7 @@ function Meditate() {
                 <h2 className="mt-1 font-display text-2xl md:text-3xl">{active.title}</h2>
                 {active.description && <p className="mt-2 max-w-md text-sm text-muted-foreground">{active.description}</p>}
               </div>
-              <div className={cn("size-16 rounded-full bg-sage/15 grid place-items-center", playing && "ring-breathe")}>
-                <div className="size-10 rounded-full bg-sage/40" />
-              </div>
+              <Scene kind="meditate" size={96} />
             </div>
 
             <audio
@@ -120,10 +131,11 @@ function Meditate() {
             />
 
             <div className="mt-6">
-              <Slider
+              <TouchSlider
                 min={0} max={Math.max(dur, 1)} step={1}
-                value={[pos]}
-                onValueChange={([v]) => { if (audioRef.current) audioRef.current.currentTime = v; setPos(v); }}
+                value={Math.min(pos, Math.max(dur, 1))}
+                onChange={(v) => { if (audioRef.current) audioRef.current.currentTime = v; setPos(v); }}
+                ariaLabel="Seek"
               />
               <div className="mt-1 flex justify-between text-[11px] text-muted-foreground">
                 <span>{fmt(pos)}</span><span>{fmt(dur || active.duration_seconds)}</span>
@@ -138,9 +150,9 @@ function Meditate() {
               <Button variant="outline" size="icon" onClick={reset} className="rounded-full">
                 <RotateCcw className="size-4" />
               </Button>
-              <div className="ml-auto flex items-center gap-2 text-muted-foreground">
-                <Volume2 className="size-4" />
-                <Slider className="w-28" min={0} max={100} step={1} value={[vol]} onValueChange={([v]) => setVol(v)} />
+              <div className="ml-auto flex items-center gap-2 text-muted-foreground w-40">
+                <Volume2 className="size-4 shrink-0" />
+                <TouchSlider min={0} max={100} step={1} value={vol} onChange={setVol} ariaLabel="Volume" />
               </div>
             </div>
           </div>

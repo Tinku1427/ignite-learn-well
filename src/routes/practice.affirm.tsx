@@ -5,7 +5,9 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { Button } from "@/components/ui/button";
 import { Check, Shuffle } from "lucide-react";
-import { toast } from "sonner";
+
+import { Scene } from "@/components/scene";
+import { Celebrate } from "@/components/celebrate";
 
 export const Route = createFileRoute("/practice/affirm")({ component: Affirm });
 
@@ -15,6 +17,7 @@ function Affirm() {
   const { user } = useAuth();
   const qc = useQueryClient();
   const [idx, setIdx] = useState(0);
+  const [celebrate, setCelebrate] = useState(false);
 
   const { data: list = [] } = useQuery({
     queryKey: ["affirmations"],
@@ -57,7 +60,7 @@ function Affirm() {
       if (error) throw error;
     },
     onSuccess: () => {
-      toast.success("Held. Take that with you.");
+      setCelebrate(true);
       qc.invalidateQueries({ queryKey: ["aff-done"] });
     },
   });
@@ -66,8 +69,12 @@ function Affirm() {
 
   return (
     <div className="space-y-6">
+      <Celebrate scene="affirm" open={celebrate} onClose={() => setCelebrate(false)} intensity="soft" />
       <div className="soft-card relative overflow-hidden bg-gradient-to-br from-paper via-card to-sage-soft/40 p-8 md:p-12">
-        <div className="text-xs uppercase tracking-widest text-muted-foreground">Today's line</div>
+        <div className="flex items-start justify-between gap-4">
+          <div className="text-xs uppercase tracking-widest text-muted-foreground">Today's line</div>
+          <Scene kind="affirm" size={72} />
+        </div>
         <p className="mt-4 font-display text-3xl leading-snug md:text-4xl">"{cur.body}"</p>
         {cur.category && <div className="mt-6 text-xs text-muted-foreground">— {cur.category}</div>}
 
