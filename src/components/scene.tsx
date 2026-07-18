@@ -240,7 +240,7 @@ function Fallback() {
   );
 }
 
-const MAP: Record<SceneKind, () => JSX.Element> = {
+const MAP: Record<SceneKind, () => React.ReactElement> = {
   "home-morning": HomeMorning,
   "home-evening": HomeEvening,
   meditate: Meditate,
