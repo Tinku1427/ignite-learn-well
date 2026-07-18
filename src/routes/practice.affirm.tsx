@@ -17,6 +17,7 @@ function Affirm() {
   const { user } = useAuth();
   const qc = useQueryClient();
   const [idx, setIdx] = useState(0);
+  const [celebrate, setCelebrate] = useState(false);
 
   const { data: list = [] } = useQuery({
     queryKey: ["affirmations"],
