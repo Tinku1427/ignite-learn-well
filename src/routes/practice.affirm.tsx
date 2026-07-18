@@ -6,6 +6,8 @@ import { useAuth } from "@/hooks/use-auth";
 import { Button } from "@/components/ui/button";
 import { Check, Shuffle } from "lucide-react";
 import { toast } from "sonner";
+import { Scene } from "@/components/scene";
+import { Celebrate } from "@/components/celebrate";
 
 export const Route = createFileRoute("/practice/affirm")({ component: Affirm });
 
