@@ -285,6 +285,51 @@ export type Database = {
         }
         Relationships: []
       }
+      coaches: {
+        Row: {
+          active: boolean
+          avatar_seed: string | null
+          bio: string | null
+          certification_name: string | null
+          certification_url: string | null
+          created_at: string
+          id: string
+          profile_id: string
+          specialties: string[] | null
+          verification_status: string
+          verified_at: string | null
+          verified_by: string | null
+        }
+        Insert: {
+          active?: boolean
+          avatar_seed?: string | null
+          bio?: string | null
+          certification_name?: string | null
+          certification_url?: string | null
+          created_at?: string
+          id?: string
+          profile_id: string
+          specialties?: string[] | null
+          verification_status?: string
+          verified_at?: string | null
+          verified_by?: string | null
+        }
+        Update: {
+          active?: boolean
+          avatar_seed?: string | null
+          bio?: string | null
+          certification_name?: string | null
+          certification_url?: string | null
+          created_at?: string
+          id?: string
+          profile_id?: string
+          specialties?: string[] | null
+          verification_status?: string
+          verified_at?: string | null
+          verified_by?: string | null
+        }
+        Relationships: []
+      }
       cohorts: {
         Row: {
           created_at: string
@@ -308,6 +353,44 @@ export type Database = {
           start_date?: string | null
         }
         Relationships: []
+      }
+      enrollments: {
+        Row: {
+          activated_at: string | null
+          cohort_id: string | null
+          created_at: string
+          email: string
+          id: string
+          invited_by: string | null
+          status: string
+        }
+        Insert: {
+          activated_at?: string | null
+          cohort_id?: string | null
+          created_at?: string
+          email: string
+          id?: string
+          invited_by?: string | null
+          status?: string
+        }
+        Update: {
+          activated_at?: string | null
+          cohort_id?: string | null
+          created_at?: string
+          email?: string
+          id?: string
+          invited_by?: string | null
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "enrollments_cohort_id_fkey"
+            columns: ["cohort_id"]
+            isOneToOne: false
+            referencedRelation: "cohorts"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       focus_sessions: {
         Row: {
@@ -573,28 +656,40 @@ export type Database = {
           active: boolean
           avatar_seed: string | null
           bio: string | null
+          college_name: string | null
           created_at: string
           id: string
           profile_id: string
           specialties: string[] | null
+          verification_status: string
+          verified_at: string | null
+          verified_by: string | null
         }
         Insert: {
           active?: boolean
           avatar_seed?: string | null
           bio?: string | null
+          college_name?: string | null
           created_at?: string
           id?: string
           profile_id: string
           specialties?: string[] | null
+          verification_status?: string
+          verified_at?: string | null
+          verified_by?: string | null
         }
         Update: {
           active?: boolean
           avatar_seed?: string | null
           bio?: string | null
+          college_name?: string | null
           created_at?: string
           id?: string
           profile_id?: string
           specialties?: string[] | null
+          verification_status?: string
+          verified_at?: string | null
+          verified_by?: string | null
         }
         Relationships: [
           {
@@ -1033,7 +1128,7 @@ export type Database = {
       }
     }
     Enums: {
-      app_role: "student" | "admin" | "mentor" | "counsellor"
+      app_role: "student" | "admin" | "mentor" | "counsellor" | "coach"
       booking_status: "requested" | "confirmed" | "completed" | "cancelled"
       exam_type: "JEE" | "NEET"
       reminder_channel: "whatsapp" | "in_app"
@@ -1166,7 +1261,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      app_role: ["student", "admin", "mentor", "counsellor"],
+      app_role: ["student", "admin", "mentor", "counsellor", "coach"],
       booking_status: ["requested", "confirmed", "completed", "cancelled"],
       exam_type: ["JEE", "NEET"],
       reminder_channel: ["whatsapp", "in_app"],
