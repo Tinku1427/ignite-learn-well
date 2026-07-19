@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as PracticeRouteImport } from './routes/practice'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
+import { Route as MentorRouteImport } from './routes/mentor'
 import { Route as MeRouteImport } from './routes/me'
 import { Route as LearnRouteImport } from './routes/learn'
 import { Route as HomeRouteImport } from './routes/home'
@@ -42,6 +43,11 @@ const PracticeRoute = PracticeRouteImport.update({
 const OnboardingRoute = OnboardingRouteImport.update({
   id: '/onboarding',
   path: '/onboarding',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MentorRoute = MentorRouteImport.update({
+  id: '/mentor',
+  path: '/mentor',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MeRoute = MeRouteImport.update({
@@ -135,6 +141,7 @@ export interface FileRoutesByFullPath {
   '/home': typeof HomeRoute
   '/learn': typeof LearnRoute
   '/me': typeof MeRoute
+  '/mentor': typeof MentorRoute
   '/onboarding': typeof OnboardingRoute
   '/practice': typeof PracticeRouteWithChildren
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -155,6 +162,7 @@ export interface FileRoutesByTo {
   '/home': typeof HomeRoute
   '/learn': typeof LearnRoute
   '/me': typeof MeRoute
+  '/mentor': typeof MentorRoute
   '/onboarding': typeof OnboardingRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/practice/affirm': typeof PracticeAffirmRoute
@@ -176,6 +184,7 @@ export interface FileRoutesById {
   '/home': typeof HomeRoute
   '/learn': typeof LearnRoute
   '/me': typeof MeRoute
+  '/mentor': typeof MentorRoute
   '/onboarding': typeof OnboardingRoute
   '/practice': typeof PracticeRouteWithChildren
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -199,6 +208,7 @@ export interface FileRouteTypes {
     | '/home'
     | '/learn'
     | '/me'
+    | '/mentor'
     | '/onboarding'
     | '/practice'
     | '/sitemap.xml'
@@ -219,6 +229,7 @@ export interface FileRouteTypes {
     | '/home'
     | '/learn'
     | '/me'
+    | '/mentor'
     | '/onboarding'
     | '/sitemap.xml'
     | '/practice/affirm'
@@ -239,6 +250,7 @@ export interface FileRouteTypes {
     | '/home'
     | '/learn'
     | '/me'
+    | '/mentor'
     | '/onboarding'
     | '/practice'
     | '/sitemap.xml'
@@ -261,6 +273,7 @@ export interface RootRouteChildren {
   HomeRoute: typeof HomeRoute
   LearnRoute: typeof LearnRoute
   MeRoute: typeof MeRoute
+  MentorRoute: typeof MentorRoute
   OnboardingRoute: typeof OnboardingRoute
   PracticeRoute: typeof PracticeRouteWithChildren
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
@@ -287,6 +300,13 @@ declare module '@tanstack/react-router' {
       path: '/onboarding'
       fullPath: '/onboarding'
       preLoaderRoute: typeof OnboardingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mentor': {
+      id: '/mentor'
+      path: '/mentor'
+      fullPath: '/mentor'
+      preLoaderRoute: typeof MentorRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/me': {
@@ -446,6 +466,7 @@ const rootRouteChildren: RootRouteChildren = {
   HomeRoute: HomeRoute,
   LearnRoute: LearnRoute,
   MeRoute: MeRoute,
+  MentorRoute: MentorRoute,
   OnboardingRoute: OnboardingRoute,
   PracticeRoute: PracticeRouteWithChildren,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
