@@ -35,6 +35,6 @@ export function useAuth() {
     isCounsellor: roles.includes("counsellor"),
     isCoach: roles.includes("coach") || roles.includes("counsellor"),
     isMentor: roles.includes("mentor"),
-    isStaff: roles.includes("admin") || roles.includes("coach") || roles.includes("counsellor") || roles.includes("mentor"),
+    isStaff: roles.includes("admin"),
   };
 }
