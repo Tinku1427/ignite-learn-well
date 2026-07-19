@@ -33,7 +33,8 @@ export function useAuth() {
     user, roles, loading,
     isAdmin: roles.includes("admin"),
     isCounsellor: roles.includes("counsellor"),
+    isCoach: roles.includes("coach") || roles.includes("counsellor"),
     isMentor: roles.includes("mentor"),
-    isStaff: roles.includes("admin") || roles.includes("counsellor"),
+    isStaff: roles.includes("admin") || roles.includes("coach") || roles.includes("counsellor") || roles.includes("mentor"),
   };
 }
