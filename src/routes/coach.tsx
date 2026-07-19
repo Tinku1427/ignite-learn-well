@@ -35,23 +35,28 @@ function CoachHome() {
   const { data: rows = [], isLoading } = useQuery({
     queryKey: ["coach-attention"],
     queryFn: async () => {
-      // Latest score per student
       const { data, error } = await supabase
         .from("wellness_scores")
-        .select("user_id, composite, risk_band, score_date, profile:profiles!wellness_scores_user_id_fkey(full_name)")
+        .select("user_id, composite, risk_band, score_date")
         .order("score_date", { ascending: false })
         .limit(500);
       if (error) throw error;
       const seen = new Set<string>();
-      const latest: Row[] = [];
-      for (const r of (data ?? []) as Array<{ user_id: string; composite: number; risk_band: string; score_date: string; profile: { full_name: string | null } | null }>) {
+      const latest: Omit<Row, "full_name">[] = [];
+      for (const r of data ?? []) {
         if (seen.has(r.user_id)) continue;
         seen.add(r.user_id);
-        latest.push({ user_id: r.user_id, composite: r.composite, risk_band: r.risk_band, score_date: r.score_date, full_name: r.profile?.full_name ?? null });
+        latest.push(r);
       }
+      const ids = latest.map((r) => r.user_id);
+      const { data: profs } = ids.length
+        ? await supabase.from("profiles").select("id, full_name").in("id", ids)
+        : { data: [] as { id: string; full_name: string | null }[] };
+      const nameMap = new Map((profs ?? []).map((p) => [p.id, p.full_name]));
+      const withNames: Row[] = latest.map((r) => ({ ...r, full_name: nameMap.get(r.user_id) ?? null }));
       const order: Record<string, number> = { watch: 0, amber: 1, green: 2 };
-      latest.sort((a, b) => (order[a.risk_band] ?? 3) - (order[b.risk_band] ?? 3) || a.composite - b.composite);
-      return latest;
+      withNames.sort((a, b) => (order[a.risk_band] ?? 3) - (order[b.risk_band] ?? 3) || a.composite - b.composite);
+      return withNames;
     },
   });
 

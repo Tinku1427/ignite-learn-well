@@ -16,6 +16,7 @@ import { Route as MeRouteImport } from './routes/me'
 import { Route as LearnRouteImport } from './routes/learn'
 import { Route as HomeRouteImport } from './routes/home'
 import { Route as FocusRouteImport } from './routes/focus'
+import { Route as CoachRouteImport } from './routes/coach'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AdminLoginRouteImport } from './routes/admin-login'
 import { Route as AdminRouteImport } from './routes/admin'
@@ -61,6 +62,11 @@ const HomeRoute = HomeRouteImport.update({
 const FocusRoute = FocusRouteImport.update({
   id: '/focus',
   path: '/focus',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CoachRoute = CoachRouteImport.update({
+  id: '/coach',
+  path: '/coach',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRoute = AuthRouteImport.update({
@@ -124,6 +130,7 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AdminRouteWithChildren
   '/admin-login': typeof AdminLoginRoute
   '/auth': typeof AuthRoute
+  '/coach': typeof CoachRoute
   '/focus': typeof FocusRoute
   '/home': typeof HomeRoute
   '/learn': typeof LearnRoute
@@ -143,6 +150,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/admin-login': typeof AdminLoginRoute
   '/auth': typeof AuthRoute
+  '/coach': typeof CoachRoute
   '/focus': typeof FocusRoute
   '/home': typeof HomeRoute
   '/learn': typeof LearnRoute
@@ -163,6 +171,7 @@ export interface FileRoutesById {
   '/admin': typeof AdminRouteWithChildren
   '/admin-login': typeof AdminLoginRoute
   '/auth': typeof AuthRoute
+  '/coach': typeof CoachRoute
   '/focus': typeof FocusRoute
   '/home': typeof HomeRoute
   '/learn': typeof LearnRoute
@@ -185,6 +194,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/admin-login'
     | '/auth'
+    | '/coach'
     | '/focus'
     | '/home'
     | '/learn'
@@ -204,6 +214,7 @@ export interface FileRouteTypes {
     | '/'
     | '/admin-login'
     | '/auth'
+    | '/coach'
     | '/focus'
     | '/home'
     | '/learn'
@@ -223,6 +234,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/admin-login'
     | '/auth'
+    | '/coach'
     | '/focus'
     | '/home'
     | '/learn'
@@ -244,6 +256,7 @@ export interface RootRouteChildren {
   AdminRoute: typeof AdminRouteWithChildren
   AdminLoginRoute: typeof AdminLoginRoute
   AuthRoute: typeof AuthRoute
+  CoachRoute: typeof CoachRoute
   FocusRoute: typeof FocusRoute
   HomeRoute: typeof HomeRoute
   LearnRoute: typeof LearnRoute
@@ -302,6 +315,13 @@ declare module '@tanstack/react-router' {
       path: '/focus'
       fullPath: '/focus'
       preLoaderRoute: typeof FocusRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/coach': {
+      id: '/coach'
+      path: '/coach'
+      fullPath: '/coach'
+      preLoaderRoute: typeof CoachRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth': {
@@ -421,6 +441,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminRoute: AdminRouteWithChildren,
   AdminLoginRoute: AdminLoginRoute,
   AuthRoute: AuthRoute,
+  CoachRoute: CoachRoute,
   FocusRoute: FocusRoute,
   HomeRoute: HomeRoute,
   LearnRoute: LearnRoute,
