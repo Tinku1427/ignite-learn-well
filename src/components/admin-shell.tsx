@@ -1,5 +1,5 @@
 import { Link, useRouter, useRouterState } from "@tanstack/react-router";
-import { LayoutDashboard, Users, FileText, BookOpen, Bot, Megaphone, LogOut } from "lucide-react";
+import { LayoutDashboard, Users, FileText, BookOpen, Bot, Megaphone, Activity, LogOut } from "lucide-react";
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 import { supabase } from "@/integrations/supabase/client";
@@ -7,6 +7,7 @@ import { supabase } from "@/integrations/supabase/client";
 type NavItem = { to: string; label: string; icon: typeof LayoutDashboard; exact?: boolean };
 const NAV: NavItem[] = [
   { to: "/admin",               label: "Overview",      icon: LayoutDashboard, exact: true },
+  { to: "/admin/wellness",      label: "Wellness",      icon: Activity },
   { to: "/admin/students",      label: "Students",      icon: Users },
   { to: "/admin/reports",       label: "Reports",       icon: FileText },
   { to: "/admin/content",       label: "Content",       icon: BookOpen },
