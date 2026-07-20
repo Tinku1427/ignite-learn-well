@@ -43,7 +43,7 @@ function Learn() {
 
       {!isLoading && sessions.length === 0 && (
         <div className="soft-card grid place-items-center p-8 text-center">
-          <Scene kind="focus" size={160} />
+          <Scene kind="empty" size={160} />
           <p className="mt-2 text-sm text-muted-foreground">Nothing scheduled yet.</p>
         </div>
       )}

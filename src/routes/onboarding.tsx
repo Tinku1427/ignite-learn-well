@@ -7,12 +7,13 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Slider } from "@/components/ui/slider";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Buddy } from "@/components/buddy";
+import { Scene } from "@/components/scene";
+import { MoodFacePicker, type MoodValue } from "@/components/mood-face";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/onboarding")({ component: Onboarding });
 
-type Step = "welcome" | "about" | "transparency" | "consent" | "baseline" | "done";
+type Step = "welcome" | "about" | "transparency" | "consent" | "baseline" | "face" | "done";
 
 const BASELINE_Q = [
   { id: "stress",  q: "Right now, how heavy does the load feel?",     lo: "Very heavy", hi: "Manageable" },
@@ -35,6 +36,7 @@ function Onboarding() {
   const [answers, setAnswers] = useState<Record<string, number>>(
     Object.fromEntries(BASELINE_Q.map((q) => [q.id, 5]))
   );
+  const [face, setFace] = useState<MoodValue | null>(null);
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
@@ -78,13 +80,17 @@ function Onboarding() {
       }
 
       // Baseline assessment: ensure a baseline exists, insert response.
-      let { data: baseline } = await supabase.from("assessments").select("id").eq("kind", "baseline").eq("is_active", true).limit(1).maybeSingle();
-      if (!baseline) {
-        // No published baseline yet — record answers as a lightweight profile-embedded record.
-        // Skip DB write silently rather than fail onboarding.
-      } else {
+      const { data: baseline } = await supabase.from("assessments").select("id").eq("kind", "baseline").eq("is_active", true).limit(1).maybeSingle();
+      if (baseline) {
         await supabase.from("assessment_responses").insert({
           user_id: uid, assessment_id: baseline.id, answers,
+        });
+      }
+
+      // Baseline face — the "before" in Before → After. Uses mood_checkins.
+      if (face) {
+        await supabase.from("mood_checkins").insert({
+          user_id: uid, mood_score: face, energy: 3, tags: ["baseline"], note: "Baseline face at onboarding.",
         });
       }
       toast.success("You're set. Welcome.");
@@ -98,7 +104,7 @@ function Onboarding() {
     <div className="min-h-screen bg-background text-foreground px-4 py-10">
       <div className="mx-auto max-w-lg">
         <div className="mb-6 flex items-center gap-4">
-          <Buddy mood="encouraging" size={64} />
+          <Scene kind="home-morning" size={72} />
           <div>
             <div className="text-xs uppercase tracking-widest text-muted-foreground">Onboarding</div>
             <div className="font-display text-2xl">A few things to begin</div>
@@ -199,7 +205,22 @@ function Onboarding() {
                   </div>
                 ))}
               </div>
-              <Button className="mt-8 w-full rounded-full" disabled={saving} onClick={finish}>{saving ? "…" : "Finish and enter"}</Button>
+              <Button className="mt-8 w-full rounded-full" onClick={() => setStep("face")}>Continue</Button>
+            </>
+          )}
+
+          {step === "face" && (
+            <>
+              <h2 className="font-display text-2xl">And one face.</h2>
+              <p className="mt-2 text-sm text-muted-foreground">
+                How do you feel about your prep, right now? This becomes your "before" face — we'll set it beside your "after" later. No wrong pick.
+              </p>
+              <div className="mt-6">
+                <MoodFacePicker value={face} onChange={setFace} />
+              </div>
+              <Button className="mt-8 w-full rounded-full" disabled={saving || !face} onClick={finish}>
+                {saving ? "…" : "Finish and enter"}
+              </Button>
             </>
           )}
         </div>

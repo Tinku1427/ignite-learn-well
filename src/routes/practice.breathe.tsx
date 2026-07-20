@@ -6,6 +6,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { Button } from "@/components/ui/button";
 import { Play, Square } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Scene } from "@/components/scene";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/practice/breathe")({ component: Breathe });
@@ -72,13 +73,16 @@ function Breathe() {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-wrap gap-2">
-        {(Object.keys(PATTERNS) as Pattern[]).map((p) => (
-          <button key={p} onClick={() => !running && setPattern(p)} className={cn(
-            "rounded-full px-4 py-1.5 text-sm border border-border",
-            pattern === p ? "bg-primary text-primary-foreground border-primary" : "hover:bg-secondary"
-          )}>{PATTERNS[p].label}</button>
-        ))}
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="flex flex-wrap gap-2">
+          {(Object.keys(PATTERNS) as Pattern[]).map((p) => (
+            <button key={p} onClick={() => !running && setPattern(p)} className={cn(
+              "rounded-full px-4 py-1.5 text-sm border border-border",
+              pattern === p ? "bg-primary text-primary-foreground border-primary" : "hover:bg-secondary"
+            )}>{PATTERNS[p].label}</button>
+          ))}
+        </div>
+        <Scene kind="breathe" size={64} className="shrink-0" />
       </div>
 
       <div className="soft-card grid place-items-center p-8 md:p-12" style={{ minHeight: 360 }}>

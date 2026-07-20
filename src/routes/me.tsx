@@ -5,6 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { Protected } from "@/components/protected";
 import { WellnessRing } from "@/components/wellness-ring";
+import { BeforeAfter } from "@/components/before-after";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "@tanstack/react-router";
 import { Check, Plus, Trash2 } from "lucide-react";
@@ -68,10 +69,12 @@ function Me() {
         <h1 className="font-display text-3xl">Your arc</h1>
       </header>
 
+      <BeforeAfter />
+
       <div className="soft-card p-6 flex flex-col items-center">
         <WellnessRing arcs={{ focus: 62, rest: 58, reflection: 70, connection: 45 }} size={180} />
         <p className="mt-4 text-center text-sm text-muted-foreground max-w-xs">
-          The arc across your program will fill in as you practice. Your baseline is saved.
+          The arc across your program will fill in as you practice.
         </p>
       </div>
 
