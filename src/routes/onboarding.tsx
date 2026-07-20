@@ -205,7 +205,22 @@ function Onboarding() {
                   </div>
                 ))}
               </div>
-              <Button className="mt-8 w-full rounded-full" disabled={saving} onClick={finish}>{saving ? "…" : "Finish and enter"}</Button>
+              <Button className="mt-8 w-full rounded-full" onClick={() => setStep("face")}>Continue</Button>
+            </>
+          )}
+
+          {step === "face" && (
+            <>
+              <h2 className="font-display text-2xl">And one face.</h2>
+              <p className="mt-2 text-sm text-muted-foreground">
+                How do you feel about your prep, right now? This becomes your "before" face — we'll set it beside your "after" later. No wrong pick.
+              </p>
+              <div className="mt-6">
+                <MoodFacePicker value={face} onChange={setFace} />
+              </div>
+              <Button className="mt-8 w-full rounded-full" disabled={saving || !face} onClick={finish}>
+                {saving ? "…" : "Finish and enter"}
+              </Button>
             </>
           )}
         </div>
