@@ -232,6 +232,22 @@ function HomeEvening() {
   );
 }
 
+function Breathe() {
+  return (
+    <Wrap>
+      <circle cx="100" cy="120" r="90" fill="url(#dusk-grad)" />
+      {/* concentric breathing rings */}
+      <circle cx="100" cy="120" r="60" fill={SAGE} opacity="0.18" />
+      <circle cx="100" cy="120" r="42" fill={SAGE} opacity="0.28" />
+      <circle cx="100" cy="120" r="26" fill={APRICOT} opacity="0.55" />
+      {/* small seated figure */}
+      <path d="M78 168 Q100 148 122 168 Q112 174 100 170 Q88 174 78 168 Z" fill={TEE} opacity="0.85" />
+      <path d="M86 160 Q86 132 100 130 Q114 132 114 160 Z" fill={TEE} opacity="0.85" />
+      <Face cx={100} cy={122} r={11} hair="loose" />
+    </Wrap>
+  );
+}
+
 function Fallback() {
   return (
     <Wrap>
@@ -249,5 +265,6 @@ const MAP: Record<SceneKind, () => React.ReactElement> = {
   journal: Journal,
   mood: Mood,
   ambient: Ambient,
+  breathe: Breathe,
   empty: Fallback,
 };
