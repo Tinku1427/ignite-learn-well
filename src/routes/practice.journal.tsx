@@ -8,6 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Lock, Share2, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import { Scene } from "@/components/scene";
 
 export const Route = createFileRoute("/practice/journal")({ component: Journal });
 
@@ -91,8 +92,13 @@ function Journal() {
   return (
     <div className="space-y-6">
       <div className="soft-card p-6">
-        <div className="text-xs uppercase tracking-widest text-muted-foreground">Prompt</div>
-        <div className="mt-1 font-display text-xl">{prompt}</div>
+        <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-4">
+          <div className="min-w-0">
+            <div className="text-xs uppercase tracking-widest text-muted-foreground">Prompt</div>
+            <div className="mt-1 font-display text-xl">{prompt}</div>
+          </div>
+          <Scene kind="journal" size={72} className="shrink-0" />
+        </div>
         <Textarea
           value={body}
           onChange={(e) => setBody(e.target.value)}
