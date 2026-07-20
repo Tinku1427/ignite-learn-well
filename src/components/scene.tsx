@@ -11,7 +11,7 @@ import { cn } from "@/lib/utils";
 
 export type SceneKind =
   | "home-morning" | "home-evening"
-  | "meditate" | "focus" | "affirm" | "journal" | "mood" | "ambient"
+  | "meditate" | "focus" | "affirm" | "journal" | "mood" | "ambient" | "breathe"
   | "empty";
 
 export function Scene({ kind, className, size = 220, animate = false }: {
