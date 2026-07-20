@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Protected } from "@/components/protected";
 import { WellnessRing } from "@/components/wellness-ring";
-import { Buddy } from "@/components/buddy";
+import { Scene } from "@/components/scene";
 import { useAuth } from "@/hooks/use-auth";
 
 export const Route = createFileRoute("/home")({ component: () => <Protected><Home /></Protected> });
@@ -26,8 +26,8 @@ const CONCERNS = [
 function Home() {
   const { user } = useAuth();
   const first = (user?.user_metadata?.full_name as string | undefined)?.split(" ")[0] ?? "friend";
-  // Placeholder arcs until Phase 2/4 wire real data
   const arcs = { focus: 62, rest: 58, reflection: 70, connection: 45 };
+  const isMorning = new Date().getHours() < 15;
 
   return (
     <div className="space-y-8">
@@ -36,10 +36,15 @@ function Home() {
         <h1 className="font-display text-3xl md:text-4xl">{greeting()}, {first}.</h1>
       </header>
 
-      <section className="soft-card p-6 md:p-8 flex flex-col items-center gap-4">
+      <section className="soft-card p-6 md:p-8 flex flex-col items-center gap-3">
         <WellnessRing arcs={arcs} />
-        <Buddy mood="neutral" size={72} className="-mt-4" />
-        <p className="max-w-xs text-center text-sm text-muted-foreground">One arc at a time. Small today. Different by month's end.</p>
+        <p className="max-w-xs text-center text-sm text-muted-foreground">
+          One arc at a time. Small today. Different by month's end.
+        </p>
+      </section>
+
+      <section className="grid place-items-center">
+        <Scene kind={isMorning ? "home-morning" : "home-evening"} size={200} />
       </section>
 
       <section>

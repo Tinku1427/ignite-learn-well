@@ -7,12 +7,13 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Slider } from "@/components/ui/slider";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Buddy } from "@/components/buddy";
+import { Scene } from "@/components/scene";
+import { MoodFacePicker, type MoodValue } from "@/components/mood-face";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/onboarding")({ component: Onboarding });
 
-type Step = "welcome" | "about" | "transparency" | "consent" | "baseline" | "done";
+type Step = "welcome" | "about" | "transparency" | "consent" | "baseline" | "face" | "done";
 
 const BASELINE_Q = [
   { id: "stress",  q: "Right now, how heavy does the load feel?",     lo: "Very heavy", hi: "Manageable" },
@@ -35,6 +36,7 @@ function Onboarding() {
   const [answers, setAnswers] = useState<Record<string, number>>(
     Object.fromEntries(BASELINE_Q.map((q) => [q.id, 5]))
   );
+  const [face, setFace] = useState<MoodValue | null>(null);
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
