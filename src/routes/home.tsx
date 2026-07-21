@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Protected } from "@/components/protected";
 import { WellnessRing } from "@/components/wellness-ring";
 import { Scene } from "@/components/scene";
+import { AppIcon } from "@/components/app-icon";
 import { useAuth } from "@/hooks/use-auth";
 
 export const Route = createFileRoute("/home")({ component: () => <Protected><Home /></Protected> });
