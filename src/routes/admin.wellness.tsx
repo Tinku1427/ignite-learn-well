@@ -3,6 +3,7 @@ import { Protected } from "@/components/protected";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Scene } from "@/components/scene";
+import { AppIcon } from "@/components/app-icon";
 
 export const Route = createFileRoute("/admin/wellness")({
   component: () => <Protected mode="admin" staffOnly><Wellness /></Protected>,
@@ -45,7 +46,7 @@ function Wellness() {
     <div className="space-y-8">
       <header className="flex items-start justify-between">
         <div>
-          <div className="text-xs uppercase tracking-widest text-muted-foreground">Admin · Wellness</div>
+          <div className="flex items-center gap-2 text-xs uppercase tracking-widest text-muted-foreground"><AppIcon name="chart" size={14} /> Admin · Wellness</div>
           <h1 className="mt-1 font-display text-3xl">Cohort improvement</h1>
           <p className="mt-1 text-sm text-muted-foreground max-w-lg">A glanceable view of how the cohort is trending. No raw journal entries — even here.</p>
         </div>

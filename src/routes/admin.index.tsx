@@ -1,11 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { AppIcon } from "@/components/app-icon";
 export const Route = createFileRoute("/admin/")({ component: AdminOverview });
 
 function AdminOverview() {
   return (
     <div className="space-y-8">
       <header>
-        <div className="text-xs uppercase tracking-widest text-muted-foreground">Overview</div>
+        <div className="flex items-center gap-2 text-xs uppercase tracking-widest text-muted-foreground"><AppIcon name="dashboard" size={14} /> Overview</div>
         <h1 className="text-3xl font-semibold">Cohort wellness</h1>
       </header>
       <div className="grid gap-4 md:grid-cols-3">

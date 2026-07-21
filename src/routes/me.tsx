@@ -9,6 +9,7 @@ import { BeforeAfter } from "@/components/before-after";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "@tanstack/react-router";
 import { Check, Plus, Trash2 } from "lucide-react";
+import { AppIcon } from "@/components/app-icon";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/me")({ component: () => <Protected><Me /></Protected> });
@@ -65,7 +66,7 @@ function Me() {
   return (
     <div className="space-y-6">
       <header>
-        <div className="text-xs uppercase tracking-widest text-muted-foreground">Me</div>
+        <div className="flex items-center gap-2 text-xs uppercase tracking-widest text-muted-foreground"><AppIcon name="avatar" size={14} /> Me</div>
         <h1 className="font-display text-3xl">Your arc</h1>
       </header>
 
@@ -79,7 +80,7 @@ function Me() {
       </div>
 
       <div className="soft-card p-6">
-        <h2 className="font-display text-xl">To-do</h2>
+        <h2 className="flex items-center gap-2 font-display text-xl"><AppIcon name="checklist" size={20} tone="ink" /> To-do</h2>
         <p className="mt-1 text-xs text-muted-foreground">Short list. Only what matters today.</p>
         <div className="mt-4 flex gap-2">
           <input

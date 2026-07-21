@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Protected } from "@/components/protected";
 import { WellnessRing } from "@/components/wellness-ring";
 import { Scene } from "@/components/scene";
+import { AppIcon } from "@/components/app-icon";
 import { useAuth } from "@/hooks/use-auth";
 
 export const Route = createFileRoute("/home")({ component: () => <Protected><Home /></Protected> });
@@ -48,7 +49,7 @@ function Home() {
       </section>
 
       <section>
-        <h2 className="mb-3 text-sm font-medium text-muted-foreground">Today's practice</h2>
+        <h2 className="mb-3 flex items-center gap-2 text-sm font-medium text-muted-foreground"><AppIcon name="checklist" size={16} /> Today's practice</h2>
         <div className="grid gap-3 sm:grid-cols-2">
           {[
             { t: "Morning meditation", d: "5 min · guided", to: "/practice/meditate" },
@@ -65,7 +66,7 @@ function Home() {
       </section>
 
       <section>
-        <h2 className="mb-3 text-sm font-medium text-muted-foreground">What's on your mind?</h2>
+        <h2 className="mb-3 flex items-center gap-2 text-sm font-medium text-muted-foreground"><AppIcon name="mentor" size={16} /> What's on your mind?</h2>
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
           {CONCERNS.map((c) => (
             <Link key={c.title} to={c.to} className="rounded-2xl bg-secondary p-4 text-left transition-transform hover:-translate-y-0.5">
