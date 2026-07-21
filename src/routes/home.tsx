@@ -16,12 +16,20 @@ function greeting() {
   return "Late night";
 }
 
-const CONCERNS = [
-  { title: "Stressed",       to: "/practice/breathe",   note: "A minute of breathing" },
-  { title: "Can't focus",    to: "/focus",              note: "Try a 25-minute pomodoro" },
-  { title: "Sleep trouble",  to: "/practice/meditate",  note: "Evening wind-down" },
-  { title: "Feeling low",    to: "/practice/journal",   note: "Put it on the page" },
-  { title: "Need to talk",   to: "/me",                 note: "See your mentors" },
+import meditationImg from "@/assets/menu/yoga.png.asset.json";
+import breakImg from "@/assets/menu/take-a-break.png.asset.json";
+import calendarImg from "@/assets/menu/project.png.asset.json";
+import breatheImg from "@/assets/menu/yoga_1.png.asset.json";
+import privacyImg from "@/assets/menu/privacy.png.asset.json";
+import welcomeImg from "@/assets/menu/introduction-handshake-2.png.asset.json";
+
+const MENU = [
+  { title: "Welcome",    img: welcomeImg.url,    to: "/me",                note: "Your space" },
+  { title: "Meditation", img: meditationImg.url, to: "/practice/meditate", note: "Guided sits" },
+  { title: "Breathing",  img: breatheImg.url,    to: "/practice/breathe",  note: "Calm in a minute" },
+  { title: "Tea break",  img: breakImg.url,      to: "/focus",             note: "Rest a moment" },
+  { title: "Calendar",   img: calendarImg.url,   to: "/learn",             note: "Plan your day" },
+  { title: "Private",    img: privacyImg.url,    to: "/practice/journal",  note: "Your journal" },
 ] as const;
 
 function Home() {
