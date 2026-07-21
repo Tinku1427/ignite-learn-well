@@ -9,6 +9,7 @@ import { BeforeAfter } from "@/components/before-after";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "@tanstack/react-router";
 import { Check, Plus, Trash2 } from "lucide-react";
+import { AppIcon } from "@/components/app-icon";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/me")({ component: () => <Protected><Me /></Protected> });
