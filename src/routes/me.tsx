@@ -66,7 +66,7 @@ function Me() {
   return (
     <div className="space-y-6">
       <header>
-        <div className="text-xs uppercase tracking-widest text-muted-foreground">Me</div>
+        <div className="flex items-center gap-2 text-xs uppercase tracking-widest text-muted-foreground"><AppIcon name="avatar" size={14} /> Me</div>
         <h1 className="font-display text-3xl">Your arc</h1>
       </header>
 
