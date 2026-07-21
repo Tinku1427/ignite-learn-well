@@ -80,7 +80,7 @@ function Me() {
       </div>
 
       <div className="soft-card p-6">
-        <h2 className="font-display text-xl">To-do</h2>
+        <h2 className="flex items-center gap-2 font-display text-xl"><AppIcon name="checklist" size={20} tone="ink" /> To-do</h2>
         <p className="mt-1 text-xs text-muted-foreground">Short list. Only what matters today.</p>
         <div className="mt-4 flex gap-2">
           <input
