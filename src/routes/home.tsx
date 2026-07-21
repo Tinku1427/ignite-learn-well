@@ -66,7 +66,7 @@ function Home() {
       </section>
 
       <section>
-        <h2 className="mb-3 text-sm font-medium text-muted-foreground">What's on your mind?</h2>
+        <h2 className="mb-3 flex items-center gap-2 text-sm font-medium text-muted-foreground"><AppIcon name="mentor" size={16} /> What's on your mind?</h2>
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
           {CONCERNS.map((c) => (
             <Link key={c.title} to={c.to} className="rounded-2xl bg-secondary p-4 text-left transition-transform hover:-translate-y-0.5">
