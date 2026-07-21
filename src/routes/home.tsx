@@ -49,7 +49,7 @@ function Home() {
       </section>
 
       <section>
-        <h2 className="mb-3 text-sm font-medium text-muted-foreground">Today's practice</h2>
+        <h2 className="mb-3 flex items-center gap-2 text-sm font-medium text-muted-foreground"><AppIcon name="checklist" size={16} /> Today's practice</h2>
         <div className="grid gap-3 sm:grid-cols-2">
           {[
             { t: "Morning meditation", d: "5 min · guided", to: "/practice/meditate" },
