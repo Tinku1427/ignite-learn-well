@@ -268,7 +268,7 @@ function AmbientAdmin() {
 }
 
 /* ---------------- Affirmations ---------------- */
-type Aff = { id: string; text: string; category: string | null; is_published: boolean };
+type Aff = { id: string; body: string; category: string | null; is_published: boolean };
 
 function AffirmationsAdmin() {
   const qc = useQueryClient();
@@ -312,7 +312,7 @@ function AffirmationsAdmin() {
       <ul className="space-y-2">
         {rows.map((r) => (
           <li key={r.id} className="soft-card p-4 flex items-center justify-between gap-3">
-            <div><div className="text-sm">{r.text}</div><div className="text-[11px] text-muted-foreground">{r.category ?? "—"}</div></div>
+            <div><div className="text-sm">{r.body}</div><div className="text-[11px] text-muted-foreground">{r.category ?? "—"}</div></div>
             <button onClick={() => remove.mutate(r.id)} className="text-muted-foreground hover:text-foreground">
               <Trash2 className="size-4" />
             </button>
@@ -325,7 +325,7 @@ function AffirmationsAdmin() {
 }
 
 /* ---------------- Live sessions ---------------- */
-type Sess = { id: string; title: string; scheduled_at: string; join_url: string | null; recording_url: string | null; cohort_id: string | null };
+type Sess = { id: string; title: string; scheduled_at: string; zoom_url: string | null; recording_url: string | null; cohort_id: string | null };
 
 function SessionsAdmin() {
   const qc = useQueryClient();
@@ -345,7 +345,7 @@ function SessionsAdmin() {
       if (!form.title.trim() || !form.scheduled_at) return;
       const { error } = await supabase.from("live_sessions").insert({
         title: form.title, scheduled_at: form.scheduled_at,
-        join_url: form.join_url || null, recording_url: form.recording_url || null,
+        zoom_url: form.join_url || null, recording_url: form.recording_url || null,
       });
       if (error) throw error;
     },
@@ -383,7 +383,7 @@ function SessionsAdmin() {
               <div className="text-xs text-muted-foreground">{new Date(r.scheduled_at).toLocaleString()}</div>
             </div>
             <div className="flex items-center gap-3">
-              {r.join_url && <a href={r.join_url} target="_blank" className="text-xs underline text-muted-foreground" rel="noreferrer">Join</a>}
+              {r.zoom_url && <a href={r.zoom_url} target="_blank" className="text-xs underline text-muted-foreground" rel="noreferrer">Join</a>}
               <button onClick={() => remove.mutate(r.id)} className="text-muted-foreground hover:text-foreground">
                 <Trash2 className="size-4" />
               </button>
