@@ -54,8 +54,11 @@ function Home() {
       </section>
 
       <section className="grid place-items-center">
-        <Scene kind={isMorning ? "home-morning" : "home-evening"} size={200} />
+        <div className="relative grid place-items-center rounded-full bg-sage-soft/60 p-6" style={{ width: 220, height: 220 }}>
+          <img src={heroMeditating.url} alt="" aria-hidden="true" className="h-[170px] w-[170px] object-contain" />
+        </div>
       </section>
+
 
       <section>
         <h2 className="mb-3 flex items-center gap-2 text-sm font-medium text-muted-foreground"><AppIcon name="checklist" size={16} /> Today's practice</h2>
