@@ -22,13 +22,14 @@ import calendarImg from "@/assets/menu/project.png.asset.json";
 import breatheImg from "@/assets/menu/yoga_1.png.asset.json";
 import privacyImg from "@/assets/menu/privacy.png.asset.json";
 import welcomeImg from "@/assets/menu/introduction-handshake-2.png.asset.json";
+import heroMeditating from "@/assets/menu/meditating.png.asset.json";
 
 const MENU = [
   { title: "Welcome",    img: welcomeImg.url,    to: "/me",                note: "Your space" },
   { title: "Meditation", img: meditationImg.url, to: "/practice/meditate", note: "Guided sits" },
   { title: "Breathing",  img: breatheImg.url,    to: "/practice/breathe",  note: "Calm in a minute" },
   { title: "Tea break",  img: breakImg.url,      to: "/focus",             note: "Rest a moment" },
-  { title: "Calendar",   img: calendarImg.url,   to: "/learn",             note: "Plan your day" },
+  { title: "Calendar",   img: calendarImg.url,   to: "/plan",              note: "Plan your day" },
   { title: "Private",    img: privacyImg.url,    to: "/practice/journal",  note: "Your journal" },
 ] as const;
 
