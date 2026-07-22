@@ -11,6 +11,7 @@ import { useRouter } from "@tanstack/react-router";
 import { Check, Plus, Trash2 } from "lucide-react";
 import { AppIcon } from "@/components/app-icon";
 import { cn } from "@/lib/utils";
+import chartUp from "@/assets/menu/chart-up.png.asset.json";
 
 export const Route = createFileRoute("/me")({ component: () => <Protected><Me /></Protected> });
 
@@ -73,6 +74,9 @@ function Me() {
       <BeforeAfter />
 
       <div className="soft-card p-6 flex flex-col items-center">
+        <div className="relative grid place-items-center rounded-full bg-sage-soft/60 p-4 mb-4" style={{ width: 160, height: 160 }}>
+          <img src={chartUp.url} alt="" aria-hidden="true" className="h-[110px] w-[110px] object-contain" />
+        </div>
         <WellnessRing arcs={{ focus: 62, rest: 58, reflection: 70, connection: 45 }} size={180} />
         <p className="mt-4 text-center text-sm text-muted-foreground max-w-xs">
           The arc across your program will fill in as you practice.
