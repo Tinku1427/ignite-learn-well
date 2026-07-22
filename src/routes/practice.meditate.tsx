@@ -32,6 +32,7 @@ function Meditate() {
   const qc = useQueryClient();
   const [tab, setTab] = useState<"morning" | "evening">(timeBucket());
   const [active, setActive] = useState<Track | null>(null);
+  const [signedUrl, setSignedUrl] = useState<string>("");
   const [playing, setPlaying] = useState(false);
   const [pos, setPos] = useState(0);
   const [dur, setDur] = useState(0);
