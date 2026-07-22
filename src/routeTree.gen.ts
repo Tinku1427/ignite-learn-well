@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as PracticeRouteImport } from './routes/practice'
+import { Route as PlanRouteImport } from './routes/plan'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as MentorRouteImport } from './routes/mentor'
 import { Route as MeRouteImport } from './routes/me'
@@ -30,6 +31,7 @@ import { Route as PracticeJournalRouteImport } from './routes/practice.journal'
 import { Route as PracticeBreatheRouteImport } from './routes/practice.breathe'
 import { Route as PracticeAffirmRouteImport } from './routes/practice.affirm'
 import { Route as AdminWellnessRouteImport } from './routes/admin.wellness'
+import { Route as AdminContentRouteImport } from './routes/admin.content'
 
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
@@ -39,6 +41,11 @@ const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
 const PracticeRoute = PracticeRouteImport.update({
   id: '/practice',
   path: '/practice',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PlanRoute = PlanRouteImport.update({
+  id: '/plan',
+  path: '/plan',
   getParentRoute: () => rootRouteImport,
 } as any)
 const OnboardingRoute = OnboardingRouteImport.update({
@@ -136,6 +143,11 @@ const AdminWellnessRoute = AdminWellnessRouteImport.update({
   path: '/wellness',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminContentRoute = AdminContentRouteImport.update({
+  id: '/content',
+  path: '/content',
+  getParentRoute: () => AdminRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -149,8 +161,10 @@ export interface FileRoutesByFullPath {
   '/me': typeof MeRoute
   '/mentor': typeof MentorRoute
   '/onboarding': typeof OnboardingRoute
+  '/plan': typeof PlanRoute
   '/practice': typeof PracticeRouteWithChildren
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/admin/content': typeof AdminContentRoute
   '/admin/wellness': typeof AdminWellnessRoute
   '/practice/affirm': typeof PracticeAffirmRoute
   '/practice/breathe': typeof PracticeBreatheRoute
@@ -171,7 +185,9 @@ export interface FileRoutesByTo {
   '/me': typeof MeRoute
   '/mentor': typeof MentorRoute
   '/onboarding': typeof OnboardingRoute
+  '/plan': typeof PlanRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/admin/content': typeof AdminContentRoute
   '/admin/wellness': typeof AdminWellnessRoute
   '/practice/affirm': typeof PracticeAffirmRoute
   '/practice/breathe': typeof PracticeBreatheRoute
@@ -194,8 +210,10 @@ export interface FileRoutesById {
   '/me': typeof MeRoute
   '/mentor': typeof MentorRoute
   '/onboarding': typeof OnboardingRoute
+  '/plan': typeof PlanRoute
   '/practice': typeof PracticeRouteWithChildren
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/admin/content': typeof AdminContentRoute
   '/admin/wellness': typeof AdminWellnessRoute
   '/practice/affirm': typeof PracticeAffirmRoute
   '/practice/breathe': typeof PracticeBreatheRoute
@@ -219,8 +237,10 @@ export interface FileRouteTypes {
     | '/me'
     | '/mentor'
     | '/onboarding'
+    | '/plan'
     | '/practice'
     | '/sitemap.xml'
+    | '/admin/content'
     | '/admin/wellness'
     | '/practice/affirm'
     | '/practice/breathe'
@@ -241,7 +261,9 @@ export interface FileRouteTypes {
     | '/me'
     | '/mentor'
     | '/onboarding'
+    | '/plan'
     | '/sitemap.xml'
+    | '/admin/content'
     | '/admin/wellness'
     | '/practice/affirm'
     | '/practice/breathe'
@@ -263,8 +285,10 @@ export interface FileRouteTypes {
     | '/me'
     | '/mentor'
     | '/onboarding'
+    | '/plan'
     | '/practice'
     | '/sitemap.xml'
+    | '/admin/content'
     | '/admin/wellness'
     | '/practice/affirm'
     | '/practice/breathe'
@@ -287,6 +311,7 @@ export interface RootRouteChildren {
   MeRoute: typeof MeRoute
   MentorRoute: typeof MentorRoute
   OnboardingRoute: typeof OnboardingRoute
+  PlanRoute: typeof PlanRoute
   PracticeRoute: typeof PracticeRouteWithChildren
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
 }
@@ -305,6 +330,13 @@ declare module '@tanstack/react-router' {
       path: '/practice'
       fullPath: '/practice'
       preLoaderRoute: typeof PracticeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/plan': {
+      id: '/plan'
+      path: '/plan'
+      fullPath: '/plan'
+      preLoaderRoute: typeof PlanRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/onboarding': {
@@ -440,15 +472,24 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminWellnessRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/content': {
+      id: '/admin/content'
+      path: '/content'
+      fullPath: '/admin/content'
+      preLoaderRoute: typeof AdminContentRouteImport
+      parentRoute: typeof AdminRoute
+    }
   }
 }
 
 interface AdminRouteChildren {
+  AdminContentRoute: typeof AdminContentRoute
   AdminWellnessRoute: typeof AdminWellnessRoute
   AdminIndexRoute: typeof AdminIndexRoute
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
+  AdminContentRoute: AdminContentRoute,
   AdminWellnessRoute: AdminWellnessRoute,
   AdminIndexRoute: AdminIndexRoute,
 }
@@ -489,6 +530,7 @@ const rootRouteChildren: RootRouteChildren = {
   MeRoute: MeRoute,
   MentorRoute: MentorRoute,
   OnboardingRoute: OnboardingRoute,
+  PlanRoute: PlanRoute,
   PracticeRoute: PracticeRouteWithChildren,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
 }

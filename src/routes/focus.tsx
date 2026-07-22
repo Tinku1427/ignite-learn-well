@@ -10,6 +10,7 @@ import { Scene } from "@/components/scene";
 import { Celebrate } from "@/components/celebrate";
 import { Play, Pause, RotateCcw, Volume2 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import yogaFocus from "@/assets/menu/yoga_focus.png.asset.json";
 
 export const Route = createFileRoute("/focus")({
   component: () => <Protected><Focus /></Protected>,
@@ -151,7 +152,9 @@ function Focus() {
 
       <div className="soft-card p-6 md:p-8">
         <div className="flex flex-col items-center gap-4">
-          <Scene kind="focus" size={160} animate={phase === "done"} />
+          <div className={cn("relative grid place-items-center rounded-full bg-apricot/25 p-5", phase === "done" && "scene-hop")} style={{ width: 180, height: 180 }}>
+            <img src={yogaFocus.url} alt="" aria-hidden="true" className="h-[130px] w-[130px] object-contain" />
+          </div>
           <div className="font-display text-5xl tabular-nums">
             {phase === "break-locked" ? fmt(lockRemain) : fmt(remain)}
           </div>

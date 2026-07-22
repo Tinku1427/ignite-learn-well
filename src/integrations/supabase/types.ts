@@ -285,6 +285,27 @@ export type Database = {
         }
         Relationships: []
       }
+      coach_assignments: {
+        Row: {
+          coach_id: string
+          created_at: string
+          id: string
+          student_id: string
+        }
+        Insert: {
+          coach_id: string
+          created_at?: string
+          id?: string
+          student_id: string
+        }
+        Update: {
+          coach_id?: string
+          created_at?: string
+          id?: string
+          student_id?: string
+        }
+        Relationships: []
+      }
       coaches: {
         Row: {
           active: boolean
@@ -351,6 +372,33 @@ export type Database = {
           institute_name?: string | null
           name?: string
           start_date?: string | null
+        }
+        Relationships: []
+      }
+      day_plans: {
+        Row: {
+          blocks: Json
+          created_at: string
+          id: string
+          plan_date: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          blocks?: Json
+          created_at?: string
+          id?: string
+          plan_date: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          blocks?: Json
+          created_at?: string
+          id?: string
+          plan_date?: string
+          updated_at?: string
+          user_id?: string
         }
         Relationships: []
       }

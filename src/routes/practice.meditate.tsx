@@ -32,6 +32,7 @@ function Meditate() {
   const qc = useQueryClient();
   const [tab, setTab] = useState<"morning" | "evening">(timeBucket());
   const [active, setActive] = useState<Track | null>(null);
+  const [signedUrl, setSignedUrl] = useState<string>("");
   const [playing, setPlaying] = useState(false);
   const [pos, setPos] = useState(0);
   const [dur, setDur] = useState(0);
@@ -71,9 +72,17 @@ function Meditate() {
     onSuccess: () => qc.invalidateQueries({ queryKey: ["today-progress"] }),
   });
 
-  const pick = (t: Track) => {
-    setActive(t); setPos(0); setPlaying(false);
-    setTimeout(() => { audioRef.current?.play().then(() => setPlaying(true)).catch(() => {}); }, 50);
+  const pick = async (t: Track) => {
+    setActive(t); setPos(0); setPlaying(false); setSignedUrl("");
+    // audio_url is a storage path within the meditation-audio bucket
+    // (legacy full URLs are also handled)
+    let src = t.audio_url;
+    if (!/^https?:\/\//i.test(src)) {
+      const { data } = await supabase.storage.from("meditation-audio").createSignedUrl(src, 60 * 60);
+      src = data?.signedUrl ?? "";
+    }
+    setSignedUrl(src);
+    setTimeout(() => { audioRef.current?.play().then(() => setPlaying(true)).catch(() => {}); }, 60);
   };
   const toggle = () => {
     if (!audioRef.current) return;
@@ -123,7 +132,7 @@ function Meditate() {
 
             <audio
               ref={audioRef}
-              src={active.audio_url}
+              src={signedUrl}
               onLoadedMetadata={(e) => setDur(e.currentTarget.duration || active.duration_seconds)}
               onTimeUpdate={(e) => setPos(e.currentTarget.currentTime)}
               onEnded={onEnded}

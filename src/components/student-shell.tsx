@@ -1,5 +1,5 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { Home, Sparkles, Timer, GraduationCap, User } from "lucide-react";
+import { Home, Sparkles, Timer, CalendarDays, User } from "lucide-react";
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
@@ -7,7 +7,7 @@ const TABS = [
   { to: "/home",     label: "Home",     icon: Home },
   { to: "/practice", label: "Practice", icon: Sparkles },
   { to: "/focus",    label: "Focus",    icon: Timer },
-  { to: "/learn",    label: "Learn",    icon: GraduationCap },
+  { to: "/plan",     label: "Plan",     icon: CalendarDays },
   { to: "/me",       label: "Me",       icon: User },
 ] as const;
 
