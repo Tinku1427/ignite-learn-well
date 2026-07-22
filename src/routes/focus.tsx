@@ -10,7 +10,7 @@ import { Scene } from "@/components/scene";
 import { Celebrate } from "@/components/celebrate";
 import { Play, Pause, RotateCcw, Volume2 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import yogaFocus from "@/assets/menu/yoga_focus.png.asset.json";
+import yogaFocus from "@/assets/menu/yoga_1.png.asset.json";
 
 export const Route = createFileRoute("/focus")({
   component: () => <Protected><Focus /></Protected>,
