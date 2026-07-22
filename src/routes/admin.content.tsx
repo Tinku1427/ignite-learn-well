@@ -275,7 +275,7 @@ function AffirmationsAdmin() {
   const { data: rows = [] } = useQuery({
     queryKey: ["admin-affirmations"],
     queryFn: async () => {
-      const { data } = await supabase.from("affirmations").select("id,text,category,is_published").order("category");
+      const { data } = await supabase.from("affirmations").select("id,body,category,is_published").order("category");
       return (data ?? []) as Aff[];
     },
   });
@@ -285,7 +285,7 @@ function AffirmationsAdmin() {
   const add = useMutation({
     mutationFn: async () => {
       if (!text.trim()) return;
-      const { error } = await supabase.from("affirmations").insert({ text: text.trim(), category, is_published: true });
+      const { error } = await supabase.from("affirmations").insert({ body: text.trim(), category, is_published: true });
       if (error) throw error;
     },
     onSuccess: () => { setText(""); qc.invalidateQueries({ queryKey: ["admin-affirmations"] }); },
@@ -333,7 +333,7 @@ function SessionsAdmin() {
     queryKey: ["admin-sessions"],
     queryFn: async () => {
       const { data } = await supabase.from("live_sessions")
-        .select("id,title,scheduled_at,join_url,recording_url,cohort_id")
+        .select("id,title,scheduled_at,zoom_url,recording_url,cohort_id")
         .order("scheduled_at", { ascending: false });
       return (data ?? []) as Sess[];
     },
