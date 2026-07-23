@@ -22,7 +22,7 @@ import calendarImg from "@/assets/menu/project.png.asset.json";
 import breatheImg from "@/assets/menu/yoga_1.png.asset.json";
 import privacyImg from "@/assets/menu/privacy.png.asset.json";
 import welcomeImg from "@/assets/menu/introduction-handshake-2.png.asset.json";
-import heroMeditating from "@/assets/menu/meditating.png.asset.json";
+import heroMeditating from "@/assets/menu/meditation-amico.png.asset.json";
 
 const MENU = [
   { title: "Welcome",    img: welcomeImg.url,    to: "/me",                note: "Your space" },
