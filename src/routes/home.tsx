@@ -22,7 +22,7 @@ import calendarImg from "@/assets/menu/project.png.asset.json";
 import breatheImg from "@/assets/menu/yoga_1.png.asset.json";
 import privacyImg from "@/assets/menu/privacy.png.asset.json";
 import welcomeImg from "@/assets/menu/introduction-handshake-2.png.asset.json";
-import heroMeditating from "@/assets/menu/meditating.png.asset.json";
+import heroMeditating from "@/assets/menu/meditation-amico.png.asset.json";
 
 const MENU = [
   { title: "Welcome",    img: welcomeImg.url,    to: "/me",                note: "Your space" },
@@ -54,8 +54,8 @@ function Home() {
       </section>
 
       <section className="grid place-items-center">
-        <div className="relative grid place-items-center rounded-full bg-sage-soft/60 p-6" style={{ width: 220, height: 220 }}>
-          <img src={heroMeditating.url} alt="" aria-hidden="true" className="h-[170px] w-[170px] object-contain" />
+        <div className="relative grid place-items-center rounded-full bg-sage-soft/60 p-6" style={{ width: 260, height: 260 }}>
+          <img src={heroMeditating.url} alt="" aria-hidden="true" className="h-[210px] w-[210px] object-contain" />
         </div>
       </section>
 
