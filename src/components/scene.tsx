@@ -1,12 +1,13 @@
 import { cn } from "@/lib/utils";
+import meditateImg from "@/assets/scenes/meditation.png.asset.json";
+import affirmImg from "@/assets/scenes/affirmation.png.asset.json";
+import moodImg from "@/assets/scenes/mood.png.asset.json";
+import breatheImg from "@/assets/scenes/breathe.png.asset.json";
 
 /**
- * Scene — one coherent illustrated set (Humaaans / Open Peeps vibe) for every
- * wellness surface. Warm rounded figures, palette-matched to --sage / --dusk /
- * --apricot. All inline SVG so it recolors with the theme and never breaks.
- *
- * Figures are stylized "any student" — no fixed gender, no faces beyond a
- * soft mouth. Keep it that way.
+ * Scene — illustrated set for every wellness surface.
+ * meditate / affirm / mood / breathe render curated PNGs; the rest fall back
+ * to inline SVG so unstyled surfaces still get palette-matched artwork.
  */
 
 export type SceneKind =
@@ -14,12 +15,30 @@ export type SceneKind =
   | "meditate" | "focus" | "affirm" | "journal" | "mood" | "ambient" | "breathe"
   | "empty";
 
+const IMG_MAP: Partial<Record<SceneKind, { url: string; alt: string }>> = {
+  meditate: { url: meditateImg.url, alt: "Person meditating" },
+  affirm:   { url: affirmImg.url,   alt: "You are worthy" },
+  mood:     { url: moodImg.url,     alt: "Reading a book" },
+  breathe:  { url: breatheImg.url,  alt: "Yoga breathing pose" },
+};
+
 export function Scene({ kind, className, size = 220, animate = false }: {
   kind: SceneKind;
   className?: string;
   size?: number;
   animate?: boolean;
 }) {
+  const img = IMG_MAP[kind];
+  if (img) {
+    return (
+      <div
+        className={cn("relative flex items-center justify-center", animate && "scene-hop", className)}
+        style={{ width: size, height: size }}
+      >
+        <img src={img.url} alt={img.alt} className="w-full h-full object-contain" loading="lazy" />
+      </div>
+    );
+  }
   const Cmp = MAP[kind] ?? Fallback;
   return (
     <div
