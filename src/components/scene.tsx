@@ -3,6 +3,7 @@ import meditateImg from "@/assets/scenes/meditation.png.asset.json";
 import affirmImg from "@/assets/scenes/affirmation.png.asset.json";
 import moodImg from "@/assets/scenes/mood.png.asset.json";
 import breatheImg from "@/assets/scenes/breathe.png.asset.json";
+import journalImg from "@/assets/scenes/journal.png.asset.json";
 
 /**
  * Scene — illustrated set for every wellness surface.
