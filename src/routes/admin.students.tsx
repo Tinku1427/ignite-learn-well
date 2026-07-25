@@ -1,0 +1,170 @@
+import { createFileRoute } from "@tanstack/react-router";
+import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+import { Protected } from "@/components/protected";
+import { AppIcon } from "@/components/app-icon";
+
+export const Route = createFileRoute("/admin/students")({
+  component: () => <Protected mode="admin" staffOnly><Students /></Protected>,
+});
+
+function Students() {
+  const [selected, setSelected] = useState<string | null>(null);
+  const [q, setQ] = useState("");
+
+  const { data: profiles = [] } = useQuery({
+    queryKey: ["admin-students"],
+    queryFn: async () => {
+      const { data } = await supabase.from("profiles").select("id, full_name, exam, created_at").order("created_at", { ascending: false });
+      return data ?? [];
+    },
+  });
+
+  const list = profiles.filter((p: any) => !q || (p.full_name ?? "").toLowerCase().includes(q.toLowerCase()));
+
+  return (
+    <div className="space-y-6">
+      <header>
+        <div className="flex items-center gap-2 text-xs uppercase tracking-widest text-muted-foreground"><AppIcon name="dashboard" size={14} /> Students</div>
+        <h1 className="font-display text-3xl">Directory</h1>
+        <p className="mt-1 text-sm text-muted-foreground max-w-lg">A 360° view of each student. Never the raw journal — even here.</p>
+      </header>
+
+      <div className="grid gap-6 md:grid-cols-[280px_1fr]">
+        <aside className="soft-card p-3">
+          <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search…" className="w-full rounded-lg border border-border bg-paper/60 px-3 py-2 text-sm" />
+          <ul className="mt-2 max-h-[60vh] overflow-y-auto space-y-1">
+            {list.map((p: any) => (
+              <li key={p.id}>
+                <button onClick={() => setSelected(p.id)} className={`w-full text-left rounded-lg px-3 py-2 text-sm hover:bg-secondary/60 ${selected === p.id ? "bg-secondary/70" : ""}`}>
+                  <div className="font-medium">{p.full_name || "Unnamed"}</div>
+                  <div className="text-[11px] text-muted-foreground">{p.exam ?? "—"}</div>
+                </button>
+              </li>
+            ))}
+            {list.length === 0 && <div className="p-3 text-sm text-muted-foreground">No students match.</div>}
+          </ul>
+        </aside>
+
+        <section className="soft-card p-6 min-h-[40vh]">
+          {!selected ? (
+            <div className="text-sm text-muted-foreground">Select a student to see their 360° profile.</div>
+          ) : (
+            <StudentProfile id={selected} />
+          )}
+        </section>
+      </div>
+    </div>
+  );
+}
+
+function StudentProfile({ id }: { id: string }) {
+  const { data: profile } = useQuery({
+    queryKey: ["student-profile", id],
+    queryFn: async () => {
+      const { data } = await supabase.from("profiles").select("id, full_name, exam, target_year, class_level").eq("id", id).maybeSingle();
+      return data;
+    },
+  });
+
+  const { data: scores = [] } = useQuery({
+    queryKey: ["student-scores", id],
+    queryFn: async () => {
+      const { data } = await supabase.from("wellness_scores").select("score_date, composite, focus_score, rest_score, reflection_score, connection_score, risk_band").eq("user_id", id).order("score_date", { ascending: true });
+      return data ?? [];
+    },
+  });
+
+  const { data: moods = [] } = useQuery({
+    queryKey: ["student-moods", id],
+    queryFn: async () => {
+      const { data } = await supabase.from("mood_checkins").select("mood_score, energy, created_at").eq("user_id", id).order("created_at", { ascending: true }).limit(30);
+      return data ?? [];
+    },
+  });
+
+  const { data: events = [] } = useQuery({
+    queryKey: ["student-events", id],
+    queryFn: async () => {
+      const { data } = await supabase.from("agent_events").select("event_type, detail, created_at").eq("user_id", id).order("created_at", { ascending: false }).limit(20);
+      return data ?? [];
+    },
+  });
+
+  const latest = scores[scores.length - 1] as any;
+  const first = scores[0] as any;
+
+  return (
+    <div className="space-y-6">
+      <div>
+        <h2 className="font-display text-2xl">{profile?.full_name ?? "Student"}</h2>
+        <div className="text-xs text-muted-foreground">{profile?.exam ?? "—"} · target {profile?.target_year ?? "—"}</div>
+      </div>
+
+      <section>
+        <h3 className="text-xs uppercase tracking-widest text-muted-foreground mb-2">Wellness — before & now</h3>
+        <div className="grid grid-cols-4 gap-2">
+          {(["focus_score","rest_score","reflection_score","connection_score"] as const).map((k) => {
+            const before = first ? Math.round(first[k]) : 0;
+            const now = latest ? Math.round(latest[k]) : 0;
+            const dir = now - before;
+            const label = k.replace("_score","");
+            return (
+              <div key={k} className="rounded-xl border border-border bg-paper/40 p-3">
+                <div className="text-[10px] uppercase tracking-widest text-muted-foreground">{label}</div>
+                <div className="mt-1 flex items-baseline gap-2">
+                  <span className="font-display text-xl tabular-nums">{now}</span>
+                  <span className={`text-[11px] ${dir >= 0 ? "text-sage-ink" : "text-muted-foreground"}`}>{dir >= 0 ? `+${dir}` : dir}</span>
+                </div>
+                <div className="text-[10px] text-muted-foreground">from {before}</div>
+              </div>
+            );
+          })}
+        </div>
+      </section>
+
+      <section>
+        <h3 className="text-xs uppercase tracking-widest text-muted-foreground mb-2">Composite over time</h3>
+        <svg viewBox="0 0 600 120" className="w-full h-28">
+          {scores.length > 1 && (
+            <polyline fill="none" stroke="hsl(var(--primary))" strokeWidth="2"
+              points={scores.map((s: any, i: number) => {
+                const x = (i / (scores.length - 1)) * 580 + 10;
+                const y = 110 - (Number(s.composite) / 100) * 100;
+                return `${x},${y}`;
+              }).join(" ")}
+            />
+          )}
+        </svg>
+      </section>
+
+      <section>
+        <h3 className="text-xs uppercase tracking-widest text-muted-foreground mb-2">Mood check-ins</h3>
+        <div className="flex flex-wrap gap-1">
+          {moods.map((m: any, i: number) => (
+            <span key={i} className="rounded-full bg-secondary px-2 py-0.5 text-[11px] tabular-nums" title={new Date(m.created_at).toLocaleString()}>
+              {m.mood_score}
+            </span>
+          ))}
+          {moods.length === 0 && <span className="text-xs text-muted-foreground">No mood entries.</span>}
+        </div>
+      </section>
+
+      <section>
+        <h3 className="text-xs uppercase tracking-widest text-muted-foreground mb-2">Agent events</h3>
+        <ul className="space-y-1">
+          {events.map((e: any, i: number) => (
+            <li key={i} className="text-xs text-muted-foreground flex justify-between rounded-lg bg-paper/40 px-3 py-2">
+              <span className="font-medium text-foreground">{e.event_type}</span>
+              <span>{new Date(e.created_at).toLocaleString()}</span>
+            </li>
+          ))}
+          {events.length === 0 && <span className="text-xs text-muted-foreground">No events yet.</span>}
+        </ul>
+      </section>
+
+      <div className="text-[11px] text-muted-foreground">Journal entries are private to the student.</div>
+    </div>
+  );
+}

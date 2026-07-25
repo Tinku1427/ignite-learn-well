@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
+import { navigateByRole } from "@/lib/role-routing";
 
 export const Route = createFileRoute("/auth")({ component: Auth });
 
@@ -22,7 +23,7 @@ function Auth() {
 
   useEffect(() => {
     const { data: sub } = supabase.auth.onAuthStateChange((_e, session) => {
-      if (session?.user) router.navigate({ to: "/home" });
+      if (session?.user) navigateByRole(session.user.id, (opts) => router.navigate(opts));
     });
     return () => sub.subscription.unsubscribe();
   }, [router]);

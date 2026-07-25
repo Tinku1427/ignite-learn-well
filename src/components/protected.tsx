@@ -4,13 +4,14 @@ import { useAuth } from "@/hooks/use-auth";
 import { StudentShell } from "./student-shell";
 import { AdminShell } from "./admin-shell";
 import { supabase } from "@/integrations/supabase/client";
+import { ROLE_HOME, pickPrimaryRole } from "@/lib/role-routing";
 
 export function Protected({
   children,
   mode = "student",
   staffOnly = false,
 }: { children: ReactNode; mode?: "student" | "admin"; staffOnly?: boolean }) {
-  const { user, loading, isStaff } = useAuth();
+  const { user, loading, roles, isStaff, isAdmin } = useAuth();
   const router = useRouter();
   const [gateChecked, setGateChecked] = useState(false);
 
@@ -19,10 +20,21 @@ export function Protected({
   }, [loading, user, router, mode]);
 
   useEffect(() => {
-    if (!loading && user && staffOnly && !isStaff) {
-      supabase.auth.signOut().then(() => router.navigate({ to: "/admin-login" }));
+    if (loading || !user) return;
+    if (mode === "admin") {
+      if (!isAdmin) router.navigate({ to: "/admin-login" });
+      return;
     }
-  }, [loading, user, staffOnly, isStaff, router]);
+    // student mode — bounce staff-only users to their own panel
+    if (staffOnly && !isStaff) {
+      supabase.auth.signOut().then(() => router.navigate({ to: "/admin-login" }));
+      return;
+    }
+    if (roles.length > 0 && !roles.includes("student")) {
+      const primary = pickPrimaryRole(roles);
+      if (primary && ROLE_HOME[primary] !== "/home") router.navigate({ to: ROLE_HOME[primary] as string });
+    }
+  }, [loading, user, mode, staffOnly, isStaff, isAdmin, roles, router]);
 
   useEffect(() => {
     if (loading || !user || mode !== "student") return;
