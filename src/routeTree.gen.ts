@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as RoleSelectRouteImport } from './routes/role-select'
 import { Route as PracticeRouteImport } from './routes/practice'
 import { Route as PlanRouteImport } from './routes/plan'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
@@ -31,11 +32,22 @@ import { Route as PracticeJournalRouteImport } from './routes/practice.journal'
 import { Route as PracticeBreatheRouteImport } from './routes/practice.breathe'
 import { Route as PracticeAffirmRouteImport } from './routes/practice.affirm'
 import { Route as AdminWellnessRouteImport } from './routes/admin.wellness'
+import { Route as AdminStudentsRouteImport } from './routes/admin.students'
+import { Route as AdminReportsRouteImport } from './routes/admin.reports'
+import { Route as AdminPeopleRouteImport } from './routes/admin.people'
 import { Route as AdminContentRouteImport } from './routes/admin.content'
+import { Route as AdminAnnouncementsRouteImport } from './routes/admin.announcements'
+import { Route as AdminAgentRouteImport } from './routes/admin.agent'
+import { Route as ApiPublicSeedTestRouteImport } from './routes/api/public/seed-test'
 
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
   path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RoleSelectRoute = RoleSelectRouteImport.update({
+  id: '/role-select',
+  path: '/role-select',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PracticeRoute = PracticeRouteImport.update({
@@ -143,10 +155,40 @@ const AdminWellnessRoute = AdminWellnessRouteImport.update({
   path: '/wellness',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminStudentsRoute = AdminStudentsRouteImport.update({
+  id: '/students',
+  path: '/students',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminReportsRoute = AdminReportsRouteImport.update({
+  id: '/reports',
+  path: '/reports',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminPeopleRoute = AdminPeopleRouteImport.update({
+  id: '/people',
+  path: '/people',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminContentRoute = AdminContentRouteImport.update({
   id: '/content',
   path: '/content',
   getParentRoute: () => AdminRoute,
+} as any)
+const AdminAnnouncementsRoute = AdminAnnouncementsRouteImport.update({
+  id: '/announcements',
+  path: '/announcements',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminAgentRoute = AdminAgentRouteImport.update({
+  id: '/agent',
+  path: '/agent',
+  getParentRoute: () => AdminRoute,
+} as any)
+const ApiPublicSeedTestRoute = ApiPublicSeedTestRouteImport.update({
+  id: '/api/public/seed-test',
+  path: '/api/public/seed-test',
+  getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
@@ -163,8 +205,14 @@ export interface FileRoutesByFullPath {
   '/onboarding': typeof OnboardingRoute
   '/plan': typeof PlanRoute
   '/practice': typeof PracticeRouteWithChildren
+  '/role-select': typeof RoleSelectRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/admin/agent': typeof AdminAgentRoute
+  '/admin/announcements': typeof AdminAnnouncementsRoute
   '/admin/content': typeof AdminContentRoute
+  '/admin/people': typeof AdminPeopleRoute
+  '/admin/reports': typeof AdminReportsRoute
+  '/admin/students': typeof AdminStudentsRoute
   '/admin/wellness': typeof AdminWellnessRoute
   '/practice/affirm': typeof PracticeAffirmRoute
   '/practice/breathe': typeof PracticeBreatheRoute
@@ -173,6 +221,7 @@ export interface FileRoutesByFullPath {
   '/practice/mood': typeof PracticeMoodRoute
   '/admin/': typeof AdminIndexRoute
   '/practice/': typeof PracticeIndexRoute
+  '/api/public/seed-test': typeof ApiPublicSeedTestRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -186,8 +235,14 @@ export interface FileRoutesByTo {
   '/mentor': typeof MentorRoute
   '/onboarding': typeof OnboardingRoute
   '/plan': typeof PlanRoute
+  '/role-select': typeof RoleSelectRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/admin/agent': typeof AdminAgentRoute
+  '/admin/announcements': typeof AdminAnnouncementsRoute
   '/admin/content': typeof AdminContentRoute
+  '/admin/people': typeof AdminPeopleRoute
+  '/admin/reports': typeof AdminReportsRoute
+  '/admin/students': typeof AdminStudentsRoute
   '/admin/wellness': typeof AdminWellnessRoute
   '/practice/affirm': typeof PracticeAffirmRoute
   '/practice/breathe': typeof PracticeBreatheRoute
@@ -196,6 +251,7 @@ export interface FileRoutesByTo {
   '/practice/mood': typeof PracticeMoodRoute
   '/admin': typeof AdminIndexRoute
   '/practice': typeof PracticeIndexRoute
+  '/api/public/seed-test': typeof ApiPublicSeedTestRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -212,8 +268,14 @@ export interface FileRoutesById {
   '/onboarding': typeof OnboardingRoute
   '/plan': typeof PlanRoute
   '/practice': typeof PracticeRouteWithChildren
+  '/role-select': typeof RoleSelectRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/admin/agent': typeof AdminAgentRoute
+  '/admin/announcements': typeof AdminAnnouncementsRoute
   '/admin/content': typeof AdminContentRoute
+  '/admin/people': typeof AdminPeopleRoute
+  '/admin/reports': typeof AdminReportsRoute
+  '/admin/students': typeof AdminStudentsRoute
   '/admin/wellness': typeof AdminWellnessRoute
   '/practice/affirm': typeof PracticeAffirmRoute
   '/practice/breathe': typeof PracticeBreatheRoute
@@ -222,6 +284,7 @@ export interface FileRoutesById {
   '/practice/mood': typeof PracticeMoodRoute
   '/admin/': typeof AdminIndexRoute
   '/practice/': typeof PracticeIndexRoute
+  '/api/public/seed-test': typeof ApiPublicSeedTestRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -239,8 +302,14 @@ export interface FileRouteTypes {
     | '/onboarding'
     | '/plan'
     | '/practice'
+    | '/role-select'
     | '/sitemap.xml'
+    | '/admin/agent'
+    | '/admin/announcements'
     | '/admin/content'
+    | '/admin/people'
+    | '/admin/reports'
+    | '/admin/students'
     | '/admin/wellness'
     | '/practice/affirm'
     | '/practice/breathe'
@@ -249,6 +318,7 @@ export interface FileRouteTypes {
     | '/practice/mood'
     | '/admin/'
     | '/practice/'
+    | '/api/public/seed-test'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -262,8 +332,14 @@ export interface FileRouteTypes {
     | '/mentor'
     | '/onboarding'
     | '/plan'
+    | '/role-select'
     | '/sitemap.xml'
+    | '/admin/agent'
+    | '/admin/announcements'
     | '/admin/content'
+    | '/admin/people'
+    | '/admin/reports'
+    | '/admin/students'
     | '/admin/wellness'
     | '/practice/affirm'
     | '/practice/breathe'
@@ -272,6 +348,7 @@ export interface FileRouteTypes {
     | '/practice/mood'
     | '/admin'
     | '/practice'
+    | '/api/public/seed-test'
   id:
     | '__root__'
     | '/'
@@ -287,8 +364,14 @@ export interface FileRouteTypes {
     | '/onboarding'
     | '/plan'
     | '/practice'
+    | '/role-select'
     | '/sitemap.xml'
+    | '/admin/agent'
+    | '/admin/announcements'
     | '/admin/content'
+    | '/admin/people'
+    | '/admin/reports'
+    | '/admin/students'
     | '/admin/wellness'
     | '/practice/affirm'
     | '/practice/breathe'
@@ -297,6 +380,7 @@ export interface FileRouteTypes {
     | '/practice/mood'
     | '/admin/'
     | '/practice/'
+    | '/api/public/seed-test'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -313,7 +397,9 @@ export interface RootRouteChildren {
   OnboardingRoute: typeof OnboardingRoute
   PlanRoute: typeof PlanRoute
   PracticeRoute: typeof PracticeRouteWithChildren
+  RoleSelectRoute: typeof RoleSelectRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  ApiPublicSeedTestRoute: typeof ApiPublicSeedTestRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -323,6 +409,13 @@ declare module '@tanstack/react-router' {
       path: '/sitemap.xml'
       fullPath: '/sitemap.xml'
       preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/role-select': {
+      id: '/role-select'
+      path: '/role-select'
+      fullPath: '/role-select'
+      preLoaderRoute: typeof RoleSelectRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/practice': {
@@ -472,6 +565,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminWellnessRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/students': {
+      id: '/admin/students'
+      path: '/students'
+      fullPath: '/admin/students'
+      preLoaderRoute: typeof AdminStudentsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/reports': {
+      id: '/admin/reports'
+      path: '/reports'
+      fullPath: '/admin/reports'
+      preLoaderRoute: typeof AdminReportsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/people': {
+      id: '/admin/people'
+      path: '/people'
+      fullPath: '/admin/people'
+      preLoaderRoute: typeof AdminPeopleRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/content': {
       id: '/admin/content'
       path: '/content'
@@ -479,17 +593,48 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminContentRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/announcements': {
+      id: '/admin/announcements'
+      path: '/announcements'
+      fullPath: '/admin/announcements'
+      preLoaderRoute: typeof AdminAnnouncementsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/agent': {
+      id: '/admin/agent'
+      path: '/agent'
+      fullPath: '/admin/agent'
+      preLoaderRoute: typeof AdminAgentRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/api/public/seed-test': {
+      id: '/api/public/seed-test'
+      path: '/api/public/seed-test'
+      fullPath: '/api/public/seed-test'
+      preLoaderRoute: typeof ApiPublicSeedTestRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 interface AdminRouteChildren {
+  AdminAgentRoute: typeof AdminAgentRoute
+  AdminAnnouncementsRoute: typeof AdminAnnouncementsRoute
   AdminContentRoute: typeof AdminContentRoute
+  AdminPeopleRoute: typeof AdminPeopleRoute
+  AdminReportsRoute: typeof AdminReportsRoute
+  AdminStudentsRoute: typeof AdminStudentsRoute
   AdminWellnessRoute: typeof AdminWellnessRoute
   AdminIndexRoute: typeof AdminIndexRoute
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
+  AdminAgentRoute: AdminAgentRoute,
+  AdminAnnouncementsRoute: AdminAnnouncementsRoute,
   AdminContentRoute: AdminContentRoute,
+  AdminPeopleRoute: AdminPeopleRoute,
+  AdminReportsRoute: AdminReportsRoute,
+  AdminStudentsRoute: AdminStudentsRoute,
   AdminWellnessRoute: AdminWellnessRoute,
   AdminIndexRoute: AdminIndexRoute,
 }
@@ -532,7 +677,9 @@ const rootRouteChildren: RootRouteChildren = {
   OnboardingRoute: OnboardingRoute,
   PlanRoute: PlanRoute,
   PracticeRoute: PracticeRouteWithChildren,
+  RoleSelectRoute: RoleSelectRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
+  ApiPublicSeedTestRoute: ApiPublicSeedTestRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

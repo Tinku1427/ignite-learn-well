@@ -2,18 +2,24 @@ import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
 import { useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { WellnessRing } from "@/components/wellness-ring";
-import { Buddy } from "@/components/buddy";
 
 export const Route = createFileRoute("/")({ component: Landing });
 
 function Landing() {
   const router = useRouter();
   useEffect(() => {
+    let cancelled = false;
+    const go = async (userId: string) => {
+      const { landingForRoles, fetchRoles } = await import("@/lib/role-routing");
+      const roles = await fetchRoles(userId);
+      if (cancelled) return;
+      router.navigate({ to: landingForRoles(roles) as string });
+    };
     const { data: sub } = supabase.auth.onAuthStateChange((_e, session) => {
-      if (session?.user) router.navigate({ to: "/home" });
+      if (session?.user) go(session.user.id);
     });
-    supabase.auth.getSession().then(({ data }) => { if (data.session?.user) router.navigate({ to: "/home" }); });
-    return () => sub.subscription.unsubscribe();
+    supabase.auth.getSession().then(({ data }) => { if (data.session?.user) go(data.session.user.id); });
+    return () => { cancelled = true; sub.subscription.unsubscribe(); };
   }, [router]);
 
   return (
@@ -39,7 +45,6 @@ function Landing() {
         </div>
         <div className="flex flex-col items-center">
           <WellnessRing arcs={{ focus: 70, rest: 65, reflection: 72, connection: 60 }} />
-          <Buddy mood="encouraging" size={80} className="-mt-6" />
         </div>
       </section>
 
