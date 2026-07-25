@@ -21,6 +21,7 @@ const IMG_MAP: Partial<Record<SceneKind, { url: string; alt: string }>> = {
   affirm:   { url: affirmImg.url,   alt: "You are worthy" },
   mood:     { url: moodImg.url,     alt: "Reading a book" },
   breathe:  { url: breatheImg.url,  alt: "Yoga breathing pose" },
+  journal:  { url: journalImg.url,  alt: "Reading a book" },
 };
 
 export function Scene({ kind, className, size = 220, animate = false }: {
