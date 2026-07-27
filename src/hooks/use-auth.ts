@@ -13,19 +13,34 @@ export function useAuth() {
     let mounted = true;
     const loadRoles = async (uid: string) => {
       const { data } = await supabase.from("user_roles").select("role").eq("user_id", uid);
-      if (mounted) setRoles((data ?? []).map((r) => r.role as AppRole));
+      if (!mounted) return;
+      setRoles((data ?? []).map((r) => r.role as AppRole));
     };
+
     const { data: sub } = supabase.auth.onAuthStateChange((_e, session) => {
       setUser(session?.user ?? null);
-      if (session?.user) setTimeout(() => loadRoles(session.user.id), 0);
-      else setRoles([]);
+      if (session?.user) {
+        const uid = session.user.id;
+        setTimeout(() => {
+          loadRoles(uid).finally(() => mounted && setLoading(false));
+        }, 0);
+      } else {
+        setRoles([]);
+        setLoading(false);
+      }
     });
-    supabase.auth.getSession().then(({ data }) => {
+
+    supabase.auth.getSession().then(async ({ data }) => {
       if (!mounted) return;
-      setUser(data.session?.user ?? null);
-      if (data.session?.user) loadRoles(data.session.user.id);
-      setLoading(false);
+      const u = data.session?.user ?? null;
+      setUser(u);
+      // Roles must resolve BEFORE loading flips false — gates read both together
+      // and would otherwise sign the user out against an empty roles array.
+      if (u) await loadRoles(u.id);
+      else setRoles([]);
+      if (mounted) setLoading(false);
     });
+
     return () => { mounted = false; sub.subscription.unsubscribe(); };
   }, []);
 

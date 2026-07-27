@@ -12,13 +12,16 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as RoleSelectRouteImport } from './routes/role-select'
 import { Route as PracticeRouteImport } from './routes/practice'
+import { Route as PortalsRouteImport } from './routes/portals'
 import { Route as PlanRouteImport } from './routes/plan'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
+import { Route as MentorLoginRouteImport } from './routes/mentor-login'
 import { Route as MentorRouteImport } from './routes/mentor'
 import { Route as MeRouteImport } from './routes/me'
 import { Route as LearnRouteImport } from './routes/learn'
 import { Route as HomeRouteImport } from './routes/home'
 import { Route as FocusRouteImport } from './routes/focus'
+import { Route as CoachLoginRouteImport } from './routes/coach-login'
 import { Route as CoachRouteImport } from './routes/coach'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AdminLoginRouteImport } from './routes/admin-login'
@@ -55,6 +58,11 @@ const PracticeRoute = PracticeRouteImport.update({
   path: '/practice',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PortalsRoute = PortalsRouteImport.update({
+  id: '/portals',
+  path: '/portals',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PlanRoute = PlanRouteImport.update({
   id: '/plan',
   path: '/plan',
@@ -63,6 +71,11 @@ const PlanRoute = PlanRouteImport.update({
 const OnboardingRoute = OnboardingRouteImport.update({
   id: '/onboarding',
   path: '/onboarding',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MentorLoginRoute = MentorLoginRouteImport.update({
+  id: '/mentor-login',
+  path: '/mentor-login',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MentorRoute = MentorRouteImport.update({
@@ -88,6 +101,11 @@ const HomeRoute = HomeRouteImport.update({
 const FocusRoute = FocusRouteImport.update({
   id: '/focus',
   path: '/focus',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CoachLoginRoute = CoachLoginRouteImport.update({
+  id: '/coach-login',
+  path: '/coach-login',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CoachRoute = CoachRouteImport.update({
@@ -197,13 +215,16 @@ export interface FileRoutesByFullPath {
   '/admin-login': typeof AdminLoginRoute
   '/auth': typeof AuthRoute
   '/coach': typeof CoachRoute
+  '/coach-login': typeof CoachLoginRoute
   '/focus': typeof FocusRoute
   '/home': typeof HomeRoute
   '/learn': typeof LearnRoute
   '/me': typeof MeRoute
   '/mentor': typeof MentorRoute
+  '/mentor-login': typeof MentorLoginRoute
   '/onboarding': typeof OnboardingRoute
   '/plan': typeof PlanRoute
+  '/portals': typeof PortalsRoute
   '/practice': typeof PracticeRouteWithChildren
   '/role-select': typeof RoleSelectRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -228,13 +249,16 @@ export interface FileRoutesByTo {
   '/admin-login': typeof AdminLoginRoute
   '/auth': typeof AuthRoute
   '/coach': typeof CoachRoute
+  '/coach-login': typeof CoachLoginRoute
   '/focus': typeof FocusRoute
   '/home': typeof HomeRoute
   '/learn': typeof LearnRoute
   '/me': typeof MeRoute
   '/mentor': typeof MentorRoute
+  '/mentor-login': typeof MentorLoginRoute
   '/onboarding': typeof OnboardingRoute
   '/plan': typeof PlanRoute
+  '/portals': typeof PortalsRoute
   '/role-select': typeof RoleSelectRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/agent': typeof AdminAgentRoute
@@ -260,13 +284,16 @@ export interface FileRoutesById {
   '/admin-login': typeof AdminLoginRoute
   '/auth': typeof AuthRoute
   '/coach': typeof CoachRoute
+  '/coach-login': typeof CoachLoginRoute
   '/focus': typeof FocusRoute
   '/home': typeof HomeRoute
   '/learn': typeof LearnRoute
   '/me': typeof MeRoute
   '/mentor': typeof MentorRoute
+  '/mentor-login': typeof MentorLoginRoute
   '/onboarding': typeof OnboardingRoute
   '/plan': typeof PlanRoute
+  '/portals': typeof PortalsRoute
   '/practice': typeof PracticeRouteWithChildren
   '/role-select': typeof RoleSelectRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -294,13 +321,16 @@ export interface FileRouteTypes {
     | '/admin-login'
     | '/auth'
     | '/coach'
+    | '/coach-login'
     | '/focus'
     | '/home'
     | '/learn'
     | '/me'
     | '/mentor'
+    | '/mentor-login'
     | '/onboarding'
     | '/plan'
+    | '/portals'
     | '/practice'
     | '/role-select'
     | '/sitemap.xml'
@@ -325,13 +355,16 @@ export interface FileRouteTypes {
     | '/admin-login'
     | '/auth'
     | '/coach'
+    | '/coach-login'
     | '/focus'
     | '/home'
     | '/learn'
     | '/me'
     | '/mentor'
+    | '/mentor-login'
     | '/onboarding'
     | '/plan'
+    | '/portals'
     | '/role-select'
     | '/sitemap.xml'
     | '/admin/agent'
@@ -356,13 +389,16 @@ export interface FileRouteTypes {
     | '/admin-login'
     | '/auth'
     | '/coach'
+    | '/coach-login'
     | '/focus'
     | '/home'
     | '/learn'
     | '/me'
     | '/mentor'
+    | '/mentor-login'
     | '/onboarding'
     | '/plan'
+    | '/portals'
     | '/practice'
     | '/role-select'
     | '/sitemap.xml'
@@ -389,13 +425,16 @@ export interface RootRouteChildren {
   AdminLoginRoute: typeof AdminLoginRoute
   AuthRoute: typeof AuthRoute
   CoachRoute: typeof CoachRoute
+  CoachLoginRoute: typeof CoachLoginRoute
   FocusRoute: typeof FocusRoute
   HomeRoute: typeof HomeRoute
   LearnRoute: typeof LearnRoute
   MeRoute: typeof MeRoute
   MentorRoute: typeof MentorRoute
+  MentorLoginRoute: typeof MentorLoginRoute
   OnboardingRoute: typeof OnboardingRoute
   PlanRoute: typeof PlanRoute
+  PortalsRoute: typeof PortalsRoute
   PracticeRoute: typeof PracticeRouteWithChildren
   RoleSelectRoute: typeof RoleSelectRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
@@ -425,6 +464,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PracticeRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/portals': {
+      id: '/portals'
+      path: '/portals'
+      fullPath: '/portals'
+      preLoaderRoute: typeof PortalsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/plan': {
       id: '/plan'
       path: '/plan'
@@ -437,6 +483,13 @@ declare module '@tanstack/react-router' {
       path: '/onboarding'
       fullPath: '/onboarding'
       preLoaderRoute: typeof OnboardingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mentor-login': {
+      id: '/mentor-login'
+      path: '/mentor-login'
+      fullPath: '/mentor-login'
+      preLoaderRoute: typeof MentorLoginRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/mentor': {
@@ -472,6 +525,13 @@ declare module '@tanstack/react-router' {
       path: '/focus'
       fullPath: '/focus'
       preLoaderRoute: typeof FocusRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/coach-login': {
+      id: '/coach-login'
+      path: '/coach-login'
+      fullPath: '/coach-login'
+      preLoaderRoute: typeof CoachLoginRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/coach': {
@@ -669,13 +729,16 @@ const rootRouteChildren: RootRouteChildren = {
   AdminLoginRoute: AdminLoginRoute,
   AuthRoute: AuthRoute,
   CoachRoute: CoachRoute,
+  CoachLoginRoute: CoachLoginRoute,
   FocusRoute: FocusRoute,
   HomeRoute: HomeRoute,
   LearnRoute: LearnRoute,
   MeRoute: MeRoute,
   MentorRoute: MentorRoute,
+  MentorLoginRoute: MentorLoginRoute,
   OnboardingRoute: OnboardingRoute,
   PlanRoute: PlanRoute,
+  PortalsRoute: PortalsRoute,
   PracticeRoute: PracticeRouteWithChildren,
   RoleSelectRoute: RoleSelectRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
@@ -684,13 +747,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
