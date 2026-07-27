@@ -14,6 +14,7 @@ import { Route as RoleSelectRouteImport } from './routes/role-select'
 import { Route as PracticeRouteImport } from './routes/practice'
 import { Route as PlanRouteImport } from './routes/plan'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
+import { Route as MentorLoginRouteImport } from './routes/mentor-login'
 import { Route as MentorRouteImport } from './routes/mentor'
 import { Route as MeRouteImport } from './routes/me'
 import { Route as LearnRouteImport } from './routes/learn'
@@ -64,6 +65,11 @@ const PlanRoute = PlanRouteImport.update({
 const OnboardingRoute = OnboardingRouteImport.update({
   id: '/onboarding',
   path: '/onboarding',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MentorLoginRoute = MentorLoginRouteImport.update({
+  id: '/mentor-login',
+  path: '/mentor-login',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MentorRoute = MentorRouteImport.update({
@@ -209,6 +215,7 @@ export interface FileRoutesByFullPath {
   '/learn': typeof LearnRoute
   '/me': typeof MeRoute
   '/mentor': typeof MentorRoute
+  '/mentor-login': typeof MentorLoginRoute
   '/onboarding': typeof OnboardingRoute
   '/plan': typeof PlanRoute
   '/practice': typeof PracticeRouteWithChildren
@@ -241,6 +248,7 @@ export interface FileRoutesByTo {
   '/learn': typeof LearnRoute
   '/me': typeof MeRoute
   '/mentor': typeof MentorRoute
+  '/mentor-login': typeof MentorLoginRoute
   '/onboarding': typeof OnboardingRoute
   '/plan': typeof PlanRoute
   '/role-select': typeof RoleSelectRoute
@@ -274,6 +282,7 @@ export interface FileRoutesById {
   '/learn': typeof LearnRoute
   '/me': typeof MeRoute
   '/mentor': typeof MentorRoute
+  '/mentor-login': typeof MentorLoginRoute
   '/onboarding': typeof OnboardingRoute
   '/plan': typeof PlanRoute
   '/practice': typeof PracticeRouteWithChildren
@@ -309,6 +318,7 @@ export interface FileRouteTypes {
     | '/learn'
     | '/me'
     | '/mentor'
+    | '/mentor-login'
     | '/onboarding'
     | '/plan'
     | '/practice'
@@ -341,6 +351,7 @@ export interface FileRouteTypes {
     | '/learn'
     | '/me'
     | '/mentor'
+    | '/mentor-login'
     | '/onboarding'
     | '/plan'
     | '/role-select'
@@ -373,6 +384,7 @@ export interface FileRouteTypes {
     | '/learn'
     | '/me'
     | '/mentor'
+    | '/mentor-login'
     | '/onboarding'
     | '/plan'
     | '/practice'
@@ -407,6 +419,7 @@ export interface RootRouteChildren {
   LearnRoute: typeof LearnRoute
   MeRoute: typeof MeRoute
   MentorRoute: typeof MentorRoute
+  MentorLoginRoute: typeof MentorLoginRoute
   OnboardingRoute: typeof OnboardingRoute
   PlanRoute: typeof PlanRoute
   PracticeRoute: typeof PracticeRouteWithChildren
@@ -450,6 +463,13 @@ declare module '@tanstack/react-router' {
       path: '/onboarding'
       fullPath: '/onboarding'
       preLoaderRoute: typeof OnboardingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mentor-login': {
+      id: '/mentor-login'
+      path: '/mentor-login'
+      fullPath: '/mentor-login'
+      preLoaderRoute: typeof MentorLoginRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/mentor': {
@@ -695,6 +715,7 @@ const rootRouteChildren: RootRouteChildren = {
   LearnRoute: LearnRoute,
   MeRoute: MeRoute,
   MentorRoute: MentorRoute,
+  MentorLoginRoute: MentorLoginRoute,
   OnboardingRoute: OnboardingRoute,
   PlanRoute: PlanRoute,
   PracticeRoute: PracticeRouteWithChildren,
