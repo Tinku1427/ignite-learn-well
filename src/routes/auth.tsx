@@ -104,6 +104,11 @@ function Auth() {
             >
               {mode === "signin" ? "New here? Create an account" : "Have an account? Sign in"}
             </button>
+
+            <div className="mt-4 border-t border-border pt-4 text-center text-xs text-muted-foreground">
+              Mentor, coach or admin?{" "}
+              <Link to="/portals" className="underline hover:text-foreground">Use your portal</Link>
+            </div>
           </div>
         )}
       </div>

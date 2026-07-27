@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as RoleSelectRouteImport } from './routes/role-select'
 import { Route as PracticeRouteImport } from './routes/practice'
+import { Route as PortalsRouteImport } from './routes/portals'
 import { Route as PlanRouteImport } from './routes/plan'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as MentorLoginRouteImport } from './routes/mentor-login'
@@ -55,6 +56,11 @@ const RoleSelectRoute = RoleSelectRouteImport.update({
 const PracticeRoute = PracticeRouteImport.update({
   id: '/practice',
   path: '/practice',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PortalsRoute = PortalsRouteImport.update({
+  id: '/portals',
+  path: '/portals',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PlanRoute = PlanRouteImport.update({
@@ -218,6 +224,7 @@ export interface FileRoutesByFullPath {
   '/mentor-login': typeof MentorLoginRoute
   '/onboarding': typeof OnboardingRoute
   '/plan': typeof PlanRoute
+  '/portals': typeof PortalsRoute
   '/practice': typeof PracticeRouteWithChildren
   '/role-select': typeof RoleSelectRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -251,6 +258,7 @@ export interface FileRoutesByTo {
   '/mentor-login': typeof MentorLoginRoute
   '/onboarding': typeof OnboardingRoute
   '/plan': typeof PlanRoute
+  '/portals': typeof PortalsRoute
   '/role-select': typeof RoleSelectRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/agent': typeof AdminAgentRoute
@@ -285,6 +293,7 @@ export interface FileRoutesById {
   '/mentor-login': typeof MentorLoginRoute
   '/onboarding': typeof OnboardingRoute
   '/plan': typeof PlanRoute
+  '/portals': typeof PortalsRoute
   '/practice': typeof PracticeRouteWithChildren
   '/role-select': typeof RoleSelectRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -321,6 +330,7 @@ export interface FileRouteTypes {
     | '/mentor-login'
     | '/onboarding'
     | '/plan'
+    | '/portals'
     | '/practice'
     | '/role-select'
     | '/sitemap.xml'
@@ -354,6 +364,7 @@ export interface FileRouteTypes {
     | '/mentor-login'
     | '/onboarding'
     | '/plan'
+    | '/portals'
     | '/role-select'
     | '/sitemap.xml'
     | '/admin/agent'
@@ -387,6 +398,7 @@ export interface FileRouteTypes {
     | '/mentor-login'
     | '/onboarding'
     | '/plan'
+    | '/portals'
     | '/practice'
     | '/role-select'
     | '/sitemap.xml'
@@ -422,6 +434,7 @@ export interface RootRouteChildren {
   MentorLoginRoute: typeof MentorLoginRoute
   OnboardingRoute: typeof OnboardingRoute
   PlanRoute: typeof PlanRoute
+  PortalsRoute: typeof PortalsRoute
   PracticeRoute: typeof PracticeRouteWithChildren
   RoleSelectRoute: typeof RoleSelectRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
@@ -449,6 +462,13 @@ declare module '@tanstack/react-router' {
       path: '/practice'
       fullPath: '/practice'
       preLoaderRoute: typeof PracticeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/portals': {
+      id: '/portals'
+      path: '/portals'
+      fullPath: '/portals'
+      preLoaderRoute: typeof PortalsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/plan': {
@@ -718,6 +738,7 @@ const rootRouteChildren: RootRouteChildren = {
   MentorLoginRoute: MentorLoginRoute,
   OnboardingRoute: OnboardingRoute,
   PlanRoute: PlanRoute,
+  PortalsRoute: PortalsRoute,
   PracticeRoute: PracticeRouteWithChildren,
   RoleSelectRoute: RoleSelectRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
