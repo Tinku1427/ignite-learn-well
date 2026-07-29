@@ -1,12 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Protected } from "@/components/protected";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Scene } from "@/components/scene";
 import { AppIcon } from "@/components/app-icon";
 
 export const Route = createFileRoute("/admin/wellness")({
-  component: () => <Protected mode="admin" staffOnly><Wellness /></Protected>,
+  component: () => <><Wellness /></>,
 });
 
 type Score = { user_id: string; score_date: string; composite: number; focus_score: number; rest_score: number; reflection_score: number; connection_score: number; risk_band: string };

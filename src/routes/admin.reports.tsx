@@ -1,10 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Protected } from "@/components/protected";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/admin/reports")({
-  component: () => <Protected mode="admin" staffOnly><Reports /></Protected>,
+  component: () => <><Reports /></>,
 });
 
 function Reports() {

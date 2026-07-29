@@ -2,7 +2,6 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { Protected } from "@/components/protected";
 import { Button } from "@/components/ui/button";
 import { Upload, Trash2, CheckCircle2, Circle } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -10,9 +9,9 @@ import { toast } from "sonner";
 
 export const Route = createFileRoute("/admin/content")({
   component: () => (
-    <Protected mode="admin" staffOnly>
+    <>
       <Content />
-    </Protected>
+    </>
   ),
 });
 
