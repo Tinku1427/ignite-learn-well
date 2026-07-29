@@ -1,5 +1,6 @@
 import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
+import { BrandLogo } from "@/components/brand-logo";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable";
 import { Button } from "@/components/ui/button";
@@ -56,7 +57,7 @@ function Auth() {
   return (
     <div className="min-h-screen grid place-items-center bg-background px-4 py-10">
       <div className="w-full max-w-md">
-        <Link to="/" className="mb-8 block text-center font-display text-xl">Guiding Mentor</Link>
+        <Link to="/" className="mb-8 flex justify-center"><BrandLogo height={34} /></Link>
 
         {checkInbox ? (
           <div className="soft-card p-8 text-center">
