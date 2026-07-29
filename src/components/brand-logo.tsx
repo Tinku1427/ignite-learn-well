@@ -17,10 +17,11 @@ export function BrandLogo({
       alt="Guiding Mentor"
       style={{ height }}
       className={cn(
-        "w-auto select-none object-contain mix-blend-multiply",
-        tone === "onDark" && "invert mix-blend-screen",
+        "w-auto select-none object-contain",
+        tone === "onDark" && "invert",
         className,
       )}
+
       loading="eager"
       decoding="async"
     />
