@@ -1,4 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { BrandLogo } from "@/components/brand-logo";
+
 
 export const Route = createFileRoute("/portals")({
   head: () => ({
@@ -26,7 +28,7 @@ function Portals() {
     <div className="min-h-screen grid place-items-center bg-background px-4 py-10">
       <div className="w-full max-w-md">
         <div className="mb-6 text-center">
-          <Link to="/" className="font-display text-xl">Guiding Mentor</Link>
+          <Link to="/" className="flex justify-center"><BrandLogo height={34} /></Link>
           <h1 className="mt-3 font-display text-2xl">Choose your portal</h1>
           <p className="mt-1 text-sm text-muted-foreground">Each role has its own sign-in.</p>
         </div>

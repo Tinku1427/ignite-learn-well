@@ -1,3 +1,4 @@
+import { BrandLogo } from "@/components/brand-logo";
 import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
 import { useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
@@ -25,7 +26,7 @@ function Landing() {
   return (
     <div className="min-h-screen bg-background text-foreground">
       <header className="mx-auto flex max-w-5xl items-center justify-between px-6 py-6">
-        <div className="font-display text-lg">Guiding Mentor</div>
+        <BrandLogo height={28} />
         <Link to="/auth" className="rounded-full border border-border bg-card px-4 py-2 text-sm hover:bg-secondary">Sign in</Link>
       </header>
 

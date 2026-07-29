@@ -2,7 +2,6 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { Protected } from "@/components/protected";
 import { AppIcon } from "@/components/app-icon";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -10,7 +9,7 @@ import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/admin/people")({
-  component: () => <Protected mode="admin" staffOnly><People /></Protected>,
+  component: () => <><People /></>,
 });
 
 type Tab = "mentors" | "coaches" | "assign";
