@@ -6,6 +6,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { fetchRoles, ROLE_HOME, type AppRole } from "@/lib/role-routing";
+import { BrandLogo } from "@/components/brand-logo";
+
 
 /** A single-role sign-in portal. Only accounts holding `role` may enter. */
 export function StaffLogin({
@@ -55,7 +57,7 @@ export function StaffLogin({
   return (
     <div className="min-h-screen grid place-items-center bg-background px-4 py-10">
       <div className="w-full max-w-sm">
-        <Link to="/" className="mb-6 block text-center font-display text-xl">Guiding Mentor</Link>
+        <Link to="/" className="mb-6 flex justify-center"><BrandLogo height={34} /></Link>
         <div className="soft-card p-7">
           <div className="text-[11px] uppercase tracking-widest text-muted-foreground">{kicker}</div>
           <h1 className="mt-1 font-display text-2xl">{title}</h1>
