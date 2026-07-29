@@ -47,7 +47,7 @@ export function StaffShell({
 
   const brand = (
     <div className="px-5 py-6">
-      <BrandLogo height={26} />
+      <BrandLogo height={34} />
       <div className="mt-2 text-[10px] uppercase tracking-[0.18em] text-muted-foreground">{subtitle}</div>
     </div>
   );
