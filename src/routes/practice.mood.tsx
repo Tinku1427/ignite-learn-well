@@ -73,17 +73,10 @@ function Mood() {
           <Scene kind="mood" size={72} className="shrink-0" />
         </div>
 
-        <div className="mt-5 grid grid-cols-5 gap-2">
-          {MOODS.map((m) => (
-            <button key={m.v} onClick={() => setMood(m.v)} className={cn(
-              "flex flex-col items-center rounded-2xl border border-border p-3 transition-all",
-              mood === m.v ? "bg-sage-soft border-primary scale-105" : "hover:bg-secondary/50"
-            )}>
-              <span className="text-2xl">{m.e}</span>
-              <span className="mt-1 text-[11px] text-muted-foreground">{m.l}</span>
-            </button>
-          ))}
+        <div className="mt-5">
+          <MoodFacePicker value={(mood as MoodValue | null) ?? null} onChange={(v) => setMood(v)} />
         </div>
+
 
         <div className="mt-6">
           <div className="mb-2 flex justify-between text-xs text-muted-foreground">
