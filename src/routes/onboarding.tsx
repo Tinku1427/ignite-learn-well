@@ -10,6 +10,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Scene } from "@/components/scene";
 import { MoodFacePicker, type MoodValue } from "@/components/mood-face";
 import { toast } from "sonner";
+import { cleanFullName, splitFullName } from "@/lib/name";
 
 export const Route = createFileRoute("/onboarding")({ component: Onboarding });
 
@@ -47,9 +48,9 @@ function Onboarding() {
         .then(({ data: p }) => {
           if (p?.onboarding_complete && p?.parental_consent_at) router.navigate({ to: "/home" });
           if (p?.full_name) {
-            const parts = p.full_name.trim().split(/\s+/);
-            setFirstName(parts[0] ?? "");
-            setLastName(parts.slice(1).join(" "));
+            const { first, last } = splitFullName(p.full_name);
+            setFirstName(first);
+            setLastName(last);
           }
         });
     });
@@ -60,7 +61,7 @@ function Onboarding() {
     if (!uid) return;
     setSaving(true);
     try {
-      const fullName = `${firstName.trim()} ${lastName.trim()}`.trim();
+      const fullName = cleanFullName(firstName, lastName);
       const { error: pErr } = await supabase.from("profiles").update({
         full_name: fullName,
 
