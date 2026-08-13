@@ -109,7 +109,7 @@ export function MoodFacePicker({
               "group flex flex-col items-center justify-end rounded-2xl border p-2",
               "motion-safe:transition-all motion-safe:duration-200",
               active
-                ? "border-primary bg-sage-soft ring-2 ring-primary/60 shadow-[0_0_0_6px_hsl(var(--ring)/0.10)] motion-safe:scale-105"
+                ? "border-primary bg-sage-soft ring-2 ring-primary/60 shadow-[0_0_0_6px_rgba(0,60,148,0.12)] motion-safe:scale-105"
                 : "border-border hover:bg-secondary/50",
               dimmed && "opacity-60"
             )}
