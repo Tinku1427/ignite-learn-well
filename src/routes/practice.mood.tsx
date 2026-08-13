@@ -29,6 +29,7 @@ function Mood() {
   const [energy, setEnergy] = useState(3);
   const [tags, setTags] = useState<string[]>([]);
   const [note, setNote] = useState("");
+  const [showHelp, setShowHelp] = useState(false);
 
   const { data: recent = [] } = useQuery({
     enabled: !!user,
