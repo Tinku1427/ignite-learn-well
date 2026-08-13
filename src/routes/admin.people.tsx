@@ -12,20 +12,20 @@ export const Route = createFileRoute("/admin/people")({
   component: () => <><People /></>,
 });
 
-type Tab = "mentors" | "coaches" | "assign";
+type Tab = "users" | "mentors" | "coaches" | "assign";
 
 function People() {
-  const [tab, setTab] = useState<Tab>("mentors");
+  const [tab, setTab] = useState<Tab>("users");
   return (
     <div className="space-y-6">
       <header>
         <div className="flex items-center gap-2 text-xs uppercase tracking-widest text-muted-foreground"><AppIcon name="mentor" size={14} /> Admin · People</div>
-        <h1 className="font-display text-3xl">Mentors & Coaches</h1>
-        <p className="mt-1 text-sm text-muted-foreground max-w-lg">The only way someone becomes staff. Verify credentials, assign caseloads.</p>
+        <h1 className="font-display text-3xl">People & access</h1>
+        <p className="mt-1 text-sm text-muted-foreground max-w-lg">Add or remove accounts, verify staff credentials, and decide who can see which student.</p>
       </header>
 
       <div className="inline-flex flex-wrap gap-1 rounded-full bg-secondary p-1 text-sm">
-        {(["mentors","coaches","assign"] as Tab[]).map((t) => (
+        {(["users","mentors","coaches","assign"] as Tab[]).map((t) => (
           <button key={t} onClick={() => setTab(t)}
             className={`rounded-full px-4 py-1.5 capitalize ${tab === t ? "bg-card shadow-sm" : ""}`}>
             {t === "assign" ? "Assign role by email" : t}
@@ -33,6 +33,7 @@ function People() {
         ))}
       </div>
 
+      {tab === "users" && <UserManager />}
       {tab === "assign" && <AssignRole />}
       {tab === "mentors" && <MentorsPanel />}
       {tab === "coaches" && <CoachesPanel />}
