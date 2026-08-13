@@ -99,6 +99,7 @@ function Journal() {
 
   return (
     <div className="space-y-6">
+      {showHelp && <CrisisHelp onDismiss={() => setShowHelp(false)} />
       <div className="soft-card p-6">
         <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-4">
           <div className="min-w-0">
