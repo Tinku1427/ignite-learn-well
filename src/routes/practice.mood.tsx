@@ -13,13 +13,9 @@ import { CrisisHelp } from "@/components/crisis-help";
 
 export const Route = createFileRoute("/practice/mood")({ component: Mood });
 
-const MOODS = [
-  { v: 1, e: "😞", l: "Rough" },
-  { v: 2, e: "😕", l: "Low" },
-  { v: 3, e: "😐", l: "Okay" },
-  { v: 4, e: "🙂", l: "Good" },
-  { v: 5, e: "😄", l: "Bright" },
-];
+import { MoodFace, MoodFacePicker, MOOD_LABEL, type MoodValue } from "@/components/mood-face";
+
+
 const TAGS = ["exam-stress", "tired", "distracted", "anxious", "grateful", "focused", "lonely", "hopeful"];
 
 function Mood() {
