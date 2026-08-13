@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
+import { UserManager } from "@/components/admin/user-manager";
 
 export const Route = createFileRoute("/admin/people")({
   component: () => <><People /></>,
