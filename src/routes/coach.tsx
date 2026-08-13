@@ -79,6 +79,29 @@ function CoachHome() {
         <Scene kind="ambient" size={96} />
       </header>
 
+      {(() => {
+        const flags = events.filter((e) => e.event_type === "crisis_flag");
+        if (!flags.length) return null;
+        const nameOf = (id: string) => rows.find((r) => r.user_id === id)?.full_name ?? "A student";
+        return (
+          <section className="soft-card border-primary/30 bg-secondary/60 p-5">
+            <div className="text-xs uppercase tracking-widest text-muted-foreground">Reach out first</div>
+            <h2 className="mt-1 font-display text-xl">Safety signal detected</h2>
+            <p className="mt-1 max-w-prose text-sm text-muted-foreground">
+              Language suggesting self-harm appeared in a check-in. The words stay private — call them today.
+            </p>
+            <ul className="mt-3 space-y-1.5 text-sm">
+              {flags.slice(0, 8).map((f) => (
+                <li key={f.id} className="flex items-center justify-between gap-3 rounded-xl bg-card px-3 py-2">
+                  <span className="font-medium">{nameOf(f.user_id)}</span>
+                  <span className="text-xs text-muted-foreground">{new Date(f.created_at).toLocaleString()}</span>
+                </li>
+              ))}
+            </ul>
+          </section>
+        );
+      })()}
+
       <section>
         <h2 className="text-sm font-medium text-muted-foreground mb-3">Ranked by risk</h2>
         {isLoading && <div className="text-sm text-muted-foreground">Loading…</div>}
