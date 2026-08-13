@@ -118,9 +118,11 @@ function Mood() {
             {recent.slice().reverse().map((r, i) => (
               <div key={i} className="flex flex-1 flex-col items-center gap-1">
                 <div className="w-full rounded-t-md bg-sage/60" style={{ height: `${r.mood_score * 14}px` }} />
-                <span className="text-[10px] text-muted-foreground">{MOODS.find((m) => m.v === r.mood_score)?.e}</span>
+                <MoodFace value={Math.max(1, Math.min(5, r.mood_score)) as MoodValue} size={22} />
+                <span className="text-[9px] text-muted-foreground">{MOOD_LABEL[Math.max(1, Math.min(5, r.mood_score)) as MoodValue]}</span>
               </div>
             ))}
+
           </div>
         </div>
       )}
