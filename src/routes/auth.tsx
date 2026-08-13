@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { navigateByRole } from "@/lib/role-routing";
+import { cleanFullName } from "@/lib/name";
 
 export const Route = createFileRoute("/auth")({ component: Auth });
 
@@ -38,7 +39,7 @@ function Auth() {
     e.preventDefault();
     setBusy(true);
     if (mode === "signup") {
-      const fullName = `${firstName.trim()} ${lastName.trim()}`.trim();
+      const fullName = cleanFullName(firstName, lastName);
       const { data, error } = await supabase.auth.signUp({
         email, password,
         options: { emailRedirectTo: window.location.origin, data: { full_name: fullName } },
