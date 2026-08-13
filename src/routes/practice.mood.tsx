@@ -8,6 +8,8 @@ import { Slider } from "@/components/ui/slider";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { Scene } from "@/components/scene";
+import { detectCrisis, flagCrisis } from "@/lib/crisis";
+import { CrisisHelp } from "@/components/crisis-help";
 
 export const Route = createFileRoute("/practice/mood")({ component: Mood });
 
@@ -27,6 +29,7 @@ function Mood() {
   const [energy, setEnergy] = useState(3);
   const [tags, setTags] = useState<string[]>([]);
   const [note, setNote] = useState("");
+  const [showHelp, setShowHelp] = useState(false);
 
   const { data: recent = [] } = useQuery({
     enabled: !!user,
@@ -41,15 +44,20 @@ function Mood() {
 
   const save = useMutation({
     mutationFn: async () => {
-      if (!user || mood == null) return;
+      if (!user || mood == null) return false;
+      const text = note.trim();
       const { error } = await supabase.from("mood_checkins").insert({
-        user_id: user.id, mood_score: mood, energy, tags, note: note.trim() || null,
+        user_id: user.id, mood_score: mood, energy, tags, note: text || null,
       });
       if (error) throw error;
+      const risky = detectCrisis(text) || mood === 1;
+      if (detectCrisis(text)) await flagCrisis(user.id, "mood");
+      return risky;
     },
-    onSuccess: () => {
+    onSuccess: (risky) => {
       setMood(null); setNote(""); setTags([]);
-      toast.success("Noted. No wrong answer.");
+      if (risky) setShowHelp(true);
+      else toast.success("Noted. No wrong answer.");
       qc.invalidateQueries({ queryKey: ["mood-recent"] });
     },
   });
@@ -59,6 +67,7 @@ function Mood() {
 
   return (
     <div className="space-y-6">
+      {showHelp && <CrisisHelp onDismiss={() => setShowHelp(false)} />}
       <div className="soft-card p-6">
         <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-4">
           <div className="min-w-0">

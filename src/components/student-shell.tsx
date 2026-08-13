@@ -17,6 +17,11 @@ export function StudentShell({ children }: { children: ReactNode }) {
     <div className="min-h-screen bg-background text-foreground">
       <main className="mx-auto max-w-2xl px-4 pb-28 pt-6 md:px-6 md:pt-10 page-fade">
         {children}
+        <div className="mt-10 text-center text-xs text-muted-foreground">
+          <Link to="/support" className="underline underline-offset-2 hover:text-foreground">
+            Need to talk to someone? Free 24/7 helplines
+          </Link>
+        </div>
       </main>
       <nav
         aria-label="Primary"

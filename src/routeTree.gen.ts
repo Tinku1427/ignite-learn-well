@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SupportRouteImport } from './routes/support'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as RoleSelectRouteImport } from './routes/role-select'
 import { Route as PracticeRouteImport } from './routes/practice'
@@ -41,8 +42,12 @@ import { Route as AdminPeopleRouteImport } from './routes/admin.people'
 import { Route as AdminContentRouteImport } from './routes/admin.content'
 import { Route as AdminAnnouncementsRouteImport } from './routes/admin.announcements'
 import { Route as AdminAgentRouteImport } from './routes/admin.agent'
-import { Route as ApiPublicSeedTestRouteImport } from './routes/api/public/seed-test'
 
+const SupportRoute = SupportRouteImport.update({
+  id: '/support',
+  path: '/support',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
   path: '/sitemap.xml',
@@ -203,11 +208,6 @@ const AdminAgentRoute = AdminAgentRouteImport.update({
   path: '/agent',
   getParentRoute: () => AdminRoute,
 } as any)
-const ApiPublicSeedTestRoute = ApiPublicSeedTestRouteImport.update({
-  id: '/api/public/seed-test',
-  path: '/api/public/seed-test',
-  getParentRoute: () => rootRouteImport,
-} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -228,6 +228,7 @@ export interface FileRoutesByFullPath {
   '/practice': typeof PracticeRouteWithChildren
   '/role-select': typeof RoleSelectRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/support': typeof SupportRoute
   '/admin/agent': typeof AdminAgentRoute
   '/admin/announcements': typeof AdminAnnouncementsRoute
   '/admin/content': typeof AdminContentRoute
@@ -242,7 +243,6 @@ export interface FileRoutesByFullPath {
   '/practice/mood': typeof PracticeMoodRoute
   '/admin/': typeof AdminIndexRoute
   '/practice/': typeof PracticeIndexRoute
-  '/api/public/seed-test': typeof ApiPublicSeedTestRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -261,6 +261,7 @@ export interface FileRoutesByTo {
   '/portals': typeof PortalsRoute
   '/role-select': typeof RoleSelectRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/support': typeof SupportRoute
   '/admin/agent': typeof AdminAgentRoute
   '/admin/announcements': typeof AdminAnnouncementsRoute
   '/admin/content': typeof AdminContentRoute
@@ -275,7 +276,6 @@ export interface FileRoutesByTo {
   '/practice/mood': typeof PracticeMoodRoute
   '/admin': typeof AdminIndexRoute
   '/practice': typeof PracticeIndexRoute
-  '/api/public/seed-test': typeof ApiPublicSeedTestRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -297,6 +297,7 @@ export interface FileRoutesById {
   '/practice': typeof PracticeRouteWithChildren
   '/role-select': typeof RoleSelectRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/support': typeof SupportRoute
   '/admin/agent': typeof AdminAgentRoute
   '/admin/announcements': typeof AdminAnnouncementsRoute
   '/admin/content': typeof AdminContentRoute
@@ -311,7 +312,6 @@ export interface FileRoutesById {
   '/practice/mood': typeof PracticeMoodRoute
   '/admin/': typeof AdminIndexRoute
   '/practice/': typeof PracticeIndexRoute
-  '/api/public/seed-test': typeof ApiPublicSeedTestRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -334,6 +334,7 @@ export interface FileRouteTypes {
     | '/practice'
     | '/role-select'
     | '/sitemap.xml'
+    | '/support'
     | '/admin/agent'
     | '/admin/announcements'
     | '/admin/content'
@@ -348,7 +349,6 @@ export interface FileRouteTypes {
     | '/practice/mood'
     | '/admin/'
     | '/practice/'
-    | '/api/public/seed-test'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -367,6 +367,7 @@ export interface FileRouteTypes {
     | '/portals'
     | '/role-select'
     | '/sitemap.xml'
+    | '/support'
     | '/admin/agent'
     | '/admin/announcements'
     | '/admin/content'
@@ -381,7 +382,6 @@ export interface FileRouteTypes {
     | '/practice/mood'
     | '/admin'
     | '/practice'
-    | '/api/public/seed-test'
   id:
     | '__root__'
     | '/'
@@ -402,6 +402,7 @@ export interface FileRouteTypes {
     | '/practice'
     | '/role-select'
     | '/sitemap.xml'
+    | '/support'
     | '/admin/agent'
     | '/admin/announcements'
     | '/admin/content'
@@ -416,7 +417,6 @@ export interface FileRouteTypes {
     | '/practice/mood'
     | '/admin/'
     | '/practice/'
-    | '/api/public/seed-test'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -438,11 +438,18 @@ export interface RootRouteChildren {
   PracticeRoute: typeof PracticeRouteWithChildren
   RoleSelectRoute: typeof RoleSelectRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
-  ApiPublicSeedTestRoute: typeof ApiPublicSeedTestRoute
+  SupportRoute: typeof SupportRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/support': {
+      id: '/support'
+      path: '/support'
+      fullPath: '/support'
+      preLoaderRoute: typeof SupportRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/sitemap.xml': {
       id: '/sitemap.xml'
       path: '/sitemap.xml'
@@ -667,13 +674,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAgentRouteImport
       parentRoute: typeof AdminRoute
     }
-    '/api/public/seed-test': {
-      id: '/api/public/seed-test'
-      path: '/api/public/seed-test'
-      fullPath: '/api/public/seed-test'
-      preLoaderRoute: typeof ApiPublicSeedTestRouteImport
-      parentRoute: typeof rootRouteImport
-    }
   }
 }
 
@@ -742,7 +742,7 @@ const rootRouteChildren: RootRouteChildren = {
   PracticeRoute: PracticeRouteWithChildren,
   RoleSelectRoute: RoleSelectRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
-  ApiPublicSeedTestRoute: ApiPublicSeedTestRoute,
+  SupportRoute: SupportRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

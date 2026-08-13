@@ -9,6 +9,8 @@ import { Lock, Share2, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { Scene } from "@/components/scene";
+import { detectCrisis, flagCrisis } from "@/lib/crisis";
+import { CrisisHelp } from "@/components/crisis-help";
 
 export const Route = createFileRoute("/practice/journal")({ component: Journal });
 
@@ -32,6 +34,7 @@ function Journal() {
   const [body, setBody] = useState("");
   const [share, setShare] = useState(false);
   const [mentorId, setMentorId] = useState<string>("");
+  const [showHelp, setShowHelp] = useState(false);
   const [prompt] = useState(() => PROMPTS[Math.floor(Math.random() * PROMPTS.length)]);
 
   const { data: entries = [] } = useQuery({
@@ -64,18 +67,23 @@ function Journal() {
 
   const save = useMutation({
     mutationFn: async () => {
-      if (!user || !body.trim()) return;
+      if (!user || !body.trim()) return false;
+      const text = body.trim();
       const { error } = await supabase.from("journal_entries").insert({
         user_id: user.id,
-        body: body.trim(),
+        body: text,
         is_private: !share,
         shared_with_mentor_id: share && mentorId ? mentorId : null,
       });
       if (error) throw error;
+      const risky = detectCrisis(text);
+      if (risky) await flagCrisis(user.id, "journal");
+      return risky;
     },
-    onSuccess: () => {
+    onSuccess: (risky) => {
       setBody(""); setShare(false); setMentorId("");
-      toast.success("Kept safe. Yours alone unless you shared it.");
+      if (risky) setShowHelp(true);
+      else toast.success("Kept safe. Yours alone unless you shared it.");
       qc.invalidateQueries({ queryKey: ["journal"] });
     },
     onError: (e) => toast.error(e instanceof Error ? e.message : "Could not save"),
@@ -91,6 +99,7 @@ function Journal() {
 
   return (
     <div className="space-y-6">
+      {showHelp && <CrisisHelp onDismiss={() => setShowHelp(false)} />}
       <div className="soft-card p-6">
         <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-4">
           <div className="min-w-0">
