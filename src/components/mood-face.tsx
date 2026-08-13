@@ -24,13 +24,14 @@ const LABELS: Record<MoodValue, string> = {
 };
 
 /** Mouth path + brow tilt for each face. Fixed geometry = identical alignment. */
-const FACES: Record<MoodValue, { mouth: string; brow: number; cheeks: boolean; halo: number }> = {
-  1: { mouth: "M24 45 Q32 37 40 45", brow: 3, cheeks: false, halo: 0.10 },
-  2: { mouth: "M24 44 Q32 39 40 44", brow: 2, cheeks: false, halo: 0.14 },
-  3: { mouth: "M24 43 L40 43", brow: 0, cheeks: false, halo: 0.18 },
-  4: { mouth: "M24 41 Q32 46 40 41", brow: -1, cheeks: true, halo: 0.22 },
-  5: { mouth: "M23 40 Q32 49 41 40", brow: -2, cheeks: true, halo: 0.26 },
+const FACES: Record<MoodValue, { mouth: string; brow: number; brows: boolean; cheeks: boolean; halo: number }> = {
+  1: { mouth: "M24 46 Q32 37 40 46", brow: 3, brows: true, cheeks: false, halo: 0.10 },
+  2: { mouth: "M25 44 Q32 39.5 39 44", brow: 2, brows: true, cheeks: false, halo: 0.14 },
+  3: { mouth: "M25 43 L39 43", brow: 0, brows: false, cheeks: false, halo: 0.18 },
+  4: { mouth: "M24 41 Q32 46.5 40 41", brow: -1, brows: false, cheeks: true, halo: 0.22 },
+  5: { mouth: "M23 40 Q32 50 41 40", brow: -2, brows: false, cheeks: true, halo: 0.26 },
 };
+
 
 export function MoodFace({
   value,
