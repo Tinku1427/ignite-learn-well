@@ -62,15 +62,20 @@ export function MoodFace({
           <circle cx="43" cy="37" r="3.2" fill={BLUSH} opacity="0.55" />
         </>
       )}
-      {/* brows */}
-      <path
-        d={`M22 ${25 + f.brow} q4 ${-f.brow - 1.5} 8 0`}
-        stroke={INK} strokeWidth="1.7" strokeLinecap="round" fill="none" opacity="0.85"
-      />
-      <path
-        d={`M34 ${25 + f.brow} q4 ${f.brow + 1.5} 8 0`}
-        stroke={INK} strokeWidth="1.7" strokeLinecap="round" fill="none" opacity="0.85"
-      />
+      {/* brows — only on the two lower faces, where tension reads */}
+      {f.brows && (
+        <>
+          <path
+            d={`M22 ${25 + f.brow} q4 ${-f.brow - 1} 8 1`}
+            stroke={INK} strokeWidth="1.7" strokeLinecap="round" fill="none" opacity="0.8"
+          />
+          <path
+            d={`M34 ${26 + f.brow} q4 ${f.brow + 1} 8 -1`}
+            stroke={INK} strokeWidth="1.7" strokeLinecap="round" fill="none" opacity="0.8"
+          />
+        </>
+      )}
+
       {/* eyes */}
       {value === 5 ? (
         <>
