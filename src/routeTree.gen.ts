@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SupportRouteImport } from './routes/support'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as RoleSelectRouteImport } from './routes/role-select'
 import { Route as PracticeRouteImport } from './routes/practice'
@@ -42,6 +43,11 @@ import { Route as AdminContentRouteImport } from './routes/admin.content'
 import { Route as AdminAnnouncementsRouteImport } from './routes/admin.announcements'
 import { Route as AdminAgentRouteImport } from './routes/admin.agent'
 
+const SupportRoute = SupportRouteImport.update({
+  id: '/support',
+  path: '/support',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
   path: '/sitemap.xml',
@@ -222,6 +228,7 @@ export interface FileRoutesByFullPath {
   '/practice': typeof PracticeRouteWithChildren
   '/role-select': typeof RoleSelectRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/support': typeof SupportRoute
   '/admin/agent': typeof AdminAgentRoute
   '/admin/announcements': typeof AdminAnnouncementsRoute
   '/admin/content': typeof AdminContentRoute
@@ -254,6 +261,7 @@ export interface FileRoutesByTo {
   '/portals': typeof PortalsRoute
   '/role-select': typeof RoleSelectRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/support': typeof SupportRoute
   '/admin/agent': typeof AdminAgentRoute
   '/admin/announcements': typeof AdminAnnouncementsRoute
   '/admin/content': typeof AdminContentRoute
@@ -289,6 +297,7 @@ export interface FileRoutesById {
   '/practice': typeof PracticeRouteWithChildren
   '/role-select': typeof RoleSelectRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/support': typeof SupportRoute
   '/admin/agent': typeof AdminAgentRoute
   '/admin/announcements': typeof AdminAnnouncementsRoute
   '/admin/content': typeof AdminContentRoute
@@ -325,6 +334,7 @@ export interface FileRouteTypes {
     | '/practice'
     | '/role-select'
     | '/sitemap.xml'
+    | '/support'
     | '/admin/agent'
     | '/admin/announcements'
     | '/admin/content'
@@ -357,6 +367,7 @@ export interface FileRouteTypes {
     | '/portals'
     | '/role-select'
     | '/sitemap.xml'
+    | '/support'
     | '/admin/agent'
     | '/admin/announcements'
     | '/admin/content'
@@ -391,6 +402,7 @@ export interface FileRouteTypes {
     | '/practice'
     | '/role-select'
     | '/sitemap.xml'
+    | '/support'
     | '/admin/agent'
     | '/admin/announcements'
     | '/admin/content'
@@ -426,10 +438,18 @@ export interface RootRouteChildren {
   PracticeRoute: typeof PracticeRouteWithChildren
   RoleSelectRoute: typeof RoleSelectRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  SupportRoute: typeof SupportRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/support': {
+      id: '/support'
+      path: '/support'
+      fullPath: '/support'
+      preLoaderRoute: typeof SupportRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/sitemap.xml': {
       id: '/sitemap.xml'
       path: '/sitemap.xml'
@@ -722,6 +742,7 @@ const rootRouteChildren: RootRouteChildren = {
   PracticeRoute: PracticeRouteWithChildren,
   RoleSelectRoute: RoleSelectRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
+  SupportRoute: SupportRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
