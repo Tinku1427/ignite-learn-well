@@ -34,6 +34,7 @@ function Journal() {
   const [body, setBody] = useState("");
   const [share, setShare] = useState(false);
   const [mentorId, setMentorId] = useState<string>("");
+  const [showHelp, setShowHelp] = useState(false);
   const [prompt] = useState(() => PROMPTS[Math.floor(Math.random() * PROMPTS.length)]);
 
   const { data: entries = [] } = useQuery({
