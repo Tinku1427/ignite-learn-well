@@ -870,6 +870,9 @@ export type Database = {
           preferred_relax_track_id: string | null
           quiet_hours_end: string
           quiet_hours_start: string
+          suspended: boolean
+          suspended_at: string | null
+          suspended_by: string | null
           target_year: number | null
           timezone: string
           updated_at: string
@@ -897,6 +900,9 @@ export type Database = {
           preferred_relax_track_id?: string | null
           quiet_hours_end?: string
           quiet_hours_start?: string
+          suspended?: boolean
+          suspended_at?: string | null
+          suspended_by?: string | null
           target_year?: number | null
           timezone?: string
           updated_at?: string
@@ -924,6 +930,9 @@ export type Database = {
           preferred_relax_track_id?: string | null
           quiet_hours_end?: string
           quiet_hours_start?: string
+          suspended?: boolean
+          suspended_at?: string | null
+          suspended_by?: string | null
           target_year?: number | null
           timezone?: string
           updated_at?: string
@@ -1175,6 +1184,8 @@ export type Database = {
         }
         Returns: boolean
       }
+      is_my_caseload: { Args: { _student: string }; Returns: boolean }
+      student_trend_direction: { Args: { _student: string }; Returns: string }
     }
     Enums: {
       app_role: "student" | "admin" | "mentor" | "counsellor" | "coach"
