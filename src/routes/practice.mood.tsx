@@ -90,8 +90,8 @@ function Mood() {
           <div className="flex flex-wrap gap-2">
             {TAGS.map((t) => (
               <button key={t} onClick={() => toggleTag(t)} className={cn(
-                "rounded-full border border-border px-3 py-1 text-xs transition-colors",
-                tags.includes(t) ? "bg-primary text-primary-foreground border-primary" : "hover:bg-secondary"
+                "rounded-full border border-border px-3 py-1 text-xs motion-safe:transition-all motion-safe:duration-200",
+                tags.includes(t) ? "bg-primary text-primary-foreground border-primary ring-2 ring-primary/40 shadow-[0_0_0_5px_rgba(0,60,148,0.10)] motion-safe:scale-[1.05]" : "hover:bg-secondary opacity-90"
               )}>{t}</button>
             ))}
           </div>

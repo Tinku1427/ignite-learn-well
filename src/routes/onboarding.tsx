@@ -142,7 +142,7 @@ function Onboarding() {
                   <Label>Class</Label>
                   <RadioGroup value={classLevel} onValueChange={setClassLevel} className="grid grid-cols-3 gap-2 mt-2">
                     {[{v:"11",l:"Class 11"},{v:"12",l:"Class 12"},{v:"repeater",l:"Repeater"}].map((o) => (
-                      <label key={o.v} className="rounded-xl border border-border p-3 text-sm text-center cursor-pointer has-[:checked]:bg-secondary has-[:checked]:border-primary">
+                      <label key={o.v} className="rounded-xl border border-border p-3 text-sm text-center cursor-pointer motion-safe:transition-all motion-safe:duration-200 has-[:checked]:bg-sage-soft has-[:checked]:border-primary has-[:checked]:ring-2 has-[:checked]:ring-primary/50 has-[:checked]:font-semibold has-[:checked]:text-primary has-[:checked]:motion-safe:scale-[1.03]">
                         <RadioGroupItem value={o.v} className="sr-only" /> {o.l}
                       </label>
                     ))}
@@ -152,7 +152,7 @@ function Onboarding() {
                   <Label>Exam</Label>
                   <RadioGroup value={examTrack} onValueChange={setExamTrack} className="grid grid-cols-2 gap-2 mt-2">
                     {[{v:"neet",l:"NEET"},{v:"other",l:"Other"}].map((o) => (
-                      <label key={o.v} className="rounded-xl border border-border p-3 text-sm text-center cursor-pointer has-[:checked]:bg-secondary has-[:checked]:border-primary">
+                      <label key={o.v} className="rounded-xl border border-border p-3 text-sm text-center cursor-pointer motion-safe:transition-all motion-safe:duration-200 has-[:checked]:bg-sage-soft has-[:checked]:border-primary has-[:checked]:ring-2 has-[:checked]:ring-primary/50 has-[:checked]:font-semibold has-[:checked]:text-primary has-[:checked]:motion-safe:scale-[1.03]">
                         <RadioGroupItem value={o.v} className="sr-only" /> {o.l}
                       </label>
                     ))}

@@ -174,7 +174,7 @@ function Focus() {
                 <button key={m}
                   onClick={() => { setWork(m); setRemain(m * 60); }}
                   className={cn("rounded-full border border-border px-4 py-1.5 text-sm",
-                    work === m ? "bg-primary text-primary-foreground border-primary" : "hover:bg-secondary")}>
+                    work === m ? "bg-primary text-primary-foreground border-primary ring-2 ring-primary/40 shadow-[0_0_0_5px_rgba(0,60,148,0.10)] motion-safe:scale-[1.05]" : "hover:bg-secondary opacity-70")}>
                   {m} min
                 </button>
               ))}
