@@ -85,7 +85,7 @@ export const adminSetSuspended = createServerFn({ method: "POST" })
         suspended: data.suspended,
         suspended_at: data.suspended ? new Date().toISOString() : null,
         suspended_by: data.suspended ? context.userId : null,
-      } as never)
+      })
       .eq("id", data.userId);
 
     return { ok: true, suspended: data.suspended };
