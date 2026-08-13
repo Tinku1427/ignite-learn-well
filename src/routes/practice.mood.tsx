@@ -8,6 +8,8 @@ import { Slider } from "@/components/ui/slider";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { Scene } from "@/components/scene";
+import { detectCrisis, flagCrisis } from "@/lib/crisis";
+import { CrisisHelp } from "@/components/crisis-help";
 
 export const Route = createFileRoute("/practice/mood")({ component: Mood });
 
