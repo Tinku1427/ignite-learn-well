@@ -9,6 +9,8 @@ import { Lock, Share2, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { Scene } from "@/components/scene";
+import { detectCrisis, flagCrisis } from "@/lib/crisis";
+import { CrisisHelp } from "@/components/crisis-help";
 
 export const Route = createFileRoute("/practice/journal")({ component: Journal });
 
