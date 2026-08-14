@@ -77,6 +77,8 @@ export function StaffLogin({
         </div>
         <div className="mt-5 text-center text-xs text-muted-foreground">
           <Link to="/portals" className="hover:text-foreground">← All portals</Link>
+          <span className="mx-2">·</span>
+          <Link to="/forgot-password" className="hover:text-foreground underline">Forgot password?</Link>
         </div>
       </div>
     </div>

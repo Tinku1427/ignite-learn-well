@@ -1,3 +1,4 @@
+import { MessagesCard } from "@/components/messages-card";
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -82,6 +83,8 @@ function MentorHome() {
         </div>
         <Scene kind="focus" size={96} />
       </header>
+
+      <MessagesCard title="From the admin" />
 
       <ul className="space-y-2">
         {students.map((s) => {

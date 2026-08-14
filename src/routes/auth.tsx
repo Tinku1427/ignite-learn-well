@@ -100,6 +100,10 @@ function Auth() {
               </Button>
             </form>
 
+            <div className="mt-4 text-center text-sm">
+              <Link to="/forgot-password" className="text-muted-foreground underline hover:text-foreground">Forgot your password?</Link>
+            </div>
+
             <button
               onClick={() => setMode(mode === "signin" ? "signup" : "signin")}
               className="mt-5 w-full text-center text-sm text-muted-foreground hover:text-foreground"
