@@ -1,7 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
-import { useAuth as _ } from "@/hooks/use-auth";
 import { Buddy } from "@/components/buddy";
 import { Button } from "@/components/ui/button";
 
