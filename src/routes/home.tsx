@@ -90,9 +90,6 @@ function Home() {
         </div>
       </section>
 
-      <p className="pt-4 text-center text-[11px] text-muted-foreground">
-        Need to talk to someone right now? <a href="tel:14416" className="underline">Tele-MANAS 14416</a> · <a href="tel:18005990019" className="underline">Kiran 1800-599-0019</a>
-      </p>
     </div>
   );
 }
