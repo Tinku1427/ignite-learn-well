@@ -216,11 +216,9 @@ export const Route = createFileRoute("/api/public/agent/nightly")({
           const lastNudge = (nudgeBy.get(p.id) ?? [])[0] as any;
           if (lastNudge && Date.now() - Date.parse(lastNudge.created_at) < 24 * 3600_000) { skipped++; continue; }
 
-          const todayScore = (scoreBy.get(p.id) ?? []).find((s: any) => s.score_date === today) as any;
           const input = build(p.id);
-          const r = todayScore
-            ? { composite: Number(todayScore.composite), risk_band: (todayScore.risk_band ?? "green") as string, reasons: [] as string[], ...assess(input, thresholds) }
-            : assess(input, thresholds);
+          const r = assess(input, thresholds);
+
 
           const daysSinceNudge = lastNudge
             ? (Date.now() - Date.parse(lastNudge.created_at)) / 86400_000 : 99;
