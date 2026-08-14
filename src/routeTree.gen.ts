@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as SupportRouteImport } from './routes/support'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as RoleSelectRouteImport } from './routes/role-select'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as PracticeRouteImport } from './routes/practice'
 import { Route as PortalsRouteImport } from './routes/portals'
 import { Route as PlanRouteImport } from './routes/plan'
@@ -58,6 +59,11 @@ const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
 const RoleSelectRoute = RoleSelectRouteImport.update({
   id: '/role-select',
   path: '/role-select',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PracticeRoute = PracticeRouteImport.update({
@@ -239,6 +245,7 @@ export interface FileRoutesByFullPath {
   '/plan': typeof PlanRoute
   '/portals': typeof PortalsRoute
   '/practice': typeof PracticeRouteWithChildren
+  '/reset-password': typeof ResetPasswordRoute
   '/role-select': typeof RoleSelectRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/support': typeof SupportRoute
@@ -274,6 +281,7 @@ export interface FileRoutesByTo {
   '/onboarding': typeof OnboardingRoute
   '/plan': typeof PlanRoute
   '/portals': typeof PortalsRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/role-select': typeof RoleSelectRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/support': typeof SupportRoute
@@ -312,6 +320,7 @@ export interface FileRoutesById {
   '/plan': typeof PlanRoute
   '/portals': typeof PortalsRoute
   '/practice': typeof PracticeRouteWithChildren
+  '/reset-password': typeof ResetPasswordRoute
   '/role-select': typeof RoleSelectRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/support': typeof SupportRoute
@@ -351,6 +360,7 @@ export interface FileRouteTypes {
     | '/plan'
     | '/portals'
     | '/practice'
+    | '/reset-password'
     | '/role-select'
     | '/sitemap.xml'
     | '/support'
@@ -386,6 +396,7 @@ export interface FileRouteTypes {
     | '/onboarding'
     | '/plan'
     | '/portals'
+    | '/reset-password'
     | '/role-select'
     | '/sitemap.xml'
     | '/support'
@@ -423,6 +434,7 @@ export interface FileRouteTypes {
     | '/plan'
     | '/portals'
     | '/practice'
+    | '/reset-password'
     | '/role-select'
     | '/sitemap.xml'
     | '/support'
@@ -461,6 +473,7 @@ export interface RootRouteChildren {
   PlanRoute: typeof PlanRoute
   PortalsRoute: typeof PortalsRoute
   PracticeRoute: typeof PracticeRouteWithChildren
+  ResetPasswordRoute: typeof ResetPasswordRoute
   RoleSelectRoute: typeof RoleSelectRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   SupportRoute: typeof SupportRoute
@@ -488,6 +501,13 @@ declare module '@tanstack/react-router' {
       path: '/role-select'
       fullPath: '/role-select'
       preLoaderRoute: typeof RoleSelectRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/practice': {
@@ -781,6 +801,7 @@ const rootRouteChildren: RootRouteChildren = {
   PlanRoute: PlanRoute,
   PortalsRoute: PortalsRoute,
   PracticeRoute: PracticeRouteWithChildren,
+  ResetPasswordRoute: ResetPasswordRoute,
   RoleSelectRoute: RoleSelectRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   SupportRoute: SupportRoute,
