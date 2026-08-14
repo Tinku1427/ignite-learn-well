@@ -42,6 +42,7 @@ import { Route as AdminPeopleRouteImport } from './routes/admin.people'
 import { Route as AdminContentRouteImport } from './routes/admin.content'
 import { Route as AdminAnnouncementsRouteImport } from './routes/admin.announcements'
 import { Route as AdminAgentRouteImport } from './routes/admin.agent'
+import { Route as ApiPublicAgentNightlyRouteImport } from './routes/api/public/agent/nightly'
 
 const SupportRoute = SupportRouteImport.update({
   id: '/support',
@@ -208,6 +209,11 @@ const AdminAgentRoute = AdminAgentRouteImport.update({
   path: '/agent',
   getParentRoute: () => AdminRoute,
 } as any)
+const ApiPublicAgentNightlyRoute = ApiPublicAgentNightlyRouteImport.update({
+  id: '/api/public/agent/nightly',
+  path: '/api/public/agent/nightly',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -243,6 +249,7 @@ export interface FileRoutesByFullPath {
   '/practice/mood': typeof PracticeMoodRoute
   '/admin/': typeof AdminIndexRoute
   '/practice/': typeof PracticeIndexRoute
+  '/api/public/agent/nightly': typeof ApiPublicAgentNightlyRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -276,6 +283,7 @@ export interface FileRoutesByTo {
   '/practice/mood': typeof PracticeMoodRoute
   '/admin': typeof AdminIndexRoute
   '/practice': typeof PracticeIndexRoute
+  '/api/public/agent/nightly': typeof ApiPublicAgentNightlyRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -312,6 +320,7 @@ export interface FileRoutesById {
   '/practice/mood': typeof PracticeMoodRoute
   '/admin/': typeof AdminIndexRoute
   '/practice/': typeof PracticeIndexRoute
+  '/api/public/agent/nightly': typeof ApiPublicAgentNightlyRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -349,6 +358,7 @@ export interface FileRouteTypes {
     | '/practice/mood'
     | '/admin/'
     | '/practice/'
+    | '/api/public/agent/nightly'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -382,6 +392,7 @@ export interface FileRouteTypes {
     | '/practice/mood'
     | '/admin'
     | '/practice'
+    | '/api/public/agent/nightly'
   id:
     | '__root__'
     | '/'
@@ -417,6 +428,7 @@ export interface FileRouteTypes {
     | '/practice/mood'
     | '/admin/'
     | '/practice/'
+    | '/api/public/agent/nightly'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -439,6 +451,7 @@ export interface RootRouteChildren {
   RoleSelectRoute: typeof RoleSelectRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   SupportRoute: typeof SupportRoute
+  ApiPublicAgentNightlyRoute: typeof ApiPublicAgentNightlyRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -674,6 +687,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAgentRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/api/public/agent/nightly': {
+      id: '/api/public/agent/nightly'
+      path: '/api/public/agent/nightly'
+      fullPath: '/api/public/agent/nightly'
+      preLoaderRoute: typeof ApiPublicAgentNightlyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -743,6 +763,7 @@ const rootRouteChildren: RootRouteChildren = {
   RoleSelectRoute: RoleSelectRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   SupportRoute: SupportRoute,
+  ApiPublicAgentNightlyRoute: ApiPublicAgentNightlyRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
