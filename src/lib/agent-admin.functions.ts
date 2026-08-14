@@ -28,9 +28,7 @@ export const runAgentTask = createServerFn({ method: "POST" })
       body: JSON.stringify({ task: data.task }),
     });
     const text = await res.text();
-    let parsed: unknown;
-    try { parsed = JSON.parse(text); } catch { parsed = { raw: text }; }
-    return { status: res.status, result: parsed as Record<string, unknown> };
+    return { status: res.status, result: text };
   });
 
 /** A hand-written nudge from a human. Lands in the student's Home exactly like the agent's. */
