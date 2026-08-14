@@ -21,6 +21,7 @@ import { Route as MentorRouteImport } from './routes/mentor'
 import { Route as MeRouteImport } from './routes/me'
 import { Route as LearnRouteImport } from './routes/learn'
 import { Route as HomeRouteImport } from './routes/home'
+import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as FocusRouteImport } from './routes/focus'
 import { Route as CoachLoginRouteImport } from './routes/coach-login'
 import { Route as CoachRouteImport } from './routes/coach'
@@ -102,6 +103,11 @@ const LearnRoute = LearnRouteImport.update({
 const HomeRoute = HomeRouteImport.update({
   id: '/home',
   path: '/home',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ForgotPasswordRoute = ForgotPasswordRouteImport.update({
+  id: '/forgot-password',
+  path: '/forgot-password',
   getParentRoute: () => rootRouteImport,
 } as any)
 const FocusRoute = FocusRouteImport.update({
@@ -223,6 +229,7 @@ export interface FileRoutesByFullPath {
   '/coach': typeof CoachRoute
   '/coach-login': typeof CoachLoginRoute
   '/focus': typeof FocusRoute
+  '/forgot-password': typeof ForgotPasswordRoute
   '/home': typeof HomeRoute
   '/learn': typeof LearnRoute
   '/me': typeof MeRoute
@@ -258,6 +265,7 @@ export interface FileRoutesByTo {
   '/coach': typeof CoachRoute
   '/coach-login': typeof CoachLoginRoute
   '/focus': typeof FocusRoute
+  '/forgot-password': typeof ForgotPasswordRoute
   '/home': typeof HomeRoute
   '/learn': typeof LearnRoute
   '/me': typeof MeRoute
@@ -294,6 +302,7 @@ export interface FileRoutesById {
   '/coach': typeof CoachRoute
   '/coach-login': typeof CoachLoginRoute
   '/focus': typeof FocusRoute
+  '/forgot-password': typeof ForgotPasswordRoute
   '/home': typeof HomeRoute
   '/learn': typeof LearnRoute
   '/me': typeof MeRoute
@@ -332,6 +341,7 @@ export interface FileRouteTypes {
     | '/coach'
     | '/coach-login'
     | '/focus'
+    | '/forgot-password'
     | '/home'
     | '/learn'
     | '/me'
@@ -367,6 +377,7 @@ export interface FileRouteTypes {
     | '/coach'
     | '/coach-login'
     | '/focus'
+    | '/forgot-password'
     | '/home'
     | '/learn'
     | '/me'
@@ -402,6 +413,7 @@ export interface FileRouteTypes {
     | '/coach'
     | '/coach-login'
     | '/focus'
+    | '/forgot-password'
     | '/home'
     | '/learn'
     | '/me'
@@ -439,6 +451,7 @@ export interface RootRouteChildren {
   CoachRoute: typeof CoachRoute
   CoachLoginRoute: typeof CoachLoginRoute
   FocusRoute: typeof FocusRoute
+  ForgotPasswordRoute: typeof ForgotPasswordRoute
   HomeRoute: typeof HomeRoute
   LearnRoute: typeof LearnRoute
   MeRoute: typeof MeRoute
@@ -538,6 +551,13 @@ declare module '@tanstack/react-router' {
       path: '/home'
       fullPath: '/home'
       preLoaderRoute: typeof HomeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/forgot-password': {
+      id: '/forgot-password'
+      path: '/forgot-password'
+      fullPath: '/forgot-password'
+      preLoaderRoute: typeof ForgotPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/focus': {
@@ -751,6 +771,7 @@ const rootRouteChildren: RootRouteChildren = {
   CoachRoute: CoachRoute,
   CoachLoginRoute: CoachLoginRoute,
   FocusRoute: FocusRoute,
+  ForgotPasswordRoute: ForgotPasswordRoute,
   HomeRoute: HomeRoute,
   LearnRoute: LearnRoute,
   MeRoute: MeRoute,
