@@ -1,3 +1,4 @@
+import { MessagesCard } from "@/components/messages-card";
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -78,6 +79,8 @@ function CoachHome() {
         </div>
         <Scene kind="ambient" size={96} />
       </header>
+
+      <MessagesCard title="From the admin" />
 
       {(() => {
         const flags = events.filter((e) => e.event_type === "crisis_flag");
