@@ -412,6 +412,36 @@ export type Database = {
         }
         Relationships: []
       }
+      coach_notes: {
+        Row: {
+          coach_id: string
+          created_at: string
+          follow_up_on: string | null
+          id: string
+          note: string
+          student_id: string
+          updated_at: string
+        }
+        Insert: {
+          coach_id: string
+          created_at?: string
+          follow_up_on?: string | null
+          id?: string
+          note: string
+          student_id: string
+          updated_at?: string
+        }
+        Update: {
+          coach_id?: string
+          created_at?: string
+          follow_up_on?: string | null
+          id?: string
+          note?: string
+          student_id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       coaches: {
         Row: {
           active: boolean
@@ -652,6 +682,36 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      journal_templates: {
+        Row: {
+          created_at: string
+          id: string
+          is_published: boolean
+          prompt: string
+          sort_order: number
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_published?: boolean
+          prompt: string
+          sort_order?: number
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_published?: boolean
+          prompt?: string
+          sort_order?: number
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
       }
       live_sessions: {
         Row: {
