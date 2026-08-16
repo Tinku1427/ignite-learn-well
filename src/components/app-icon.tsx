@@ -1,3 +1,4 @@
+import type { ReactElement } from "react";
 import { cn } from "@/lib/utils";
 
 /**
@@ -7,7 +8,7 @@ import { cn } from "@/lib/utils";
  */
 export type AppIconName = "avatar" | "mentor" | "chart" | "checklist" | "check" | "dashboard";
 
-const PATHS: Record<AppIconName, JSX.Element> = {
+const PATHS: Record<AppIconName, ReactElement> = {
   avatar: (
     <>
       <circle cx="12" cy="8" r="3.6" />
