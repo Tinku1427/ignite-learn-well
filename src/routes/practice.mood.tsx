@@ -8,16 +8,14 @@ import { Slider } from "@/components/ui/slider";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { Scene } from "@/components/scene";
+import { detectCrisis, flagCrisis } from "@/lib/crisis";
+import { CrisisHelp } from "@/components/crisis-help";
 
 export const Route = createFileRoute("/practice/mood")({ component: Mood });
 
-const MOODS = [
-  { v: 1, e: "😞", l: "Rough" },
-  { v: 2, e: "😕", l: "Low" },
-  { v: 3, e: "😐", l: "Okay" },
-  { v: 4, e: "🙂", l: "Good" },
-  { v: 5, e: "😄", l: "Bright" },
-];
+import { MoodFace, MoodFacePicker, MOOD_LABEL, type MoodValue } from "@/components/mood-face";
+
+
 const TAGS = ["exam-stress", "tired", "distracted", "anxious", "grateful", "focused", "lonely", "hopeful"];
 
 function Mood() {
@@ -27,6 +25,7 @@ function Mood() {
   const [energy, setEnergy] = useState(3);
   const [tags, setTags] = useState<string[]>([]);
   const [note, setNote] = useState("");
+  const [showHelp, setShowHelp] = useState(false);
 
   const { data: recent = [] } = useQuery({
     enabled: !!user,
@@ -41,15 +40,20 @@ function Mood() {
 
   const save = useMutation({
     mutationFn: async () => {
-      if (!user || mood == null) return;
+      if (!user || mood == null) return false;
+      const text = note.trim();
       const { error } = await supabase.from("mood_checkins").insert({
-        user_id: user.id, mood_score: mood, energy, tags, note: note.trim() || null,
+        user_id: user.id, mood_score: mood, energy, tags, note: text || null,
       });
       if (error) throw error;
+      const risky = detectCrisis(text) || mood === 1;
+      if (detectCrisis(text)) await flagCrisis(user.id, "mood");
+      return risky;
     },
-    onSuccess: () => {
+    onSuccess: (risky) => {
       setMood(null); setNote(""); setTags([]);
-      toast.success("Noted. No wrong answer.");
+      if (risky) setShowHelp(true);
+      else toast.success("Noted. No wrong answer.");
       qc.invalidateQueries({ queryKey: ["mood-recent"] });
     },
   });
@@ -59,6 +63,7 @@ function Mood() {
 
   return (
     <div className="space-y-6">
+      {showHelp && <CrisisHelp onDismiss={() => setShowHelp(false)} />}
       <div className="soft-card p-6">
         <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-4">
           <div className="min-w-0">
@@ -68,17 +73,10 @@ function Mood() {
           <Scene kind="mood" size={72} className="shrink-0" />
         </div>
 
-        <div className="mt-5 grid grid-cols-5 gap-2">
-          {MOODS.map((m) => (
-            <button key={m.v} onClick={() => setMood(m.v)} className={cn(
-              "flex flex-col items-center rounded-2xl border border-border p-3 transition-all",
-              mood === m.v ? "bg-sage-soft border-primary scale-105" : "hover:bg-secondary/50"
-            )}>
-              <span className="text-2xl">{m.e}</span>
-              <span className="mt-1 text-[11px] text-muted-foreground">{m.l}</span>
-            </button>
-          ))}
+        <div className="mt-5">
+          <MoodFacePicker value={(mood as MoodValue | null) ?? null} onChange={(v) => setMood(v)} />
         </div>
+
 
         <div className="mt-6">
           <div className="mb-2 flex justify-between text-xs text-muted-foreground">
@@ -92,8 +90,8 @@ function Mood() {
           <div className="flex flex-wrap gap-2">
             {TAGS.map((t) => (
               <button key={t} onClick={() => toggleTag(t)} className={cn(
-                "rounded-full border border-border px-3 py-1 text-xs transition-colors",
-                tags.includes(t) ? "bg-primary text-primary-foreground border-primary" : "hover:bg-secondary"
+                "rounded-full border border-border px-3 py-1 text-xs motion-safe:transition-all motion-safe:duration-200",
+                tags.includes(t) ? "bg-primary text-primary-foreground border-primary ring-2 ring-primary/40 shadow-[0_0_0_5px_rgba(0,60,148,0.10)] motion-safe:scale-[1.05]" : "hover:bg-secondary opacity-90"
               )}>{t}</button>
             ))}
           </div>
@@ -120,9 +118,11 @@ function Mood() {
             {recent.slice().reverse().map((r, i) => (
               <div key={i} className="flex flex-1 flex-col items-center gap-1">
                 <div className="w-full rounded-t-md bg-sage/60" style={{ height: `${r.mood_score * 14}px` }} />
-                <span className="text-[10px] text-muted-foreground">{MOODS.find((m) => m.v === r.mood_score)?.e}</span>
+                <MoodFace value={Math.max(1, Math.min(5, r.mood_score)) as MoodValue} size={22} />
+                <span className="text-[9px] text-muted-foreground">{MOOD_LABEL[Math.max(1, Math.min(5, r.mood_score)) as MoodValue]}</span>
               </div>
             ))}
+
           </div>
         </div>
       )}

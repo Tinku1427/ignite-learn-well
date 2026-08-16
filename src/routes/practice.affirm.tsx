@@ -45,9 +45,9 @@ function Affirm() {
         .from("affirmation_completions")
         .select("id")
         .eq("user_id", user!.id)
-        .gte("completed_at", `${today}T00:00:00Z`)
-        .maybeSingle();
-      return !!data;
+        .gte("created_at", `${today}T00:00:00Z`)
+        .limit(1);
+      return (data ?? []).length > 0;
     },
   });
 

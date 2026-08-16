@@ -4,6 +4,8 @@ import { WellnessRing } from "@/components/wellness-ring";
 import { Scene } from "@/components/scene";
 import { AppIcon } from "@/components/app-icon";
 import { useAuth } from "@/hooks/use-auth";
+import { NudgeCard } from "@/components/nudge-card";
+import { MessagesCard } from "@/components/messages-card";
 
 export const Route = createFileRoute("/home")({ component: () => <Protected><Home /></Protected> });
 
@@ -45,6 +47,10 @@ function Home() {
         <div className="text-xs uppercase tracking-widest text-muted-foreground">{greeting()}</div>
         <h1 className="font-display text-3xl md:text-4xl">{greeting()}, {first}.</h1>
       </header>
+
+      <NudgeCard />
+
+      <MessagesCard />
 
       <section className="soft-card p-6 md:p-8 flex flex-col items-center gap-3">
         <WellnessRing arcs={arcs} />
@@ -90,9 +96,6 @@ function Home() {
         </div>
       </section>
 
-      <p className="pt-4 text-center text-[11px] text-muted-foreground">
-        Need to talk to someone right now? <a href="tel:14416" className="underline">Tele-MANAS 14416</a> · <a href="tel:18005990019" className="underline">Kiran 1800-599-0019</a>
-      </p>
     </div>
   );
 }

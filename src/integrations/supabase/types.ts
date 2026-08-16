@@ -91,6 +91,60 @@ export type Database = {
         }
         Relationships: []
       }
+      agent_secrets: {
+        Row: {
+          cron_token: string
+          id: boolean
+        }
+        Insert: {
+          cron_token: string
+          id?: boolean
+        }
+        Update: {
+          cron_token?: string
+          id?: boolean
+        }
+        Relationships: []
+      }
+      agent_settings: {
+        Row: {
+          amber_threshold: number
+          enabled: boolean
+          id: boolean
+          low_mood_days: number
+          low_sleep_nights: number
+          quiet_end: string
+          quiet_start: string
+          silence_days: number
+          updated_at: string
+          watch_threshold: number
+        }
+        Insert: {
+          amber_threshold?: number
+          enabled?: boolean
+          id?: boolean
+          low_mood_days?: number
+          low_sleep_nights?: number
+          quiet_end?: string
+          quiet_start?: string
+          silence_days?: number
+          updated_at?: string
+          watch_threshold?: number
+        }
+        Update: {
+          amber_threshold?: number
+          enabled?: boolean
+          id?: boolean
+          low_mood_days?: number
+          low_sleep_nights?: number
+          quiet_end?: string
+          quiet_start?: string
+          silence_days?: number
+          updated_at?: string
+          watch_threshold?: number
+        }
+        Relationships: []
+      }
       ambient_tracks: {
         Row: {
           audio_url: string
@@ -118,11 +172,49 @@ export type Database = {
         }
         Relationships: []
       }
+      announcement_reads: {
+        Row: {
+          announcement_id: string
+          created_at: string
+          dismissed_at: string | null
+          id: string
+          read_at: string
+          user_id: string
+        }
+        Insert: {
+          announcement_id: string
+          created_at?: string
+          dismissed_at?: string | null
+          id?: string
+          read_at?: string
+          user_id: string
+        }
+        Update: {
+          announcement_id?: string
+          created_at?: string
+          dismissed_at?: string | null
+          id?: string
+          read_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "announcement_reads_announcement_id_fkey"
+            columns: ["announcement_id"]
+            isOneToOne: false
+            referencedRelation: "announcements"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       announcements: {
         Row: {
           active: boolean
+          audience: string
           body: string | null
+          cohort_id: string | null
           created_at: string
+          created_by: string | null
           cta_url: string | null
           ends_at: string | null
           id: string
@@ -132,8 +224,11 @@ export type Database = {
         }
         Insert: {
           active?: boolean
+          audience?: string
           body?: string | null
+          cohort_id?: string | null
           created_at?: string
+          created_by?: string | null
           cta_url?: string | null
           ends_at?: string | null
           id?: string
@@ -143,8 +238,11 @@ export type Database = {
         }
         Update: {
           active?: boolean
+          audience?: string
           body?: string | null
+          cohort_id?: string | null
           created_at?: string
+          created_by?: string | null
           cta_url?: string | null
           ends_at?: string | null
           id?: string
@@ -152,7 +250,15 @@ export type Database = {
           starts_at?: string
           title?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "announcements_cohort_id_fkey"
+            columns: ["cohort_id"]
+            isOneToOne: false
+            referencedRelation: "cohorts"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       assessment_responses: {
         Row: {
@@ -306,6 +412,36 @@ export type Database = {
         }
         Relationships: []
       }
+      coach_notes: {
+        Row: {
+          coach_id: string
+          created_at: string
+          follow_up_on: string | null
+          id: string
+          note: string
+          student_id: string
+          updated_at: string
+        }
+        Insert: {
+          coach_id: string
+          created_at?: string
+          follow_up_on?: string | null
+          id?: string
+          note: string
+          student_id: string
+          updated_at?: string
+        }
+        Update: {
+          coach_id?: string
+          created_at?: string
+          follow_up_on?: string | null
+          id?: string
+          note?: string
+          student_id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       coaches: {
         Row: {
           active: boolean
@@ -399,6 +535,39 @@ export type Database = {
           plan_date?: string
           updated_at?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      direct_messages: {
+        Row: {
+          body: string
+          created_at: string
+          dismissed_at: string | null
+          id: string
+          read_at: string | null
+          recipient_id: string
+          sender_id: string
+          title: string
+        }
+        Insert: {
+          body: string
+          created_at?: string
+          dismissed_at?: string | null
+          id?: string
+          read_at?: string | null
+          recipient_id: string
+          sender_id: string
+          title: string
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          dismissed_at?: string | null
+          id?: string
+          read_at?: string | null
+          recipient_id?: string
+          sender_id?: string
+          title?: string
         }
         Relationships: []
       }
@@ -513,6 +682,36 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      journal_templates: {
+        Row: {
+          created_at: string
+          id: string
+          is_published: boolean
+          prompt: string
+          sort_order: number
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_published?: boolean
+          prompt: string
+          sort_order?: number
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_published?: boolean
+          prompt?: string
+          sort_order?: number
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
       }
       live_sessions: {
         Row: {
@@ -870,6 +1069,9 @@ export type Database = {
           preferred_relax_track_id: string | null
           quiet_hours_end: string
           quiet_hours_start: string
+          suspended: boolean
+          suspended_at: string | null
+          suspended_by: string | null
           target_year: number | null
           timezone: string
           updated_at: string
@@ -897,6 +1099,9 @@ export type Database = {
           preferred_relax_track_id?: string | null
           quiet_hours_end?: string
           quiet_hours_start?: string
+          suspended?: boolean
+          suspended_at?: string | null
+          suspended_by?: string | null
           target_year?: number | null
           timezone?: string
           updated_at?: string
@@ -924,6 +1129,9 @@ export type Database = {
           preferred_relax_track_id?: string | null
           quiet_hours_end?: string
           quiet_hours_start?: string
+          suspended?: boolean
+          suspended_at?: string | null
+          suspended_by?: string | null
           target_year?: number | null
           timezone?: string
           updated_at?: string
@@ -1175,6 +1383,8 @@ export type Database = {
         }
         Returns: boolean
       }
+      is_my_caseload: { Args: { _student: string }; Returns: boolean }
+      student_trend_direction: { Args: { _student: string }; Returns: string }
     }
     Enums: {
       app_role: "student" | "admin" | "mentor" | "counsellor" | "coach"

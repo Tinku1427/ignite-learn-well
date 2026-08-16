@@ -78,7 +78,7 @@ function Breathe() {
           {(Object.keys(PATTERNS) as Pattern[]).map((p) => (
             <button key={p} onClick={() => !running && setPattern(p)} className={cn(
               "rounded-full px-4 py-1.5 text-sm border border-border",
-              pattern === p ? "bg-primary text-primary-foreground border-primary" : "hover:bg-secondary"
+              pattern === p ? "bg-primary text-primary-foreground border-primary ring-2 ring-primary/40 shadow-[0_0_0_5px_rgba(0,60,148,0.10)] motion-safe:scale-[1.05]" : "hover:bg-secondary opacity-70"
             )}>{PATTERNS[p].label}</button>
           ))}
         </div>

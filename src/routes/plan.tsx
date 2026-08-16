@@ -24,23 +24,29 @@ type Block = {
 };
 
 const TYPE_TONE: Record<BlockType, string> = {
-  study:    "bg-sage-soft border-sage/40",
-  practice: "bg-apricot/20 border-apricot/40",
-  break:    "bg-secondary border-border",
-  rest:     "bg-dusk/15 border-dusk/40",
+  study:    "bg-secondary border-primary/30",
+  practice: "bg-accent/15 border-accent/40",
+  break:    "bg-paper border-border",
+  rest:     "bg-primary/10 border-primary/25",
 };
 const TYPE_LABEL: Record<BlockType, string> = {
   study: "Study", practice: "Practice", break: "Break", rest: "Rest",
 };
 
-const SUGGESTIONS: Array<Omit<Block, "id" | "start" | "end" | "done">> = [
-  { title: "Morning meditation", type: "practice" },
-  { title: "One affirmation",    type: "practice" },
-  { title: "Journal entry",      type: "practice" },
-  { title: "Evening meditation", type: "practice" },
+const SUGGESTIONS: Array<{ title: string; type: BlockType; start: string; end: string }> = [
+  { title: "Morning meditation", type: "practice", start: "07:00", end: "07:15" },
+  { title: "One affirmation",    type: "practice", start: "07:20", end: "07:25" },
+  { title: "Study block",        type: "study",    start: "09:00", end: "10:30" },
+  { title: "Tea break",          type: "break",    start: "10:30", end: "10:45" },
+  { title: "Journal entry",      type: "practice", start: "20:30", end: "20:45" },
+  { title: "Evening meditation", type: "practice", start: "21:00", end: "21:15" },
 ];
 
-const HOURS = Array.from({ length: 18 }, (_, i) => i + 6); // 6..23
+const START_HOUR = 6;
+const END_HOUR = 23;
+const HOURS = Array.from({ length: END_HOUR - START_HOUR + 1 }, (_, i) => i + START_HOUR);
+const ROW_H = 56; // px per hour — fixed so nothing can collapse or overlap
+
 const todayISO = () => new Date().toISOString().slice(0, 10);
 const uid = () => Math.random().toString(36).slice(2, 10);
 
@@ -50,6 +56,23 @@ function fmtTime(t: string) {
   const p = h >= 12 ? "pm" : "am";
   const hh = ((h + 11) % 12) + 1;
   return `${hh}:${m.toString().padStart(2, "0")}${p}`;
+}
+function hourLabel(h: number) {
+  return `${((h + 11) % 12) + 1}${h >= 12 ? "pm" : "am"}`;
+}
+
+/** Lay blocks out in lanes so overlapping blocks sit side by side, never on top of each other. */
+function assignLanes(blocks: Block[]) {
+  const sorted = [...blocks].sort((a, b) => toMin(a.start) - toMin(b.start) || toMin(a.end) - toMin(b.end));
+  const laneEnds: number[] = [];
+  const placed = sorted.map((b) => {
+    const s = toMin(b.start);
+    let lane = laneEnds.findIndex((end) => end <= s);
+    if (lane === -1) { lane = laneEnds.length; laneEnds.push(0); }
+    laneEnds[lane] = toMin(b.end);
+    return { b, lane };
+  });
+  return { placed, lanes: Math.max(1, laneEnds.length) };
 }
 
 function Plan() {
@@ -72,78 +95,71 @@ function Plan() {
   });
 
   const [blocks, setBlocks] = useState<Block[]>([]);
-  useEffect(() => { setBlocks(plan?.blocks ?? []); }, [plan?.id]);
+  useEffect(() => { setBlocks((plan?.blocks as Block[] | undefined) ?? []); }, [plan?.id, plan?.blocks]);
 
   const save = useMutation({
     mutationFn: async (next: Block[]) => {
       if (!user) return;
-      await supabase.from("day_plans").upsert(
+      const { error } = await supabase.from("day_plans").upsert(
         { user_id: user.id, plan_date: date, blocks: next },
         { onConflict: "user_id,plan_date" },
       );
+      if (error) throw error;
     },
     onSuccess: () => qc.invalidateQueries({ queryKey: ["day-plan"] }),
   });
 
-  const persist = (next: Block[]) => { setBlocks(next); save.mutate(next); };
+  const persist = (next: Block[]) => {
+    const sorted = [...next].sort((a, b) => toMin(a.start) - toMin(b.start));
+    setBlocks(sorted);
+    save.mutate(sorted);
+  };
 
   const [draft, setDraft] = useState<Block>({
-    id: "", title: "", type: "study", start: "09:00", end: "10:00", subject: "",
+    id: "", title: "", type: "study", start: "09:00", end: "10:00",
   });
 
   const add = () => {
     if (!draft.title.trim()) return;
     if (toMin(draft.end) <= toMin(draft.start)) return;
-    const next = [...blocks, { ...draft, id: uid() }].sort((a, b) => toMin(a.start) - toMin(b.start));
-    persist(next);
-    setDraft((d) => ({ ...d, title: "", subject: "" }));
+    persist([...blocks, { ...draft, id: uid(), title: draft.title.trim() }]);
+    setDraft((d) => ({ ...d, title: "" }));
   };
 
-  const addSuggestion = (s: (typeof SUGGESTIONS)[number]) => {
-    const start = s.title.startsWith("Morning") ? "07:00"
-                : s.title.startsWith("Evening") ? "21:00"
-                : "12:30";
-    const end = s.title.startsWith("Morning") ? "07:10"
-              : s.title.startsWith("Evening") ? "21:10"
-              : "12:40";
-    const b: Block = { ...s, id: uid(), start, end };
-    persist([...blocks, b].sort((a, b) => toMin(a.start) - toMin(b.start)));
-  };
+  const addSuggestion = (s: (typeof SUGGESTIONS)[number]) =>
+    persist([...blocks, { id: uid(), title: s.title, type: s.type, start: s.start, end: s.end }]);
 
   const toggle = (id: string) => persist(blocks.map((b) => b.id === id ? { ...b, done: !b.done } : b));
   const remove = (id: string) => persist(blocks.filter((b) => b.id !== id));
+  const editTime = (id: string, key: "start" | "end", value: string) =>
+    persist(blocks.map((b) => b.id === id ? { ...b, [key]: value } : b));
 
   const doneCount = blocks.filter((b) => b.done).length;
 
-  // vertical timeline geometry: 6:00 → 23:00 = 17 hours → 68 quarter-hour slots
-  const TIMELINE_START = 6 * 60;
-  const TIMELINE_END = 23 * 60;
-  const total = TIMELINE_END - TIMELINE_START;
-
-  const positioned = useMemo(() => blocks.map((b) => {
-    const top = Math.max(0, (toMin(b.start) - TIMELINE_START) / total) * 100;
-    const height = Math.max(2, (toMin(b.end) - toMin(b.start)) / total) * 100;
-    return { b, top, height };
-  }), [blocks]);
+  const { placed, lanes } = useMemo(() => assignLanes(blocks), [blocks]);
+  const gridHeight = HOURS.length * ROW_H;
 
   return (
     <div className="space-y-6">
       <header>
         <div className="text-xs uppercase tracking-widest text-muted-foreground">Plan</div>
-        <h1 className="font-display text-3xl">Your day</h1>
-        <p className="mt-2 text-sm text-muted-foreground max-w-md">
+        <h1 className="font-display text-3xl">Plan your day</h1>
+        <p className="mt-2 max-w-md text-sm text-muted-foreground">
           A calm plan beats a long one. Leave room to breathe.
         </p>
       </header>
 
-      {/* Suggestions */}
+      {/* Suggestion chips */}
       <section className="soft-card p-5">
-        <div className="text-xs uppercase tracking-widest text-muted-foreground mb-2">Add today's practice</div>
+        <div className="mb-2 text-xs uppercase tracking-widest text-muted-foreground">Quick add</div>
         <div className="flex flex-wrap gap-2">
           {SUGGESTIONS.map((s) => (
-            <button key={s.title} onClick={() => addSuggestion(s)}
-              className="rounded-full border border-border bg-apricot/15 hover:bg-apricot/25 px-3 py-1.5 text-xs">
-              + {s.title}
+            <button
+              key={s.title}
+              onClick={() => addSuggestion(s)}
+              className="rounded-full border border-border bg-secondary px-3 py-1.5 text-xs transition-colors hover:bg-primary/10"
+            >
+              + {s.title} <span className="text-muted-foreground">{fmtTime(s.start)}</span>
             </button>
           ))}
         </div>
@@ -151,10 +167,10 @@ function Plan() {
 
       {/* Add form */}
       <section className="soft-card p-5">
-        <div className="text-xs uppercase tracking-widest text-muted-foreground mb-3">New block</div>
-        <div className="grid grid-cols-2 gap-2 md:grid-cols-6">
+        <div className="mb-3 text-xs uppercase tracking-widest text-muted-foreground">New block</div>
+        <div className="grid grid-cols-2 gap-2 md:grid-cols-7">
           <input
-            className="col-span-2 rounded-lg border border-border bg-paper/60 px-3 py-2 text-sm md:col-span-2"
+            className="col-span-2 rounded-lg border border-border bg-paper/60 px-3 py-2 text-sm md:col-span-3"
             placeholder="Physics — chapter 4"
             value={draft.title}
             onChange={(e) => setDraft({ ...draft, title: e.target.value })}
@@ -170,44 +186,46 @@ function Plan() {
             <option value="rest">Rest</option>
           </select>
           <input
-            type="time" className="rounded-lg border border-border bg-paper/60 px-2 py-2 text-sm"
+            type="time" aria-label="Start time"
+            className="rounded-lg border border-border bg-paper/60 px-2 py-2 text-sm"
             value={draft.start} onChange={(e) => setDraft({ ...draft, start: e.target.value })}
           />
           <input
-            type="time" className="rounded-lg border border-border bg-paper/60 px-2 py-2 text-sm"
+            type="time" aria-label="End time"
+            className="rounded-lg border border-border bg-paper/60 px-2 py-2 text-sm"
             value={draft.end} onChange={(e) => setDraft({ ...draft, end: e.target.value })}
           />
-          <Button onClick={add} className="rounded-full">
-            <Plus className="size-4 mr-1" /> Add
+          <Button onClick={add} className="col-span-2 rounded-full md:col-span-1">
+            <Plus className="mr-1 size-4" /> Add
           </Button>
         </div>
       </section>
 
       {/* Timeline */}
-      <section className="soft-card p-4 md:p-6">
-        <div className="flex items-baseline justify-between mb-3">
+      <section className="soft-card overflow-hidden p-4 md:p-6">
+        <div className="mb-3 flex items-baseline justify-between">
           <h2 className="font-display text-xl">Today's timeline</h2>
-          <div className="text-xs text-muted-foreground">
-            {doneCount}/{blocks.length} done
-          </div>
+          <div className="text-xs text-muted-foreground">{doneCount}/{blocks.length} done</div>
         </div>
 
-        <div className="relative flex gap-3">
-          <div className="w-10 shrink-0 text-[11px] text-muted-foreground">
+        <div className="flex gap-2 md:gap-3">
+          {/* hour gutter */}
+          <div className="w-11 shrink-0" style={{ height: gridHeight }}>
             {HOURS.map((h) => (
-              <div key={h} style={{ height: `${100 / HOURS.length}%` }} className="flex items-start justify-end pr-1 h-[52px]">
-                {((h + 11) % 12) + 1}{h >= 12 ? "p" : "a"}
+              <div key={h} style={{ height: ROW_H }} className="flex items-start justify-end pr-1 pt-0.5 text-[10px] leading-none text-muted-foreground">
+                {hourLabel(h)}
               </div>
             ))}
           </div>
 
-          <div className="relative flex-1 rounded-xl border border-border bg-paper/40" style={{ height: HOURS.length * 52 }}>
-            {HOURS.map((_, i) => (
-              <div key={i} className="absolute inset-x-0 border-t border-border/50" style={{ top: (i / HOURS.length) * 100 + "%" }} />
+          {/* grid */}
+          <div className="relative min-w-0 flex-1 rounded-xl border border-border bg-paper/40" style={{ height: gridHeight }}>
+            {HOURS.map((h, i) => (
+              <div key={h} className="absolute inset-x-0 border-t border-border/40" style={{ top: i * ROW_H }} />
             ))}
 
-            {positioned.length === 0 && (
-              <div className="absolute inset-0 grid place-items-center text-sm text-muted-foreground p-4 text-center">
+            {blocks.length === 0 && (
+              <div className="absolute inset-0 grid place-items-center p-4 text-center text-sm text-muted-foreground">
                 <div className="max-w-xs">
                   <Clock className="mx-auto mb-2 size-5" />
                   Nothing planned yet. Start with one meditation and one study block.
@@ -215,39 +233,73 @@ function Plan() {
               </div>
             )}
 
-            {positioned.map(({ b, top, height }) => (
-              <div key={b.id}
-                className={cn(
-                  "absolute left-1 right-1 rounded-lg border p-2 shadow-sm flex flex-col justify-between",
-                  TYPE_TONE[b.type],
-                  b.done && "opacity-60"
-                )}
-                style={{ top: `${top}%`, height: `${height}%`, minHeight: 36 }}
-              >
-                <div className="flex items-start gap-2">
-                  <button
-                    onClick={() => toggle(b.id)}
-                    className={cn("mt-0.5 grid size-4 place-items-center rounded-full border shrink-0",
-                      b.done ? "bg-primary text-primary-foreground border-primary" : "border-border bg-card")}
-                    aria-label={b.done ? "Mark undone" : "Mark done"}
-                  >
-                    {b.done && <Check className="size-3" />}
-                  </button>
-                  <div className="min-w-0 flex-1">
-                    <div className={cn("text-sm font-medium truncate", b.done && "line-through")}>{b.title}</div>
-                    <div className="text-[10px] uppercase tracking-widest text-muted-foreground">
-                      {TYPE_LABEL[b.type]} · {fmtTime(b.start)}–{fmtTime(b.end)}
+            {placed.map(({ b, lane }) => {
+              const top = ((toMin(b.start) - START_HOUR * 60) / 60) * ROW_H;
+              const height = Math.max(30, ((toMin(b.end) - toMin(b.start)) / 60) * ROW_H - 4);
+              const widthPct = 100 / lanes;
+              return (
+                <div
+                  key={b.id}
+                  className={cn(
+                    "absolute overflow-hidden rounded-lg border p-2 shadow-sm",
+                    TYPE_TONE[b.type],
+                    b.done && "opacity-60",
+                  )}
+                  style={{
+                    top: Math.max(0, top) + 2,
+                    height,
+                    left: `calc(${lane * widthPct}% + 4px)`,
+                    width: `calc(${widthPct}% - 8px)`,
+                  }}
+                >
+                  <div className="flex items-start gap-1.5">
+                    <button
+                      onClick={() => toggle(b.id)}
+                      className={cn("mt-0.5 grid size-4 shrink-0 place-items-center rounded-full border",
+                        b.done ? "border-primary bg-primary text-primary-foreground" : "border-border bg-card")}
+                      aria-label={b.done ? "Mark undone" : "Mark done"}
+                    >
+                      {b.done && <Check className="size-3" />}
+                    </button>
+                    <div className="min-w-0 flex-1">
+                      <div className={cn("truncate text-[13px] font-medium leading-tight", b.done && "line-through")}>{b.title}</div>
+                      <div className="truncate text-[10px] uppercase tracking-widest text-muted-foreground">
+                        {TYPE_LABEL[b.type]} · {fmtTime(b.start)}–{fmtTime(b.end)}
+                      </div>
                     </div>
+                    <button onClick={() => remove(b.id)} aria-label="Remove block" className="text-muted-foreground hover:text-foreground">
+                      <Trash2 className="size-3.5" />
+                    </button>
                   </div>
-                  <button onClick={() => remove(b.id)} className="text-muted-foreground hover:text-foreground">
-                    <Trash2 className="size-3.5" />
-                  </button>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>
+
+      {/* Editable list — the reliable way to adjust times on a phone */}
+      {blocks.length > 0 && (
+        <section className="soft-card p-5">
+          <div className="mb-3 text-xs uppercase tracking-widest text-muted-foreground">Adjust blocks</div>
+          <ul className="space-y-2">
+            {blocks.map((b) => (
+              <li key={b.id} className="flex flex-wrap items-center gap-2 rounded-xl border border-border bg-paper/40 p-3">
+                <span className="min-w-0 flex-1 truncate text-sm font-medium">{b.title}</span>
+                <input type="time" aria-label={`${b.title} start`} value={b.start}
+                  onChange={(e) => editTime(b.id, "start", e.target.value)}
+                  className="rounded-lg border border-border bg-card px-2 py-1 text-xs" />
+                <input type="time" aria-label={`${b.title} end`} value={b.end}
+                  onChange={(e) => editTime(b.id, "end", e.target.value)}
+                  className="rounded-lg border border-border bg-card px-2 py-1 text-xs" />
+                <button onClick={() => remove(b.id)} aria-label={`Remove ${b.title}`} className="text-muted-foreground hover:text-foreground">
+                  <Trash2 className="size-4" />
+                </button>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
     </div>
   );
 }

@@ -1,17 +1,19 @@
 import { cn } from "@/lib/utils";
 
 /**
- * MoodFace — a five-point face scale in the app's illustration style.
- * Palette-locked to --sage / --dusk / --apricot; matches Scene figures.
- * Used at onboarding baseline and at any transformation checkpoint.
+ * MoodFace — one consistent five-point SVG face scale used EVERYWHERE a mood
+ * face appears (onboarding baseline, mood check-in, before → after arc, history).
+ * No system emojis anywhere. Brand-blue palette, flat fill, no shadows.
+ * All five faces share the same 64×64 canvas, head radius, stroke weight and
+ * baseline, so a row of them aligns perfectly.
  * value: 1 (rough) → 5 (bright).
  */
 export type MoodValue = 1 | 2 | 3 | 4 | 5;
 
-const SKIN = "#E7C6A2";
-const INK = "#3B2E24";
-const APRICOT = "var(--apricot)";
-const SAGE_SOFT = "var(--sage-soft)";
+const SKIN = "#EBCBA6";        // warm neutral skin
+const INK = "#0B1B3A";         // brand ink
+const BLUE = "#003C94";        // brand blue
+const BLUSH = "#E8A33D";       // warm accent (cheeks)
 
 const LABELS: Record<MoodValue, string> = {
   1: "Rough",
@@ -21,15 +23,15 @@ const LABELS: Record<MoodValue, string> = {
   5: "Bright",
 };
 
-function faceGeom(v: MoodValue) {
-  // brow tilt + mouth curve, driven from a single scalar
-  const t = (v - 3) / 2; // -1 .. 1
-  const mouthCurve = 6 * t;        // 6=smile, -6=frown
-  const browLift = -2 * t;         // brows relax up as mood rises
-  const cheek = v >= 4 ? 0.6 : 0;
-  const aura = v >= 4 ? APRICOT : v <= 2 ? "var(--dusk)" : "var(--sage)";
-  return { mouthCurve, browLift, cheek, aura };
-}
+/** Mouth path + brow tilt for each face. Fixed geometry = identical alignment. */
+const FACES: Record<MoodValue, { mouth: string; brow: number; brows: boolean; cheeks: boolean; halo: number }> = {
+  1: { mouth: "M24 46 Q32 37 40 46", brow: 3, brows: true, cheeks: false, halo: 0.10 },
+  2: { mouth: "M25 44 Q32 39.5 39 44", brow: 2, brows: true, cheeks: false, halo: 0.14 },
+  3: { mouth: "M25 43 L39 43", brow: 0, brows: false, cheeks: false, halo: 0.18 },
+  4: { mouth: "M24 41 Q32 46.5 40 41", brow: -1, brows: false, cheeks: true, halo: 0.22 },
+  5: { mouth: "M23 40 Q32 50 41 40", brow: -2, brows: false, cheeks: true, halo: 0.26 },
+};
+
 
 export function MoodFace({
   value,
@@ -37,48 +39,57 @@ export function MoodFace({
   active = false,
   className,
 }: { value: MoodValue; size?: number; active?: boolean; className?: string }) {
-  const { mouthCurve, browLift, cheek, aura } = faceGeom(value);
+  const f = FACES[value];
+  const eyeY = 30 + f.brow * 0.5;
   return (
     <svg
       viewBox="0 0 64 64"
       width={size}
       height={size}
-      className={cn("select-none", className)}
+      className={cn("block select-none", className)}
       aria-label={LABELS[value]}
       role="img"
     >
-      {/* aura */}
-      <circle cx="32" cy="32" r="28" fill={aura} opacity={active ? 0.28 : 0.14} />
+      {/* halo — same radius on every face so the row shares one baseline */}
+      <circle cx="32" cy="32" r="30" fill={BLUE} opacity={active ? 0.16 : f.halo * 0.5} />
       {/* head */}
-      <circle cx="32" cy="32" r="18" fill={SKIN} />
-      {/* cheeks (only for happier faces) */}
-      {cheek > 0 && (
+      <circle cx="32" cy="32" r="21" fill={SKIN} />
+      <circle cx="32" cy="32" r="21" fill="none" stroke={BLUE} strokeWidth="1.6" opacity="0.5" />
+      {/* cheeks */}
+      {f.cheeks && (
         <>
-          <circle cx="22" cy="36" r="3" fill={APRICOT} opacity={cheek} />
-          <circle cx="42" cy="36" r="3" fill={APRICOT} opacity={cheek} />
+          <circle cx="21" cy="37" r="3.2" fill={BLUSH} opacity="0.55" />
+          <circle cx="43" cy="37" r="3.2" fill={BLUSH} opacity="0.55" />
         </>
       )}
-      {/* eyes */}
-      {value === 1 ? (
+      {/* brows — only on the two lower faces, where tension reads */}
+      {f.brows && (
         <>
-          <path d={`M23 ${28 + browLift} l6 3`} stroke={INK} strokeWidth="1.6" strokeLinecap="round" fill="none" />
-          <path d={`M41 ${28 + browLift} l-6 3`} stroke={INK} strokeWidth="1.6" strokeLinecap="round" fill="none" />
+          <path
+            d={`M22 ${25 + f.brow} q4 ${-f.brow - 1} 8 1`}
+            stroke={INK} strokeWidth="1.7" strokeLinecap="round" fill="none" opacity="0.8"
+          />
+          <path
+            d={`M34 ${26 + f.brow} q4 ${f.brow + 1} 8 -1`}
+            stroke={INK} strokeWidth="1.7" strokeLinecap="round" fill="none" opacity="0.8"
+          />
+        </>
+      )}
+
+      {/* eyes */}
+      {value === 5 ? (
+        <>
+          <path d={`M22 ${eyeY + 1} q4 -4 8 0`} stroke={INK} strokeWidth="2" strokeLinecap="round" fill="none" />
+          <path d={`M34 ${eyeY + 1} q4 -4 8 0`} stroke={INK} strokeWidth="2" strokeLinecap="round" fill="none" />
         </>
       ) : (
         <>
-          <circle cx="25" cy={30 + browLift} r="1.6" fill={INK} />
-          <circle cx="39" cy={30 + browLift} r="1.6" fill={INK} />
+          <circle cx="26" cy={eyeY} r="2" fill={INK} />
+          <circle cx="38" cy={eyeY} r="2" fill={INK} />
         </>
       )}
       {/* mouth */}
-      <path
-        d={`M24 ${42 - mouthCurve / 2} Q32 ${42 + mouthCurve} 40 ${42 - mouthCurve / 2}`}
-        stroke={INK}
-        strokeWidth="1.8"
-        strokeLinecap="round"
-        fill="none"
-      />
-      {active && <circle cx="32" cy="32" r="22" fill="none" stroke={SAGE_SOFT} strokeWidth="2" />}
+      <path d={f.mouth} stroke={INK} strokeWidth="2.2" strokeLinecap="round" fill="none" />
     </svg>
   );
 }
@@ -90,22 +101,35 @@ export function MoodFacePicker({
 }: { value: MoodValue | null; onChange: (v: MoodValue) => void; size?: number }) {
   const vals: MoodValue[] = [1, 2, 3, 4, 5];
   return (
-    <div className="grid grid-cols-5 gap-2">
+    <div className="grid grid-cols-5 items-end gap-2">
       {vals.map((v) => {
         const active = value === v;
+        const dimmed = value != null && !active;
         return (
           <button
             key={v}
             type="button"
             onClick={() => onChange(v)}
+            aria-pressed={active}
             className={cn(
-              "flex flex-col items-center rounded-2xl border p-2 transition-all",
-              active ? "border-primary bg-sage-soft scale-105" : "border-border hover:bg-secondary/50"
+              "group flex flex-col items-center justify-end rounded-2xl border p-2",
+              "motion-safe:transition-all motion-safe:duration-200",
+              active
+                ? "border-primary bg-sage-soft ring-2 ring-primary/60 shadow-[0_0_0_6px_rgba(0,60,148,0.12)] motion-safe:scale-105"
+                : "border-border hover:bg-secondary/50",
+              dimmed && "opacity-60"
             )}
             aria-label={LABELS[v]}
           >
             <MoodFace value={v} size={size} active={active} />
-            <span className="mt-1 text-[10px] text-muted-foreground">{LABELS[v]}</span>
+            <span
+              className={cn(
+                "mt-1 text-[10px] leading-none motion-safe:transition-colors",
+                active ? "font-semibold text-primary" : "text-muted-foreground"
+              )}
+            >
+              {LABELS[v]}
+            </span>
           </button>
         );
       })}

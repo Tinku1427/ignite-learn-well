@@ -9,8 +9,10 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SupportRouteImport } from './routes/support'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as RoleSelectRouteImport } from './routes/role-select'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as PracticeRouteImport } from './routes/practice'
 import { Route as PortalsRouteImport } from './routes/portals'
 import { Route as PlanRouteImport } from './routes/plan'
@@ -20,6 +22,7 @@ import { Route as MentorRouteImport } from './routes/mentor'
 import { Route as MeRouteImport } from './routes/me'
 import { Route as LearnRouteImport } from './routes/learn'
 import { Route as HomeRouteImport } from './routes/home'
+import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as FocusRouteImport } from './routes/focus'
 import { Route as CoachLoginRouteImport } from './routes/coach-login'
 import { Route as CoachRouteImport } from './routes/coach'
@@ -41,8 +44,13 @@ import { Route as AdminPeopleRouteImport } from './routes/admin.people'
 import { Route as AdminContentRouteImport } from './routes/admin.content'
 import { Route as AdminAnnouncementsRouteImport } from './routes/admin.announcements'
 import { Route as AdminAgentRouteImport } from './routes/admin.agent'
-import { Route as ApiPublicSeedTestRouteImport } from './routes/api/public/seed-test'
+import { Route as ApiPublicAgentNightlyRouteImport } from './routes/api/public/agent/nightly'
 
+const SupportRoute = SupportRouteImport.update({
+  id: '/support',
+  path: '/support',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
   path: '/sitemap.xml',
@@ -51,6 +59,11 @@ const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
 const RoleSelectRoute = RoleSelectRouteImport.update({
   id: '/role-select',
   path: '/role-select',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PracticeRoute = PracticeRouteImport.update({
@@ -96,6 +109,11 @@ const LearnRoute = LearnRouteImport.update({
 const HomeRoute = HomeRouteImport.update({
   id: '/home',
   path: '/home',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ForgotPasswordRoute = ForgotPasswordRouteImport.update({
+  id: '/forgot-password',
+  path: '/forgot-password',
   getParentRoute: () => rootRouteImport,
 } as any)
 const FocusRoute = FocusRouteImport.update({
@@ -203,9 +221,9 @@ const AdminAgentRoute = AdminAgentRouteImport.update({
   path: '/agent',
   getParentRoute: () => AdminRoute,
 } as any)
-const ApiPublicSeedTestRoute = ApiPublicSeedTestRouteImport.update({
-  id: '/api/public/seed-test',
-  path: '/api/public/seed-test',
+const ApiPublicAgentNightlyRoute = ApiPublicAgentNightlyRouteImport.update({
+  id: '/api/public/agent/nightly',
+  path: '/api/public/agent/nightly',
   getParentRoute: () => rootRouteImport,
 } as any)
 
@@ -217,6 +235,7 @@ export interface FileRoutesByFullPath {
   '/coach': typeof CoachRoute
   '/coach-login': typeof CoachLoginRoute
   '/focus': typeof FocusRoute
+  '/forgot-password': typeof ForgotPasswordRoute
   '/home': typeof HomeRoute
   '/learn': typeof LearnRoute
   '/me': typeof MeRoute
@@ -226,8 +245,10 @@ export interface FileRoutesByFullPath {
   '/plan': typeof PlanRoute
   '/portals': typeof PortalsRoute
   '/practice': typeof PracticeRouteWithChildren
+  '/reset-password': typeof ResetPasswordRoute
   '/role-select': typeof RoleSelectRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/support': typeof SupportRoute
   '/admin/agent': typeof AdminAgentRoute
   '/admin/announcements': typeof AdminAnnouncementsRoute
   '/admin/content': typeof AdminContentRoute
@@ -242,7 +263,7 @@ export interface FileRoutesByFullPath {
   '/practice/mood': typeof PracticeMoodRoute
   '/admin/': typeof AdminIndexRoute
   '/practice/': typeof PracticeIndexRoute
-  '/api/public/seed-test': typeof ApiPublicSeedTestRoute
+  '/api/public/agent/nightly': typeof ApiPublicAgentNightlyRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -251,6 +272,7 @@ export interface FileRoutesByTo {
   '/coach': typeof CoachRoute
   '/coach-login': typeof CoachLoginRoute
   '/focus': typeof FocusRoute
+  '/forgot-password': typeof ForgotPasswordRoute
   '/home': typeof HomeRoute
   '/learn': typeof LearnRoute
   '/me': typeof MeRoute
@@ -259,8 +281,10 @@ export interface FileRoutesByTo {
   '/onboarding': typeof OnboardingRoute
   '/plan': typeof PlanRoute
   '/portals': typeof PortalsRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/role-select': typeof RoleSelectRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/support': typeof SupportRoute
   '/admin/agent': typeof AdminAgentRoute
   '/admin/announcements': typeof AdminAnnouncementsRoute
   '/admin/content': typeof AdminContentRoute
@@ -275,7 +299,7 @@ export interface FileRoutesByTo {
   '/practice/mood': typeof PracticeMoodRoute
   '/admin': typeof AdminIndexRoute
   '/practice': typeof PracticeIndexRoute
-  '/api/public/seed-test': typeof ApiPublicSeedTestRoute
+  '/api/public/agent/nightly': typeof ApiPublicAgentNightlyRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -286,6 +310,7 @@ export interface FileRoutesById {
   '/coach': typeof CoachRoute
   '/coach-login': typeof CoachLoginRoute
   '/focus': typeof FocusRoute
+  '/forgot-password': typeof ForgotPasswordRoute
   '/home': typeof HomeRoute
   '/learn': typeof LearnRoute
   '/me': typeof MeRoute
@@ -295,8 +320,10 @@ export interface FileRoutesById {
   '/plan': typeof PlanRoute
   '/portals': typeof PortalsRoute
   '/practice': typeof PracticeRouteWithChildren
+  '/reset-password': typeof ResetPasswordRoute
   '/role-select': typeof RoleSelectRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/support': typeof SupportRoute
   '/admin/agent': typeof AdminAgentRoute
   '/admin/announcements': typeof AdminAnnouncementsRoute
   '/admin/content': typeof AdminContentRoute
@@ -311,7 +338,7 @@ export interface FileRoutesById {
   '/practice/mood': typeof PracticeMoodRoute
   '/admin/': typeof AdminIndexRoute
   '/practice/': typeof PracticeIndexRoute
-  '/api/public/seed-test': typeof ApiPublicSeedTestRoute
+  '/api/public/agent/nightly': typeof ApiPublicAgentNightlyRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -323,6 +350,7 @@ export interface FileRouteTypes {
     | '/coach'
     | '/coach-login'
     | '/focus'
+    | '/forgot-password'
     | '/home'
     | '/learn'
     | '/me'
@@ -332,8 +360,10 @@ export interface FileRouteTypes {
     | '/plan'
     | '/portals'
     | '/practice'
+    | '/reset-password'
     | '/role-select'
     | '/sitemap.xml'
+    | '/support'
     | '/admin/agent'
     | '/admin/announcements'
     | '/admin/content'
@@ -348,7 +378,7 @@ export interface FileRouteTypes {
     | '/practice/mood'
     | '/admin/'
     | '/practice/'
-    | '/api/public/seed-test'
+    | '/api/public/agent/nightly'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -357,6 +387,7 @@ export interface FileRouteTypes {
     | '/coach'
     | '/coach-login'
     | '/focus'
+    | '/forgot-password'
     | '/home'
     | '/learn'
     | '/me'
@@ -365,8 +396,10 @@ export interface FileRouteTypes {
     | '/onboarding'
     | '/plan'
     | '/portals'
+    | '/reset-password'
     | '/role-select'
     | '/sitemap.xml'
+    | '/support'
     | '/admin/agent'
     | '/admin/announcements'
     | '/admin/content'
@@ -381,7 +414,7 @@ export interface FileRouteTypes {
     | '/practice/mood'
     | '/admin'
     | '/practice'
-    | '/api/public/seed-test'
+    | '/api/public/agent/nightly'
   id:
     | '__root__'
     | '/'
@@ -391,6 +424,7 @@ export interface FileRouteTypes {
     | '/coach'
     | '/coach-login'
     | '/focus'
+    | '/forgot-password'
     | '/home'
     | '/learn'
     | '/me'
@@ -400,8 +434,10 @@ export interface FileRouteTypes {
     | '/plan'
     | '/portals'
     | '/practice'
+    | '/reset-password'
     | '/role-select'
     | '/sitemap.xml'
+    | '/support'
     | '/admin/agent'
     | '/admin/announcements'
     | '/admin/content'
@@ -416,7 +452,7 @@ export interface FileRouteTypes {
     | '/practice/mood'
     | '/admin/'
     | '/practice/'
-    | '/api/public/seed-test'
+    | '/api/public/agent/nightly'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -427,6 +463,7 @@ export interface RootRouteChildren {
   CoachRoute: typeof CoachRoute
   CoachLoginRoute: typeof CoachLoginRoute
   FocusRoute: typeof FocusRoute
+  ForgotPasswordRoute: typeof ForgotPasswordRoute
   HomeRoute: typeof HomeRoute
   LearnRoute: typeof LearnRoute
   MeRoute: typeof MeRoute
@@ -436,13 +473,22 @@ export interface RootRouteChildren {
   PlanRoute: typeof PlanRoute
   PortalsRoute: typeof PortalsRoute
   PracticeRoute: typeof PracticeRouteWithChildren
+  ResetPasswordRoute: typeof ResetPasswordRoute
   RoleSelectRoute: typeof RoleSelectRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
-  ApiPublicSeedTestRoute: typeof ApiPublicSeedTestRoute
+  SupportRoute: typeof SupportRoute
+  ApiPublicAgentNightlyRoute: typeof ApiPublicAgentNightlyRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/support': {
+      id: '/support'
+      path: '/support'
+      fullPath: '/support'
+      preLoaderRoute: typeof SupportRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/sitemap.xml': {
       id: '/sitemap.xml'
       path: '/sitemap.xml'
@@ -455,6 +501,13 @@ declare module '@tanstack/react-router' {
       path: '/role-select'
       fullPath: '/role-select'
       preLoaderRoute: typeof RoleSelectRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/practice': {
@@ -518,6 +571,13 @@ declare module '@tanstack/react-router' {
       path: '/home'
       fullPath: '/home'
       preLoaderRoute: typeof HomeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/forgot-password': {
+      id: '/forgot-password'
+      path: '/forgot-password'
+      fullPath: '/forgot-password'
+      preLoaderRoute: typeof ForgotPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/focus': {
@@ -667,11 +727,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAgentRouteImport
       parentRoute: typeof AdminRoute
     }
-    '/api/public/seed-test': {
-      id: '/api/public/seed-test'
-      path: '/api/public/seed-test'
-      fullPath: '/api/public/seed-test'
-      preLoaderRoute: typeof ApiPublicSeedTestRouteImport
+    '/api/public/agent/nightly': {
+      id: '/api/public/agent/nightly'
+      path: '/api/public/agent/nightly'
+      fullPath: '/api/public/agent/nightly'
+      preLoaderRoute: typeof ApiPublicAgentNightlyRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -731,6 +791,7 @@ const rootRouteChildren: RootRouteChildren = {
   CoachRoute: CoachRoute,
   CoachLoginRoute: CoachLoginRoute,
   FocusRoute: FocusRoute,
+  ForgotPasswordRoute: ForgotPasswordRoute,
   HomeRoute: HomeRoute,
   LearnRoute: LearnRoute,
   MeRoute: MeRoute,
@@ -740,10 +801,22 @@ const rootRouteChildren: RootRouteChildren = {
   PlanRoute: PlanRoute,
   PortalsRoute: PortalsRoute,
   PracticeRoute: PracticeRouteWithChildren,
+  ResetPasswordRoute: ResetPasswordRoute,
   RoleSelectRoute: RoleSelectRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
-  ApiPublicSeedTestRoute: ApiPublicSeedTestRoute,
+  SupportRoute: SupportRoute,
+  ApiPublicAgentNightlyRoute: ApiPublicAgentNightlyRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
