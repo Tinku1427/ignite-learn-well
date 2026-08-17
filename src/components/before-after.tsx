@@ -75,7 +75,7 @@ export function BeforeAfter() {
 
       <div className="mt-6 grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-3 md:gap-6">
         <div className="flex flex-col items-center gap-2">
-          <img src="/arc-before.svg" className="h-24 w-24 object-contain" alt="" />
+          <MoodFace value={before} size={92} />
           <div className="text-[11px] uppercase tracking-widest text-muted-foreground">Started {startedOn}</div>
           <div className="text-sm">{MOOD_LABEL[before]}</div>
         </div>
@@ -83,7 +83,7 @@ export function BeforeAfter() {
         <ArrowRight className="size-6 text-muted-foreground shrink-0" aria-hidden />
 
         <div className="flex flex-col items-center gap-2">
-          <img src="/arc-after.svg" className="h-24 w-24 object-contain" alt="" />
+          <MoodFace value={after} size={92} />
           <div className="text-[11px] uppercase tracking-widest text-muted-foreground">{nowOn}</div>
           <div className="text-sm">{MOOD_LABEL[after]}</div>
         </div>
