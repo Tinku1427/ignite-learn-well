@@ -6,6 +6,12 @@ import { AdminShell } from "./admin-shell";
 import { supabase } from "@/integrations/supabase/client";
 import { ROLE_HOME, pickPrimaryRole } from "@/lib/role-routing";
 
+/** Local-midnight YYYY-MM-DD, so an 11pm visit counts as that day. */
+function todayKey(): string {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+}
+
 export function Protected({
   children,
   mode = "student",
@@ -53,6 +59,18 @@ export function Protected({
         }
       });
   }, [loading, user, mode, router]);
+
+  // Record that the student opened the app today. Idempotent: the table's
+  // primary key is (user_id, day), so repeat visits are a no-op upsert.
+  // This is what fills a circle on the 30-day view - showing up is enough.
+  useEffect(() => {
+    if (loading || !user || mode !== "student") return;
+    const day = todayKey();
+    supabase
+      .from("login_days")
+      .upsert({ user_id: user.id, day }, { onConflict: "user_id,day", ignoreDuplicates: true })
+      .then(() => {});
+  }, [loading, user, mode]);
 
   if (loading || !user) {
     return <div className="min-h-screen grid place-items-center text-muted-foreground text-sm">…</div>;
