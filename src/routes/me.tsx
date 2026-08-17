@@ -11,7 +11,7 @@ import { useRouter } from "@tanstack/react-router";
 import { Check, Plus, Trash2 } from "lucide-react";
 import { AppIcon } from "@/components/app-icon";
 import { cn } from "@/lib/utils";
-import chartUp from "@/assets/menu/chart-up.png.asset.json";
+const chartUp = { url: "/arc.svg" };
 
 export const Route = createFileRoute("/me")({ component: () => <Protected><Me /></Protected> });
 

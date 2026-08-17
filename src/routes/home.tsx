@@ -18,13 +18,19 @@ function greeting() {
   return "Late night";
 }
 
-import meditationImg from "@/assets/menu/yoga.png.asset.json";
-import breakImg from "@/assets/menu/take-a-break.png.asset.json";
-import calendarImg from "@/assets/menu/project.png.asset.json";
-import breatheImg from "@/assets/menu/yoga_1.png.asset.json";
-import privacyImg from "@/assets/menu/privacy.png.asset.json";
-import welcomeImg from "@/assets/menu/introduction-handshake-2.png.asset.json";
-import heroMeditating from "@/assets/menu/meditation-amico.png.asset.json";
+const meditationImg = { url: "/meditation-tile.svg" };
+
+const breakImg = { url: "/break.svg" };
+
+const calendarImg = { url: "/calendar.svg" };
+
+const breatheImg = { url: "/breathing.svg" };
+
+const privacyImg = { url: "/journal.svg" };
+
+const welcomeImg = { url: "/welcome.svg" };
+
+const heroMeditating = { url: "/meditate.svg" };
 
 const MENU = [
   { title: "Welcome",    img: welcomeImg.url,    to: "/me",                note: "Your space" },

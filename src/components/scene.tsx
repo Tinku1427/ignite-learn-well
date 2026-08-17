@@ -1,9 +1,13 @@
 import { cn } from "@/lib/utils";
-import meditateImg from "@/assets/scenes/meditation.png.asset.json";
-import affirmImg from "@/assets/scenes/affirmation.png.asset.json";
-import moodImg from "@/assets/scenes/mood.png.asset.json";
-import breatheImg from "@/assets/scenes/breathe.png.asset.json";
-import journalImg from "@/assets/scenes/journal.png.asset.json";
+const meditateImg = { url: "/meditate.svg" };
+
+const affirmImg = { url: "/affirmation.svg" };
+
+const moodImg = { url: "/mood.svg" };
+
+const breatheImg = { url: "/breathing.svg" };
+
+const journalImg = { url: "/journal.svg" };
 
 /**
  * Scene — illustrated set for every wellness surface.

@@ -1,7 +1,7 @@
 import { createFileRoute, Link, Outlet, useRouterState } from "@tanstack/react-router";
 import { Protected } from "@/components/protected";
 import { cn } from "@/lib/utils";
-import practiceHero from "@/assets/menu/curious-bro.svg.asset.json";
+const practiceHero = { url: "/meditate.svg" };
 
 const TABS = [
   { to: "/practice/meditate", label: "Meditate" },
