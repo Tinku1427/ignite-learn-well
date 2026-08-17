@@ -1,29 +1,22 @@
-import logo from "@/assets/brand/gm-logo-black.png.asset.json";
 import { cn } from "@/lib/utils";
 
 /**
- * Official Guiding Mentor lockup.
- * The supplied artwork is black-on-white; `tone="onDark"` inverts it so it can
- * sit on the brand blue without a white plate.
+ * Official Guiding Mentor lockup rendered as a text wordmark to avoid external
+ * image hosting. Keeps props (className, tone, height) compatible with callers.
  */
 export function BrandLogo({
   className,
   tone = "default",
   height = 28,
 }: { className?: string; tone?: "default" | "onDark"; height?: number }) {
+  const colorClass = tone === "onDark" ? "text-white" : "text-foreground";
   return (
-    <img
-      src={logo.url}
-      alt="Guiding Mentor"
-      style={{ height }}
-      className={cn(
-        "w-auto select-none object-contain",
-        tone === "onDark" && "invert",
-        className,
-      )}
-
-      loading="eager"
-      decoding="async"
-    />
+    <div
+      className={cn("font-display font-semibold select-none inline-block leading-none", colorClass, className)}
+      style={{ height, lineHeight: `${height}px`, fontSize: Math.round(height * 0.72) }}
+      aria-label="Guiding Mentor"
+    >
+      Guiding Mentor
+    </div>
   );
 }
