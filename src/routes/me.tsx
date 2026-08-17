@@ -6,6 +6,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { Protected } from "@/components/protected";
 import { WellnessRing } from "@/components/wellness-ring";
 import { BeforeAfter } from "@/components/before-after";
+import { Journey30 } from "@/components/journey-30";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "@tanstack/react-router";
 import { Check, Plus, Trash2 } from "lucide-react";
@@ -72,6 +73,8 @@ function Me() {
       </header>
 
       <BeforeAfter />
+
+      <Journey30 />
 
       <div className="soft-card p-6 flex flex-col items-center">
         <div className="relative grid place-items-center rounded-full bg-sage-soft/60 p-4 mb-4" style={{ width: 160, height: 160 }}>
