@@ -2,7 +2,6 @@ import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { BrandLogo } from "@/components/brand-logo";
 import { supabase } from "@/integrations/supabase/client";
-import { lovable } from "@/integrations/lovable";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -31,8 +30,21 @@ function Auth() {
   }, [router]);
 
   const google = async () => {
-    try { await lovable.auth.signInWithOAuth("google", { redirect_uri: window.location.origin }); }
-    catch (e) { toast.error(e instanceof Error ? e.message : "Google sign-in failed"); }
+    setBusy(true);
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        // Supabase sends the user back here after Google. Must also be listed
+        // under Supabase > Authentication > URL Configuration > Redirect URLs.
+        redirectTo: `${window.location.origin}/auth`,
+        queryParams: { prompt: "select_account" },
+      },
+    });
+    if (error) {
+      setBusy(false);
+      toast.error(error.message || "Google sign-in failed");
+    }
+    // On success the browser leaves this page; onAuthStateChange handles the return.
   };
 
   const submit = async (e: React.FormEvent) => {
