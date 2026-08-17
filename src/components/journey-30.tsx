@@ -6,9 +6,9 @@ import { cn } from "@/lib/utils";
 /**
  * Journey30 — the student's own 30-day window, anchored to THEIR start date.
  *
- * Day 1 is the day they were onboarded (falling back to account creation),
- * not a shared cohort date. So every student sees "Day 9 of 30" relative to
- * their own beginning. Progress = days on which they actually practised.
+ * Day 1 is the day the student's account was created - i.e. the day they first
+ * logged in - not a shared cohort date and not the onboarding date. A student
+ * handed the app today starts at Day 1 today. Progress = days they practised.
  *
  * Never a grade, never a comparison to another student, no streak-shaming:
  * a missed day is quietly empty, not marked wrong.
@@ -38,11 +38,11 @@ export function Journey30() {
     queryFn: async () => {
       const { data: profile } = await supabase
         .from("profiles")
-        .select("onboarded_at, created_at")
+        .select("created_at")
         .eq("id", user!.id)
         .maybeSingle();
 
-      const startRaw = profile?.onboarded_at ?? profile?.created_at;
+      const startRaw = profile?.created_at;
       if (!startRaw) return null;
 
       // Normalise to local midnight of day 1.
