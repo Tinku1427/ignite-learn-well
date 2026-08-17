@@ -8,7 +8,10 @@ import { cn } from "@/lib/utils";
  *
  * Day 1 is the day the student's account was created - i.e. the day they first
  * logged in - not a shared cohort date and not the onboarding date. A student
- * handed the app today starts at Day 1 today. Progress = days they practised.
+ * handed the app today starts at Day 1 today.
+ *
+ * A circle fills simply because the student OPENED the app that day (recorded in
+ * public.login_days by Protected). Showing up is the habit; no practice required.
  *
  * Never a grade, never a comparison to another student, no streak-shaming:
  * a missed day is quietly empty, not marked wrong.
@@ -48,25 +51,14 @@ export function Journey30() {
       // Normalise to local midnight of day 1.
       const start = new Date(startRaw);
       start.setHours(0, 0, 0, 0);
-      const windowStart = start.toISOString();
+      // Days the student opened the app. One cheap query, no journal content.
+      const { data: logins } = await supabase
+        .from("login_days")
+        .select("day")
+        .eq("user_id", user!.id)
+        .gte("day", dayKey(start));
 
-      // One round trip per practice type, in parallel. Each returns only
-      // timestamps inside the 30-day window — never the journal body.
-      const [med, jrn, aff, mood] = await Promise.all([
-        supabase.from("meditation_sessions").select("created_at")
-          .eq("user_id", user!.id).gte("created_at", windowStart),
-        supabase.from("journal_entries").select("created_at")
-          .eq("user_id", user!.id).gte("created_at", windowStart),
-        supabase.from("affirmation_completions").select("created_at")
-          .eq("user_id", user!.id).gte("created_at", windowStart),
-        supabase.from("mood_checkins").select("created_at")
-          .eq("user_id", user!.id).gte("created_at", windowStart),
-      ]);
-
-      const active = new Set<string>();
-      for (const res of [med, jrn, aff, mood]) {
-        for (const row of res.data ?? []) active.add(dayKey(row.created_at));
-      }
+      const active = new Set<string>((logins ?? []).map((r) => r.day as string));
 
       return { start, active };
     },
@@ -95,7 +87,6 @@ export function Journey30() {
 
   const practisedCount = days.filter((d) => d.practised).length;
   const soFar = Math.min(elapsed + 1, WINDOW_DAYS);
-  const pct = Math.round((practisedCount / Math.max(1, soFar)) * 100);
 
   return (
     <div className="soft-card p-6 md:p-8">
@@ -108,7 +99,7 @@ export function Journey30() {
         </div>
         <div className="text-right">
           <div className="font-display text-2xl tabular-nums">{practisedCount}</div>
-          <div className="text-[11px] uppercase tracking-widest text-muted-foreground">days practised</div>
+          <div className="text-[11px] uppercase tracking-widest text-muted-foreground">days here</div>
         </div>
       </div>
 
@@ -119,12 +110,12 @@ export function Journey30() {
         />
       </div>
 
-      <div className="mt-6 grid grid-cols-10 gap-2" role="list" aria-label="Your 30-day practice">
+      <div className="mt-6 grid grid-cols-10 gap-2" role="list" aria-label="Your first 30 days">
         {days.map((d) => (
           <div
             key={d.index}
             role="listitem"
-            title={`Day ${d.index} · ${d.date.toLocaleDateString(undefined, { month: "short", day: "numeric" })}${d.practised ? " · practised" : ""}`}
+                title={`Day ${d.index} · ${d.date.toLocaleDateString(undefined, { month: "short", day: "numeric" })}${d.practised ? " · you were here" : ""}`}
             className={cn(
               "aspect-square rounded-full transition-colors",
               d.practised && "bg-primary",
@@ -138,10 +129,10 @@ export function Journey30() {
 
       <p className="mt-6 text-sm text-muted-foreground">
         {practisedCount === 0
-          ? "Nothing here yet. One meditation today fills the first circle."
+          ? "Nothing here yet. Just opening the app tomorrow fills a circle."
           : complete
             ? `You showed up on ${practisedCount} of your first ${WINDOW_DAYS} days. That is the whole story.`
-            : `${pct}% of your days so far. Missed days stay blank — they are not marks against you.`}
+            : `You showed up on ${practisedCount} of ${soFar} days so far. Missed days stay blank — they are not marks against you.`}
       </p>
     </div>
   );
