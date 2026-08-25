@@ -48,10 +48,16 @@ function Content() {
 }
 
 /* ---------------- Meditations ---------------- */
+type Slot = "morning" | "afternoon" | "evening" | "night" | "any";
+const SLOTS: Slot[] = ["morning", "afternoon", "evening", "night", "any"];
+const SLOT_LABEL: Record<Slot, string> = {
+  morning: "Morning", afternoon: "Afternoon", evening: "Evening", night: "Night", any: "Any time",
+};
+
 type Med = {
   id: string; title: string; description: string | null;
   coach_name: string | null; audio_url: string; duration_seconds: number;
-  time_of_day: "morning" | "evening" | "any"; is_published: boolean;
+  time_of_day: Slot; is_published: boolean;
 };
 
 function MeditationsAdmin() {
@@ -68,10 +74,11 @@ function MeditationsAdmin() {
 
   const [form, setForm] = useState({
     title: "", description: "", coach_name: "",
-    time_of_day: "morning" as Med["time_of_day"], duration_seconds: 300,
+    time_of_day: "morning" as Slot, duration_seconds: 300,
   });
   const [file, setFile] = useState<File | null>(null);
   const [busy, setBusy] = useState(false);
+  const [dragOver, setDragOver] = useState(false);
 
   const upload = async () => {
     if (!file || !form.title.trim()) { toast.error("Add a title and pick an audio file."); return; }
@@ -104,6 +111,19 @@ function MeditationsAdmin() {
     onSuccess: () => qc.invalidateQueries({ queryKey: ["admin-meditations"] }),
   });
 
+  const changeSlot = useMutation({
+    mutationFn: async ({ r, slot }: { r: Med; slot: Slot }) => {
+      const { error } = await supabase.from("meditation_tracks").update({ time_of_day: slot }).eq("id", r.id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      toast.success("Time slot updated.");
+      qc.invalidateQueries({ queryKey: ["admin-meditations"] });
+      qc.invalidateQueries({ queryKey: ["meditation-tracks"] });
+    },
+    onError: (e: any) => toast.error(e?.message ?? "Could not update slot."),
+  });
+
   const remove = useMutation({
     mutationFn: async (r: Med) => {
       if (r.audio_url && !/^https?:\/\//i.test(r.audio_url)) {
@@ -126,18 +146,30 @@ function MeditationsAdmin() {
           <input className="rounded-lg border border-border bg-paper/60 px-3 py-2 text-sm md:col-span-2"
             placeholder="Short description" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
           <select className="rounded-lg border border-border bg-paper/60 px-2 py-2 text-sm"
-            value={form.time_of_day} onChange={(e) => setForm({ ...form, time_of_day: e.target.value as Med["time_of_day"] })}>
-            <option value="morning">Morning</option>
-            <option value="evening">Evening</option>
-            <option value="any">Any time</option>
+            value={form.time_of_day} onChange={(e) => setForm({ ...form, time_of_day: e.target.value as Slot })}>
+            {SLOTS.map((s) => <option key={s} value={s}>{SLOT_LABEL[s]}</option>)}
           </select>
           <input type="number" className="rounded-lg border border-border bg-paper/60 px-3 py-2 text-sm"
             placeholder="Duration (seconds)" value={form.duration_seconds}
             onChange={(e) => setForm({ ...form, duration_seconds: Number(e.target.value) || 0 })} />
-          <label className="md:col-span-2 flex items-center gap-2 rounded-lg border border-dashed border-border bg-paper/40 px-3 py-3 text-sm cursor-pointer">
-            <Upload className="size-4" />
-            <span className="text-muted-foreground">{file ? file.name : "Choose .mp3 file"}</span>
-            <input type="file" accept="audio/*" className="hidden"
+          <label
+            onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
+            onDragLeave={() => setDragOver(false)}
+            onDrop={(e) => {
+              e.preventDefault(); setDragOver(false);
+              const f = e.dataTransfer.files?.[0];
+              if (f) setFile(f);
+            }}
+            className={cn(
+              "md:col-span-2 flex flex-col items-center justify-center gap-1 rounded-lg border-2 border-dashed bg-paper/40 px-3 py-6 text-sm cursor-pointer text-center transition-colors",
+              dragOver ? "border-primary bg-primary/5" : "border-border"
+            )}>
+            <Upload className="size-5 text-muted-foreground" />
+            <span className="text-muted-foreground">
+              {file ? file.name : "Drag a meditation audio file here, or click to browse"}
+            </span>
+            <span className="text-[11px] text-muted-foreground/70">.mp3 · .m4a · .wav</span>
+            <input type="file" accept="audio/mpeg,audio/mp4,audio/x-m4a,audio/wav,.mp3,.m4a,.wav" className="hidden"
               onChange={(e) => setFile(e.target.files?.[0] ?? null)} />
           </label>
         </div>
@@ -156,10 +188,16 @@ function MeditationsAdmin() {
               <div className="min-w-0">
                 <div className="font-medium truncate">{r.title}</div>
                 <div className="text-xs text-muted-foreground">
-                  {r.coach_name ?? "—"} · {Math.round(r.duration_seconds / 60)} min · {r.time_of_day}
+                  {r.coach_name ?? "—"} · {Math.round(r.duration_seconds / 60)} min
                 </div>
               </div>
               <div className="flex items-center gap-2 shrink-0">
+                <select
+                  value={r.time_of_day}
+                  onChange={(e) => changeSlot.mutate({ r, slot: e.target.value as Slot })}
+                  className="rounded-full border border-border bg-paper/60 px-3 py-1 text-xs">
+                  {SLOTS.map((s) => <option key={s} value={s}>{SLOT_LABEL[s]}</option>)}
+                </select>
                 <button onClick={() => togglePublish.mutate(r)}
                   className="inline-flex items-center gap-1 rounded-full border border-border px-3 py-1 text-xs">
                   {r.is_published ? <CheckCircle2 className="size-3.5 text-primary" /> : <Circle className="size-3.5" />}
