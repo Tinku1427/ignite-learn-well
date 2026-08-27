@@ -5,22 +5,37 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { Button } from "@/components/ui/button";
 import { TouchSlider } from "@/components/touch-slider";
-import { Play, Pause, RotateCcw, Volume2, Sunrise, Moon } from "lucide-react";
+import { Play, Pause, RotateCcw, Volume2, Sunrise, Sun, Sunset, Moon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Scene } from "@/components/scene";
 import { Celebrate } from "@/components/celebrate";
 
+type Slot = "morning" | "afternoon" | "evening" | "night" | "any";
+
 type Track = {
   id: string; title: string; description: string | null;
   audio_url: string; duration_seconds: number;
-  time_of_day: "morning" | "evening" | "any"; coach_name: string | null;
+  time_of_day: Slot; coach_name: string | null;
 };
+
+/** The four times of day a student can be in. "Any" plays in all of them. */
+const TABS = [
+  { value: "morning", label: "Morning", Icon: Sunrise, heading: "Begin the day" },
+  { value: "afternoon", label: "Relax", Icon: Sun, heading: "Relax between study blocks" },
+  { value: "evening", label: "Evening", Icon: Sunset, heading: "Wind down" },
+  { value: "night", label: "Night", Icon: Moon, heading: "Settle before sleep" },
+] as const;
+
+type Tab = (typeof TABS)[number]["value"];
 
 export const Route = createFileRoute("/practice/meditate")({ component: Meditate });
 
-function timeBucket(): "morning" | "evening" {
+function timeBucket(): Tab {
   const h = new Date().getHours();
-  return h < 15 ? "morning" : "evening";
+  if (h < 12) return "morning";
+  if (h < 17) return "afternoon";
+  if (h < 20) return "evening";
+  return "night";
 }
 function fmt(s: number) {
   const m = Math.floor(s / 60), r = Math.floor(s % 60);
@@ -30,7 +45,7 @@ function fmt(s: number) {
 function Meditate() {
   const { user } = useAuth();
   const qc = useQueryClient();
-  const [tab, setTab] = useState<"morning" | "evening">(timeBucket());
+  const [tab, setTab] = useState<Tab>(timeBucket());
   const [active, setActive] = useState<Track | null>(null);
   const [signedUrl, setSignedUrl] = useState<string>("");
   const [playing, setPlaying] = useState(false);
@@ -57,6 +72,8 @@ function Meditate() {
     () => tracks.filter((t) => t.time_of_day === tab || t.time_of_day === "any"),
     [tracks, tab]
   );
+
+  const heading = TABS.find((t) => t.value === tab)?.heading ?? "";
 
   useEffect(() => { if (audioRef.current) audioRef.current.volume = vol / 100; }, [vol]);
 
@@ -100,14 +117,16 @@ function Meditate() {
     <div className="space-y-6">
       <Celebrate scene="meditate" open={celebrate} onClose={() => setCelebrate(false)} next={{ label: "" }} />
 
-      <div className="inline-flex rounded-full bg-secondary p-1 text-sm">
-        <button onClick={() => setTab("morning")} className={cn("inline-flex items-center gap-1.5 rounded-full px-4 py-1.5", tab === "morning" && "bg-card shadow-sm")}>
-          <Sunrise className="size-4" /> Morning
-        </button>
-        <button onClick={() => setTab("evening")} className={cn("inline-flex items-center gap-1.5 rounded-full px-4 py-1.5", tab === "evening" && "bg-card shadow-sm")}>
-          <Moon className="size-4" /> Evening
-        </button>
+      <div className="inline-flex flex-wrap gap-1 rounded-full bg-secondary p-1 text-sm">
+        {TABS.map(({ value, label, Icon }) => (
+          <button key={value} onClick={() => setTab(value)}
+            className={cn("inline-flex items-center gap-1.5 rounded-full px-4 py-1.5", tab === value && "bg-card shadow-sm")}>
+            <Icon className="size-4" /> {label}
+          </button>
+        ))}
       </div>
+
+      <BackgroundMusic scope="meditate" />
 
       {!active && (
         <div className="soft-card grid place-items-center p-6">
@@ -169,7 +188,7 @@ function Meditate() {
       )}
 
       <div className="space-y-2">
-        <h3 className="text-sm font-medium text-muted-foreground">{tab === "morning" ? "Begin the day" : "Wind down"}</h3>
+        <h3 className="text-sm font-medium text-muted-foreground">{heading}</h3>
         {isLoading && <div className="text-sm text-muted-foreground">Loading…</div>}
         {!isLoading && list.length === 0 && (
           <div className="soft-card p-6 text-sm text-muted-foreground">
@@ -195,6 +214,84 @@ function Meditate() {
           ))}
         </ul>
       </div>
+    </div>
+  );
+}
+
+/* ---------------- Background music (inline) ---------------- */
+type BgTrack = { id: string; title: string; audio_url: string; is_default: boolean };
+
+function BackgroundMusic({ scope }: { scope: "meditate" | "breathe" }) {
+  // Off until asked for. Autoplay fights whatever the student already has on.
+  const [chosen, setChosen] = useState<string>("");
+  const [playing, setPlaying] = useState(false);
+  const [bgSrc, setBgSrc] = useState("");
+  const bgRef = useRef<HTMLAudioElement | null>(null);
+
+  const { data: bgTracks = [] } = useQuery({
+    queryKey: ["background-tracks", scope],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("background_tracks")
+        .select("id,title,audio_url,is_default")
+        .eq("is_published", true)
+        .in("use_for", [scope, "both"])
+        .order("is_default", { ascending: false });
+      if (error) throw error;
+      return (data ?? []) as BgTrack[];
+    },
+  });
+
+  const activeBg = bgTracks.find((t) => t.id === chosen) ?? bgTracks[0] ?? null;
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      if (!activeBg) { setBgSrc(""); return; }
+      let url = activeBg.audio_url;
+      if (!/^https?:\/\//i.test(url)) {
+        const { data } = await supabase.storage
+          .from("meditation-audio")
+          .createSignedUrl(url, 60 * 60);
+        url = data?.signedUrl ?? "";
+      }
+      if (!cancelled) setBgSrc(url);
+    })();
+    return () => { cancelled = true; };
+  }, [activeBg?.id]);
+
+  useEffect(() => {
+    const el = bgRef.current;
+    if (!el) return;
+    el.volume = 0.25;                 // sits under the voice, never over it
+    if (!playing || !bgSrc) { el.pause(); return; }
+    el.play().catch(() => setPlaying(false));
+  }, [bgSrc, playing]);
+
+  // Leaving the page stops the sound. Nothing keeps looping in a stray tab.
+  useEffect(() => () => { bgRef.current?.pause(); }, []);
+
+  if (bgTracks.length === 0) return null;
+
+  return (
+    <div className="flex items-center gap-2 text-xs text-muted-foreground">
+      <audio ref={bgRef} src={bgSrc} loop preload="none" />
+      <button
+        onClick={() => setPlaying((p) => !p)}
+        className={cn("rounded-full border border-border px-3 py-1",
+          playing && "bg-primary text-primary-foreground border-primary")}
+      >
+        {playing ? "Stop music" : "Play music"}
+      </button>
+      {playing && (
+        <select
+          value={activeBg?.id ?? ""}
+          onChange={(e) => setChosen(e.target.value)}
+          className="rounded-lg border border-border bg-paper/60 px-2 py-1 text-xs max-w-[10rem]"
+        >
+          {bgTracks.map((t) => <option key={t.id} value={t.id}>{t.title}</option>)}
+        </select>
+      )}
     </div>
   );
 }
